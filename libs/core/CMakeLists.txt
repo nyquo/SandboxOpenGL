@@ -1,6 +1,6 @@
 set(LibName Core)
 
-add_library(${LibName} STATIC
+add_library(${LibName}
   Logger.hpp
   Logger.cpp
 )
