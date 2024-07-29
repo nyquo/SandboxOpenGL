@@ -1,6 +1,7 @@
 set(LibName Core)
 
 add_library(${LibName}
+  gl.h
   Logger.hpp
   Logger.cpp
 )
