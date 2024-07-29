@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 
+include(GNUInstallDirs)
+include(ExternalProject)
+
 project(SandboxOpenGL LANGUAGES C CXX VERSION 0.1)
 
 set(default_build_type "Release")
@@ -24,5 +27,6 @@ if(WIN32)
 	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 endif()
 
+add_subdirectory(extern)
 add_subdirectory(libs)
 add_subdirectory(apps)
