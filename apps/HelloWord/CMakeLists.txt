@@ -8,6 +8,7 @@ set(Headers "")
 
 set(Links
 	Core
+	Glad
 )
 
 add_executable(${AppName} ${Sources} ${Headers})
