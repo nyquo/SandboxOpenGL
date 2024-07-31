@@ -36,7 +36,6 @@ int main(int argc, char** argv) {
         core::Logger::logError("Failed to initialize GLAD");
         throw(std::runtime_error("Failed to initialize GLAD"));
     }
-    std::atomic_bool {true};
 
     glfwSetWindowCloseCallback(window, windowCloseCallback);
 
