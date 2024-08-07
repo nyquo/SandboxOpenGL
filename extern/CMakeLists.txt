@@ -3,7 +3,7 @@ option(CMAKE_TLS_VERIFY "Verify SSL certificates" ON)
 # don't repeatedly build ExternalProjects.
 set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
-set(GLFW_VERSION 3.3)
+set(GLFW_VERSION 3.3) 
 
 find_package(glfw3 ${GLFW_VERSION} QUIET)
 if(NOT glfw3_FOUND)
@@ -33,4 +33,7 @@ if(NOT glfw3_FOUND)
 	add_dependencies(glfw3 glfw3_project)
 else()
 	message(STATUS "Found GLFW ${glfw3_VERSION}")
+	message(STATUS "GLFW dir: ${glfw3_DIR}")
 endif()
+
+set(glfw3_FOUND ${glfw3_FOUND} PARENT_SCOPE)

@@ -30,3 +30,5 @@ endif()
 add_subdirectory(extern)
 add_subdirectory(libs)
 add_subdirectory(apps)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT HelloWord)
