@@ -8,6 +8,8 @@ add_library(${LibName}
    Logger.cpp
    Shader.hpp
    Shader.cpp
+   Window.hpp
+   Window.cpp
 )
 
 target_link_libraries(${LibName} PRIVATE Glad)
