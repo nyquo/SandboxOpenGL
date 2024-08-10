@@ -1,6 +1,6 @@
 set(LibName Glad)
 
-add_library(${LibName} SHARED src/glad.c include/glad/glad.h include/KHR/khrplatform.h)
+add_library(${LibName} STATIC src/glad.c include/glad/glad.h include/KHR/khrplatform.h)
 
 if(NOT glfw3_FOUND)
 	target_link_libraries(${LibName} PUBLIC glfw3)
