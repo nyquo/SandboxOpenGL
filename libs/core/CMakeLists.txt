@@ -1,6 +1,8 @@
 set(LibName Core)
 
 add_library(${LibName}
+   Application.hpp
+   Application.cpp
    Events/Event.hpp
    Events/WindowEvent.hpp
    gl.h
