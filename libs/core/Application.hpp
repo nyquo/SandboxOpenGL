@@ -5,8 +5,6 @@
 #include "Window.hpp"
 #include "gl.h"
 
-#include <atomic>
-
 namespace core {
 
 #define BIND_EVENT_FN(e) std::bind(&e, this, std::placeholders::_1)

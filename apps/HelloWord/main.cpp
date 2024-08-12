@@ -1,17 +1,12 @@
-#include <Application.hpp>
 #include <Logger.hpp>
 
-bool continueRunning{true};
-
-void windowCloseCallback(GLFWwindow* window) {
-    continueRunning = false;
-}
+#include "HelloWordApp.hpp"
 
 int main(int argc, char** argv) {
 	core::Logger::setLogLevel(core::Logger::LogLevel::Info);
 	core::Logger::logInfo("Program started!");
 
-    core::Application app;
+    HelloWordApp app;
 
     app.run();
 

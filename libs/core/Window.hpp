@@ -21,7 +21,6 @@ namespace core {
 
         void setEventCallBack(std::function<void(Event&)>);
 
-        // To remove later
         GLFWwindow* getWindow() { return m_window; }
 
     private:

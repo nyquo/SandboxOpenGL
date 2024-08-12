@@ -2,9 +2,10 @@ set(AppName HelloWord)
 
 set(Sources
 	main.cpp
+	HelloWordApp.cpp
 )
 
-set(Headers "")
+set(Headers HelloWordApp.hpp)
 
 set(Links
 	Core
