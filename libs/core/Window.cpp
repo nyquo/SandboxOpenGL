@@ -62,6 +62,10 @@ namespace core {
 
     Window::~Window()
     {
+        // TEMP
+        if (m_mainLayer != nullptr) {
+            delete m_mainLayer;
+        }
     }
 
     void Window::update()
@@ -69,8 +73,15 @@ namespace core {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glfwSwapBuffers(m_window);
+
+
+        if (m_mainLayer != nullptr) {
+            m_mainLayer->onUpdate();
+        }
+
+
         glfwPollEvents();
+        glfwSwapBuffers(m_window);
     }
 
     void Window::setEventCallBack(std::function<void(Event&)> callBack) { m_eventCallBack = callBack; }

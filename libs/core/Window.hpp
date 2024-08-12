@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Events/Event.hpp"
+#include "Layer.hpp"
 #include "Shader.hpp"
 
 #include <gl.h>
@@ -35,6 +36,15 @@ namespace core {
         std::string m_name;
         unsigned int m_width;
         unsigned int m_height;
+
+
+        // TEMP
+    private:
+        // add layer stack?
+        Layer* m_mainLayer{ nullptr };
+
+    public:
+        void setLayer(Layer* layer) { m_mainLayer = layer; }
     };
 
 }

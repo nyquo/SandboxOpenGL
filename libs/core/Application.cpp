@@ -2,7 +2,11 @@
 
 namespace core {
 
-    Application::Application() { m_mainWindow.setEventCallBack(BIND_EVENT_FN(Application::onEvent)); }
+    Application::Application()
+        : m_mainWindow(std::make_unique<Window>("Hello word", 800, 600))
+    {
+        m_mainWindow->setEventCallBack(BIND_EVENT_FN(Application::onEvent));
+    }
 
     Application::~Application() { glfwTerminate(); }
 
@@ -10,7 +14,7 @@ namespace core {
     {
         while (m_continueRunning)
         {
-            m_mainWindow.update();
+            m_mainWindow->update();
         }
     }
 

@@ -3,7 +3,11 @@
 #include "HelloWordApp.hpp"
 
 int main(int argc, char** argv) {
-	core::Logger::setLogLevel(core::Logger::LogLevel::Info);
+    #ifndef NDEBUG
+    core::Logger::setLogLevel(core::Logger::LogLevel::Debug);
+    #else
+    core::Logger::setLogLevel(core::Logger::LogLevel::Info);
+    #endif
 	core::Logger::logInfo("Program started!");
 
     HelloWordApp app;

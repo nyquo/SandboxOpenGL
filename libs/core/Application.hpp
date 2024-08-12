@@ -5,6 +5,8 @@
 #include "Window.hpp"
 #include "gl.h"
 
+#include <atomic>
+
 namespace core {
 
 #define BIND_EVENT_FN(e) std::bind(&e, this, std::placeholders::_1)
@@ -22,18 +24,19 @@ namespace core {
     public:
         void run();
 
+    protected:
+        Window& getWindow() { return *m_mainWindow; }
+
     private:
         void onEvent(Event& e);
-
-        std::atomic_bool m_continueRunning{ true };
-
-        // event callbacks
-    private:
+        
+    private: // Event callbacks
         bool onWindowClose(WindowCloseEvent& e);
         bool onWindowResized(WindowResizeEvent& e);
 
     private:
-        Window m_mainWindow{ "Hello word", 800, 600 };
+        std::unique_ptr<Window> m_mainWindow;
+        std::atomic_bool m_continueRunning{ true };
     };
 
 }

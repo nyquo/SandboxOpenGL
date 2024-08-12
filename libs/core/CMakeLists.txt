@@ -6,6 +6,8 @@ add_library(${LibName}
    Events/Event.hpp
    Events/WindowEvent.hpp
    gl.h
+   Layer.hpp
+   Layer.cpp
    Logger.hpp
    Logger.cpp
    Shader.hpp
