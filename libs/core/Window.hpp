@@ -2,11 +2,11 @@
 
 #include "Events/Event.hpp"
 #include "Layer.hpp"
-#include "Shader.hpp"
 
 #include <gl.h>
 
 #include <functional>
+#include <memory>
 #include <string>
 
 namespace core {
