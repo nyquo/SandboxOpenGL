@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.21)
 
+project(SandboxOpenGL LANGUAGES C CXX VERSION 0.1)
+
 include(GNUInstallDirs)
 include(ExternalProject)
 
-project(SandboxOpenGL LANGUAGES C CXX VERSION 0.1)
 
 set(default_build_type "Release")
 
