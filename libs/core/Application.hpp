@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CoreExport.hpp"
 #include "Events/Event.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Window.hpp"
@@ -11,7 +12,7 @@ namespace core {
 
 #define BIND_EVENT_FN(e) std::bind(&e, this, std::placeholders::_1)
 
-    class Application
+    class CORE_API Application
     {
     public:
         Application();

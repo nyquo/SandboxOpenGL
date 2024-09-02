@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CoreExport.hpp"
 #include "Events/Event.hpp"
 #include "Layer.hpp"
 
@@ -11,7 +12,7 @@
 
 namespace core {
 
-class Window
+class CORE_API Window
 {
   public:
     Window(const std::string& name = "New Window", unsigned int width = 800, unsigned int height = 600);

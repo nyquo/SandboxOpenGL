@@ -1,4 +1,6 @@
 #pragma once
+
+#include "CoreExport.hpp"
 #include "Event.hpp"
 
 #ifndef NDEBUG
@@ -7,7 +9,7 @@
 
 namespace core {
 
-    class WindowCloseEvent : public Event
+    class CORE_API WindowCloseEvent : public Event
     {
     public:
         EVENT_CLASS_CATEGORY(EventCategoryWindowEvent)
@@ -23,7 +25,7 @@ namespace core {
 #endif
     };
 
-    class WindowResizeEvent : public Event
+    class CORE_API WindowResizeEvent : public Event
     {
     public:
         WindowResizeEvent(unsigned int width, unsigned int height)

@@ -15,5 +15,9 @@ add_library(${LibName}
 	${Sources}
 )
 
+if(BUILD_SHARED_LIBS)
+	target_compile_definitions(Core PRIVATE BUILDING_DLL)
+endif()
+
 target_link_libraries(${LibName} PRIVATE Glad)
 target_include_directories(${LibName} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

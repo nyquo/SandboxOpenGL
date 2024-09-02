@@ -1,11 +1,13 @@
 #pragma once
 
+#include "CoreExport.hpp"
+
 #include <ctime>
 #include <iostream>
 
 namespace core {
 
-class Logger
+class CORE_API Logger
 {
   public:
     enum class LogLevel
@@ -76,7 +78,7 @@ class Logger
         }
     }
 
-    inline static LogLevel s_logLevel{LogLevel::Error};
+    static LogLevel s_logLevel;
 };
 
 }

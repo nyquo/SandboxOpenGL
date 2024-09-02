@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CoreExport.hpp"
+
 #include <filesystem>
 #include <string>
 
@@ -7,7 +9,7 @@ namespace core {
 
     namespace fs = std::filesystem;
 
-    class Shader
+    class CORE_API Shader
     {
     public:
         Shader(const fs::path& vertexPath, const fs::path& fragmentPath);

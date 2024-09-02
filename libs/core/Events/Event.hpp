@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CoreExport.hpp"
+
 #include <functional>
 #include <type_traits>
 
@@ -45,7 +47,7 @@ namespace core {
             static_cast<std::underlying_type_t<EventCategory>>(r));
     }
 
-    class Event
+    class CORE_API Event
     {
     public:
         virtual ~Event() = default;
@@ -68,7 +70,7 @@ namespace core {
     inline std::ostream& operator<<(std::ostream& os, const Event& e) { return os << e.toString(); }
 #endif
 
-    class EventDispatcher
+    class CORE_API EventDispatcher
     {
     public:
         EventDispatcher(Event& event)
