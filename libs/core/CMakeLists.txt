@@ -1,19 +1,18 @@
 set(LibName Core)
 
+file(GLOB_RECURSE Headers
+	${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/*.h
+)
+
+file(GLOB_RECURSE Sources
+	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/*.c
+)
+
 add_library(${LibName}
-   Application.hpp
-   Application.cpp
-   Events/Event.hpp
-   Events/WindowEvent.hpp
-   gl.h
-   Layer.hpp
-   Layer.cpp
-   Logger.hpp
-   Logger.cpp
-   Shader.hpp
-   Shader.cpp
-   Window.hpp
-   Window.cpp
+	${Headers}
+	${Sources}
 )
 
 target_link_libraries(${LibName} PRIVATE Glad)
