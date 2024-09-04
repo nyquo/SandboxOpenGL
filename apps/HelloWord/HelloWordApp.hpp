@@ -6,6 +6,8 @@
 #include <Logger.hpp>
 #include <Shader.hpp>
 
+#include <cmath>
+
 class CustomLayer : public core::Layer
 {
   public:
@@ -36,7 +38,12 @@ class CustomLayer : public core::Layer
         glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        float timeValue = glfwGetTime();
+        float redValue = (sin(timeValue) / 2.0f) + 0.5f;
+        int vertexColorLocation = glGetUniformLocation(shaderProgram->getUid(), "cpuColor");
+
         shaderProgram->bind();
+        glUniform4f(vertexColorLocation, redValue, 0.0F, 0.0F, 1.0F);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }

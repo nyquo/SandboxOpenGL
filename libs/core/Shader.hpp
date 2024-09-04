@@ -7,7 +7,7 @@
 
 namespace core {
 
-    namespace fs = std::filesystem;
+namespace fs = std::filesystem;
 
     class CORE_API Shader
     {
@@ -19,15 +19,17 @@ namespace core {
         Shader operator=(Shader&& other) = delete;
         ~Shader();
 
-    public:
-        void bind() const;
-        void unbind() const;
+  public:
+    void bind() const;
+    void unbind() const;
 
-    private:
-        std::string parseFile(const std::filesystem::path& filePath);
+    int getUid() const { return m_programId; }
 
-    private:
-        uint32_t m_programId;
-    };
+  private:
+    std::string parseFile(const std::filesystem::path& filePath);
+
+  private:
+    uint32_t m_programId;
+};
 
 }
