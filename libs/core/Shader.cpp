@@ -128,6 +128,16 @@ void Shader::bind() const { glUseProgram(m_programId); }
 
 void Shader::unbind() const { glUseProgram(0); }
 
+void Shader::setInt(const std::string& name, int value) const
+{
+    glUniform1i(glGetUniformLocation(m_programId, name.c_str()), value);
+}
+
+void Shader::setFloat(const std::string& name, float value) const
+{
+    glUniform1f(glGetUniformLocation(m_programId, name.c_str()), value);
+}
+
 std::string Shader::parseFile(const fs::path& filePath)
 {
     Logger::logTrace("FilePath: " + filePath.filename().string());
