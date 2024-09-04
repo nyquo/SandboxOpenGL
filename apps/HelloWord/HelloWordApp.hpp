@@ -45,11 +45,12 @@ class CustomLayer : public core::Layer
         glClear(GL_COLOR_BUFFER_BIT);
 
         float timeValue = glfwGetTime();
-        float redValue = (sin(timeValue) / 2.0f) + 0.5f;
-        int vertexColorLocation = glGetUniformLocation(shaderProgram->getUid(), "cpuColor");
+        float offset = (sin(timeValue) * 0.5);
 
         shaderProgram->bind();
-        glUniform4f(vertexColorLocation, redValue, 0.0F, 0.0F, 1.0F);
+
+        shaderProgram->setFloat("offset", offset);
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }
