@@ -44,3 +44,5 @@ else()
     )
 endif()
 add_dependencies(${AppName} copy_shaders)
+
+set_target_properties(${AppName} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
