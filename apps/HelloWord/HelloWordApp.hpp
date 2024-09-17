@@ -40,7 +40,7 @@ class CustomLayer : public core::Layer
         glEnableVertexAttribArray(2);
 
         int width, height, channels;
-        unsigned char* data = stbi_load("assets/BUI.jpg", &width, &height, &channels, 0);
+        unsigned char* data = stbi_load("assets/container.jpg", &width, &height, &channels, 0);
 
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
