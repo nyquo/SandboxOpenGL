@@ -2,6 +2,7 @@
 
 #include <Application.hpp>
 #include <Events/Event.hpp>
+#include <Events/MouseEvent.hpp>
 #include <Layer.hpp>
 #include <Logger.hpp>
 #include <Shader.hpp>
@@ -95,7 +96,6 @@ class CustomLayer : public core::Layer
         glClear(GL_COLOR_BUFFER_BIT);
 
         float timeValue = glfwGetTime();
-        float factor = 0.8f;
 
         shaderProgram->bind();
         shaderProgram->setInt("texture1", 0);
@@ -110,7 +110,18 @@ class CustomLayer : public core::Layer
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 
-    void onEvent(core::Event& event) override {}
+    void onEvent(core::Event& e) override
+    {
+        core::EventDispatcher dispatcher(e);
+        dispatcher.dispatch<core::MouseScrolledEvent>(BIND_EVENT_FN(CustomLayer::onMouseScrolled));
+    }
+
+  private:
+    bool onMouseScrolled(core::MouseScrolledEvent& e)
+    {
+        factor = std::max(0.0f, std::min(1.0f, factor + (step * e.getYOffset())));
+        return false;
+    }
 
   private:
     float vertices[36]{
@@ -130,6 +141,8 @@ class CustomLayer : public core::Layer
     };
     unsigned int VBO, VAO, EBO, texture1, texture2;
     std::unique_ptr<core::Shader> shaderProgram;
+    float factor{0.5};
+    float step{0.05};
 };
 
 class HelloWordApp : public core::Application

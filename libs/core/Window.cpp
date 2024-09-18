@@ -106,4 +106,6 @@ void Window::update()
 }
 
 void Window::setEventCallBack(std::function<void(Event&)> callBack) { m_eventCallBack = callBack; }
+
+void Window::onEvent(Event& e) { m_mainLayer->onEvent(e); }
 }

@@ -47,6 +47,8 @@ class CORE_API Window
     std::unique_ptr<Layer> m_mainLayer;
 
   public:
+    // Move this elsewhere ? Put layers in app?
+    void onEvent(Event& e);
     void setLayer(std::unique_ptr<Layer> layer) { m_mainLayer = std::move(layer); }
 };
 
