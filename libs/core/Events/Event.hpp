@@ -12,20 +12,29 @@
 
 namespace core {
 
-    enum class EventType
-    {
-        // Window events
-        WindowCloseEvent,
-        WindowResizeEvent
-    };
+enum class EventType
+{
+    // Window events
+    WindowCloseEvent,
+    WindowResizeEvent,
 
-    enum class EventCategory : int
-    {
-        None = 0,
-        EventCategoryWindowEvent = 1 << 1
-    };
+    // Mouse events
+    MouseScrolledEvent,
 
-    // Override the type associated methods for an event
+    // Key events
+    KeyPressedEvent,
+    KeyReleasedEvent
+};
+
+enum class EventCategory : int
+{
+    None = 0,
+    EventCategoryWindowEvent = 1 << 1,
+    EventCategoryMouseEvent = 1 << 2,
+    EventCategoryKeyEvent = 1 << 3
+};
+
+// Override the type associated methods for an event
 #ifndef NDEBUG
 #define EVENT_CLASS_TYPE(type)                                                                                         \
     static EventType getStaticType() { return EventType::type; }                                                       \
@@ -41,54 +50,54 @@ namespace core {
 #define EVENT_CLASS_CATEGORY(category)                                                                                 \
     virtual EventCategory getCategory() const override { return EventCategory::category; }
 
-    inline EventCategory operator|(EventCategory l, EventCategory r)
+inline EventCategory operator|(EventCategory l, EventCategory r)
+{
+    return static_cast<EventCategory>(static_cast<std::underlying_type_t<EventCategory>>(l) |
+                                      static_cast<std::underlying_type_t<EventCategory>>(r));
+}
+
+class CORE_API Event
+{
+  public:
+    virtual ~Event() = default;
+    [[nodiscard]] virtual EventType getEventType() const = 0;
+    [[nodiscard]] virtual EventCategory getCategory() const = 0;
+    [[nodiscard]] inline bool isInCateory(EventCategory category) const
     {
-        return static_cast<EventCategory>(static_cast<std::underlying_type_t<EventCategory>>(l) |
-            static_cast<std::underlying_type_t<EventCategory>>(r));
+        return static_cast<std::underlying_type_t<EventCategory>>(getCategory()) &
+               static_cast<std::underlying_type_t<EventCategory>>(category);
+    }
+#ifndef NDEBUG
+    virtual const char* getEventName() const = 0;
+    virtual std::string toString() const { return getEventName(); }
+#endif
+
+    bool m_handled{false};
+};
+
+#ifndef NDEBUG
+inline std::ostream& operator<<(std::ostream& os, const Event& e) { return os << e.toString(); }
+#endif
+
+class CORE_API EventDispatcher
+{
+  public:
+    EventDispatcher(Event& event)
+      : m_event(event)
+    {}
+    EventDispatcher() = delete;
+
+    template<typename T>
+    void dispatch(std::function<bool(T&)> function)
+    {
+        if(m_event.getEventType() == T::getStaticType())
+        {
+            m_event.m_handled |= function(*dynamic_cast<T*>(&m_event));
+        }
     }
 
-    class CORE_API Event
-    {
-    public:
-        virtual ~Event() = default;
-        [[nodiscard]] virtual EventType getEventType() const = 0;
-        [[nodiscard]] virtual EventCategory getCategory() const = 0;
-        [[nodiscard]] inline bool isInCateory(EventCategory category) const
-        {
-            return static_cast<std::underlying_type_t<EventCategory>>(getCategory()) &
-                static_cast<std::underlying_type_t<EventCategory>>(category);
-        }
-#ifndef NDEBUG
-        virtual const char* getEventName() const = 0;
-        virtual std::string toString() const { return getEventName(); }
-#endif
-
-        bool m_handled{ false };
-    };
-
-#ifndef NDEBUG
-    inline std::ostream& operator<<(std::ostream& os, const Event& e) { return os << e.toString(); }
-#endif
-
-    class CORE_API EventDispatcher
-    {
-    public:
-        EventDispatcher(Event& event)
-            : m_event(event)
-        {}
-        EventDispatcher() = delete;
-
-        template<typename T>
-        void dispatch(std::function<bool(T&)> function)
-        {
-            if (m_event.getEventType() == T::getStaticType())
-            {
-                m_event.m_handled |= function(*dynamic_cast<T*>(&m_event));
-            }
-        }
-
-    private:
-        Event& m_event;
-    };
+  private:
+    Event& m_event;
+};
 
 }

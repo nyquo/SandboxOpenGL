@@ -1,5 +1,7 @@
 #include "Window.hpp"
 
+#include "Events/KeyEvent.hpp"
+#include "Events/MouseEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Logger.hpp"
 
@@ -58,6 +60,33 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
         auto eventCallBack = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
         eventCallBack(e);
     });
+
+    glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset) {
+        MouseScrolledEvent e(xOffset, yOffset);
+        auto eventCallBack = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+        eventCallBack(e);
+    });
+
+    glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scanCode, int action, int modifiers) {
+        auto eventCallBack = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+        if(action == GLFW_PRESS)
+        {
+            KeyPressedEvent e(key);
+            eventCallBack(e);
+        }
+
+        if(action == GLFW_RELEASE)
+        {
+            KeyReleasedEvent e(key);
+            eventCallBack(e);
+        }
+
+        if(action == GLFW_REPEAT)
+        {
+            KeyPressedEvent e(key, true);
+            eventCallBack(e);
+        }
+    });
 }
 
 Window::~Window() {}
@@ -77,5 +106,4 @@ void Window::update()
 }
 
 void Window::setEventCallBack(std::function<void(Event&)> callBack) { m_eventCallBack = callBack; }
-
 }
