@@ -61,10 +61,17 @@ class CustomLayer : public core::Layer
 
         float timeValue = glfwGetTime();
 
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+        trans = glm::rotate(trans, (float)glfwGetTime() * 3, glm::vec3(0.0f, 0.0f, 1.0f));
+
         shaderProgram->bind();
         shaderProgram->setInt("texture1", 0);
         shaderProgram->setInt("texture2", 1);
         shaderProgram->setFloat("factor", factor);
+        shaderProgram->setMat4("transform", trans);
 
         texture1->bind();
         texture2->bind();

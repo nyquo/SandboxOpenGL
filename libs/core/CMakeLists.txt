@@ -16,6 +16,7 @@ set(PrivateLinks
 
 set(PublicLinks
     Io
+    glm::glm
 )
 
 add_library(${LibName}
