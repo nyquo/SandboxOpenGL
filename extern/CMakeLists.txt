@@ -3,6 +3,10 @@ option(CMAKE_TLS_VERIFY "Verify SSL certificates" ON)
 # don't repeatedly build ExternalProjects.
 set_property(DIRECTORY PROPERTY EP_UPDATE_DISCONNECTED true)
 
+########
+# GLFW #
+########
+
 set(GLFW_VERSION 3.3) 
 
 find_package(glfw3 ${GLFW_VERSION} QUIET)
@@ -37,3 +41,15 @@ else()
 endif()
 
 set(glfw3_FOUND ${glfw3_FOUND} PARENT_SCOPE)
+
+#######
+# GLM #
+#######
+
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY	https://github.com/g-truc/glm.git
+    GIT_TAG 	bf71a834948186f4097caa076cd2663c69a10e1e #refs/tags/1.0.1
+)
+
+FetchContent_MakeAvailable(glm)

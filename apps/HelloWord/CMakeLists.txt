@@ -18,6 +18,7 @@ file(GLOB_RECURSE Shaders
 set(Links
     Core
     Glad
+    glm::glm
 )
 
 add_executable(${AppName} ${Sources} ${Headers} ${Shaders})

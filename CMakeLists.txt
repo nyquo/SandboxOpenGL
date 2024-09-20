@@ -4,7 +4,7 @@ project(SandboxOpenGL LANGUAGES C CXX VERSION 0.1)
 
 include(GNUInstallDirs)
 include(ExternalProject)
-
+include(FetchContent)
 
 set(default_build_type "Release")
 
