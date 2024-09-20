@@ -3,8 +3,7 @@
 #include "CoreExport.hpp"
 #include "Events/Event.hpp"
 #include "Layer.hpp"
-
-#include <gl.h>
+#include "gl.h"
 
 #include <functional>
 #include <memory>

@@ -23,7 +23,7 @@ class CORE_API Shader
     void bind() const;
     void unbind() const;
 
-    [[nodiscard]] int getUid() const { return m_programId; }
+    [[nodiscard]] uint32_t getUid() const { return m_programId; }
 
     void setInt(const std::string& name, int value) const;
     void setFloat(const std::string& name, float value) const;

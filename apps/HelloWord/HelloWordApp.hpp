@@ -6,12 +6,10 @@
 #include <Layer.hpp>
 #include <Logger.hpp>
 #include <Shader.hpp>
+#include <Texture.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <stb_image.h>
-
-#include <cmath>
 
 class CustomLayer : public core::Layer
 {
@@ -43,45 +41,8 @@ class CustomLayer : public core::Layer
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
         glEnableVertexAttribArray(2);
 
-        stbi_set_flip_vertically_on_load(true);
-
-        int width, height, channels;
-        unsigned char* data = stbi_load("assets/container.jpg", &width, &height, &channels, 0);
-
-        glGenTextures(1, &texture1);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-
-        // set the texture wrapping/filtering options (on the currently bound texture object)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        if(data)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-        }
-
-        glGenTextures(1, &texture2);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-
-        // set the texture wrapping/filtering options (on the currently bound texture object)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        data = stbi_load("assets/awesomeface.png", &width, &height, &channels, 0);
-
-        if(data)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-        }
-
-        stbi_image_free(data);
+        texture1 = std::make_unique<core::Texture>("assets/container.jpg", GL_TEXTURE0);
+        texture2 = std::make_unique<core::Texture>("assets/awesomeface.png", GL_TEXTURE1);
 
         glBindVertexArray(0);
     };
@@ -105,10 +66,9 @@ class CustomLayer : public core::Layer
         shaderProgram->setInt("texture2", 1);
         shaderProgram->setFloat("factor", factor);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
+        texture1->bind();
+        texture2->bind();
+
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
@@ -142,8 +102,9 @@ class CustomLayer : public core::Layer
       2,
       3 // second triangle
     };
-    unsigned int VBO, VAO, EBO, texture1, texture2;
+    unsigned int VBO, VAO, EBO;
     std::unique_ptr<core::Shader> shaderProgram;
+    std::unique_ptr<core::Texture> texture1, texture2;
     float factor{0.5};
     float step{0.05};
 };
