@@ -2,6 +2,7 @@
 
 #include "CoreExport.hpp"
 #include "Events/Event.hpp"
+#include "Events/WindowEvent.hpp"
 #include "Layer.hpp"
 #include "gl.h"
 
@@ -27,6 +28,9 @@ class CORE_API Window
 
     GLFWwindow* getWindow() { return m_window; }
 
+    [[nodiscard]] unsigned int getWidth() const;
+    [[nodiscard]] unsigned int getHeight() const;
+
   private:
     static bool s_glfwInitialized;
     static bool s_gladInitialized;
@@ -44,6 +48,13 @@ class CORE_API Window
   private:
     // add layer stack?
     std::shared_ptr<Layer> m_mainLayer;
+
+    bool onWindowResized(core::WindowResizeEvent& e)
+    {
+        m_width = e.getWidth();
+        m_height = e.getHeight();
+        return false;
+    }
 
   public:
     // Move this elsewhere ? Put layers in app?

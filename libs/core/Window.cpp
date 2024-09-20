@@ -113,5 +113,14 @@ void Window::update()
 
 void Window::setEventCallBack(std::function<void(Event&)> callBack) { m_eventCallBack = callBack; }
 
-void Window::onEvent(Event& e) { m_mainLayer->onEvent(e); }
+unsigned int Window::getWidth() const { return m_width; }
+
+unsigned int Window::getHeight() const { return m_height; }
+
+void Window::onEvent(Event& e)
+{
+    EventDispatcher dispatcher(e);
+    dispatcher.dispatch<core::WindowResizeEvent>(BIND_EVENT_FN(Window::onWindowResized));
+    m_mainLayer->onEvent(e);
+}
 }

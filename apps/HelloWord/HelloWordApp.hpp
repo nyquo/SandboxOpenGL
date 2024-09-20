@@ -167,7 +167,15 @@ class CustomLayer : public core::Layer
 class HelloWordApp : public core::Application
 {
   public:
-    HelloWordApp() { getWindow().setLayer(std::make_shared<CustomLayer>()); }
+    HelloWordApp()
+    {
+        getWindow().setLayer(std::make_shared<CustomLayer>());
+
+        auto customLayer = std::dynamic_pointer_cast<CustomLayer>(getWindow().getLayer());
+
+        customLayer->m_windowHeight = getWindow().getHeight();
+        customLayer->m_windowWidth = getWindow().getWidth();
+    }
 
     void onEvent(core::Event& e) override
     {

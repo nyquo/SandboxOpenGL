@@ -101,4 +101,6 @@ class CORE_API EventDispatcher
     Event& m_event;
 };
 
+#define BIND_EVENT_FN(e) std::bind(&e, this, std::placeholders::_1)
+
 }
