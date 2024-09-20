@@ -87,6 +87,12 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
             eventCallBack(e);
         }
     });
+
+    glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double x, double y) {
+        MouseMovedEvent e(x, y);
+        auto eventCallBack = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+        eventCallBack(e);
+    });
 }
 
 Window::~Window() {}

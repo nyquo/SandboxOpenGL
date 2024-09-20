@@ -19,6 +19,7 @@ enum class EventType
     WindowResizeEvent,
 
     // Mouse events
+    MouseMovedEvent,
     MouseScrolledEvent,
 
     // Key events

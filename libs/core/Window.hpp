@@ -43,12 +43,13 @@ class CORE_API Window
     // TEMP
   private:
     // add layer stack?
-    std::unique_ptr<Layer> m_mainLayer;
+    std::shared_ptr<Layer> m_mainLayer;
 
   public:
     // Move this elsewhere ? Put layers in app?
     void onEvent(Event& e);
-    void setLayer(std::unique_ptr<Layer> layer) { m_mainLayer = std::move(layer); }
+    void setLayer(std::shared_ptr<Layer> layer) { m_mainLayer = std::move(layer); }
+    std::shared_ptr<Layer> getLayer() { return m_mainLayer; }
 };
 
 }

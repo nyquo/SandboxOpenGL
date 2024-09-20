@@ -9,7 +9,34 @@
 
 namespace core {
 
-class MouseScrolledEvent : public Event
+class CORE_API MouseMovedEvent : public Event
+{
+  public:
+    MouseMovedEvent(float x, float y)
+      : m_posX(x)
+      , m_posY(y)
+    {}
+
+    float getX() const { return m_posX; }
+    float getY() const { return m_posY; }
+
+    EVENT_CLASS_CATEGORY(EventCategoryMouseEvent)
+    EVENT_CLASS_TYPE(MouseMovedEvent)
+
+#ifndef NDEBUG
+    std::string toString() const override
+    {
+        std::stringstream ss;
+        ss << getEventName() << " x: " << m_posX << " | y: " << m_posY;
+        return ss.str();
+    }
+#endif
+
+  private:
+    float m_posX, m_posY;
+};
+
+class CORE_API MouseScrolledEvent : public Event
 {
   public:
     MouseScrolledEvent(float xOffset, float yOffset)

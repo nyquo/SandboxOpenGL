@@ -27,8 +27,8 @@ class CORE_API Application
   protected:
     Window& getWindow() { return *m_mainWindow; }
 
-  private:
-    void onEvent(Event& e);
+  public:
+    virtual void onEvent(Event& e);
 
   private: // Event callbacks
     bool onWindowClose(WindowCloseEvent& e);
