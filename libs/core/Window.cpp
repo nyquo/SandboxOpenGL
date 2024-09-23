@@ -44,6 +44,9 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
             throw(std::runtime_error("Failed to initialize GLAD"));
         }
 
+        // configure global opengl state
+        glEnable(GL_DEPTH_TEST);
+
         s_gladInitialized = true;
     }
 
