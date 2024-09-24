@@ -42,7 +42,7 @@ Texture::Texture(const fs::path& texturePath, int activeTexture)
         format = GL_RGB;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, m_data);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, m_data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(m_data);

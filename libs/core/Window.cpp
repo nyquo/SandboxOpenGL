@@ -46,6 +46,8 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
 
         // configure global opengl state
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         s_gladInitialized = true;
     }
