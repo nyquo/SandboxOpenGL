@@ -9,13 +9,15 @@
 class HappyCube
 {
   public:
-    HappyCube();
+    HappyCube(glm::vec3 position = glm::vec3(0.0F));
     ~HappyCube();
 
     const float* getRawVertices() const;
     size_t getVertexCount() const;
-    glm::mat4 getModelMatrix() const;
-    void setModelMatrix(glm::mat4 modelMatrix);
+
+    glm::mat4 m_modelMatrix{1.0f};
+    glm::vec3 m_position;
+    glm::vec3 m_rotationVector;
 
   private:
     const std::array<float, 180> m_vertices{
@@ -36,6 +38,4 @@ class HappyCube
 
       -0.5F, 0.5F,  -0.5F, 0.0F, 1.0F, 0.5F,  0.5F,  -0.5F, 1.0F, 1.0F, 0.5F,  0.5F,  0.5F,  1.0F, 0.0F,
       0.5F,  0.5F,  0.5F,  1.0F, 0.0F, -0.5F, 0.5F,  0.5F,  0.0F, 0.0F, -0.5F, 0.5F,  -0.5F, 0.0F, 1.0F};
-
-    glm::mat4 m_modelMatrix{1.0f};
 };

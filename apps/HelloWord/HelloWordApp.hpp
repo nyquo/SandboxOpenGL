@@ -35,7 +35,7 @@ class CustomLayer : public core::Layer
   private:
     bool onMouseScrolled(core::MouseScrolledEvent& e)
     {
-        factor = std::max(0.0f, std::min(1.0f, factor + (step * e.getYOffset())));
+        fov = std::max(0.0f, std::min(90.0f, fov + (step * e.getYOffset())));
         return false;
     }
     bool onMouseMoved(core::MouseMovedEvent& e)
@@ -46,15 +46,24 @@ class CustomLayer : public core::Layer
     }
 
   private:
-    HappyCube m_happyCube;
+    std::vector<HappyCube> m_happyCubes{glm::vec3(0.0f, 0.0f, 0.0f),
+                                        glm::vec3(2.0f, 5.0f, -15.0f),
+                                        glm::vec3(-1.5f, -2.2f, -2.5f),
+                                        glm::vec3(-3.8f, -2.0f, -12.3f),
+                                        glm::vec3(2.4f, -0.4f, -3.5f),
+                                        glm::vec3(-1.7f, 3.0f, -7.5f),
+                                        glm::vec3(1.3f, -2.0f, -2.5f),
+                                        glm::vec3(1.5f, 2.0f, -2.5f),
+                                        glm::vec3(1.5f, 0.2f, -1.5f),
+                                        glm::vec3(-1.3f, 1.0f, -1.5f)};
 
     unsigned int VBO, VAO;
 
     std::unique_ptr<core::Shader> shaderProgram;
     std::unique_ptr<core::Texture> texture1, texture2;
 
-    float factor{0.5};
-    float step{0.05};
+    float fov{45};
+    float step{0.5};
     float m_mousePosXNorm, m_mousePosYNorm;
 };
 
