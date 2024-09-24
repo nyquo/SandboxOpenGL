@@ -4,6 +4,24 @@
 
 CustomLayer::CustomLayer()
 {
+    for(int i = 0; i < 16; ++i)
+    {
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 80);
+        m_happyCubes.emplace_back(
+          glm::vec3(((float)dist(rng) - 40) / 10, ((float)dist(rng) - 40) / 10, ((float)dist(rng) - 40) / 10));
+    }
+
+    for(auto& cube : m_happyCubes)
+    {
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 100);
+
+        cube.m_rotationVector = glm::vec3(((float)dist(rng)) / 100, ((float)dist(rng)) / 100, ((float)dist(rng)) / 100);
+    }
+
     shaderProgram = std::make_unique<core::Shader>("shaders/BasicShader.vert", "shaders/BasicShader.frag");
 
     glGenBuffers(1, &VBO);
@@ -28,15 +46,6 @@ CustomLayer::CustomLayer()
     texture1 = std::make_unique<core::Texture>("assets/container.jpg", GL_TEXTURE0);
     texture2 = std::make_unique<core::Texture>("assets/awesomeface.png", GL_TEXTURE1);
 
-    for(auto& cube : m_happyCubes)
-    {
-        std::random_device dev;
-        std::mt19937 rng(dev());
-        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 100);
-
-        cube.m_rotationVector = glm::vec3(((float)dist(rng)) / 100, ((float)dist(rng)) / 100, ((float)dist(rng)) / 100);
-    }
-
     glBindVertexArray(0);
 };
 
@@ -53,9 +62,12 @@ void CustomLayer::onUpdate()
 
     shaderProgram->bind();
 
+    const float radius = 10.0f;
+    float camX = sin(glfwGetTime()) * radius;
+    float camZ = cos(glfwGetTime()) * radius;
+
     glm::mat4 view = glm::mat4(1.0f);
-    // note that we're translating the scene in the reverse direction of where we want to move
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(fov), (float)m_windowWidth / (float)m_windowHeight, 0.1f, 100.0f);
