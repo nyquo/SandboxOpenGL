@@ -4,6 +4,7 @@
 
 #include <Application.hpp>
 #include <Events/Event.hpp>
+#include <Events/KeyEvent.hpp>
 #include <Events/MouseEvent.hpp>
 #include <Events/WindowEvent.hpp>
 #include <Layer.hpp>
@@ -21,6 +22,8 @@ class CustomLayer : public core::Layer
 
     ~CustomLayer();
 
+    void onProcessInput(GLFWwindow* window) override;
+
     void onUpdate() override;
 
     void onEvent(core::Event& e) override
@@ -28,6 +31,8 @@ class CustomLayer : public core::Layer
         core::EventDispatcher dispatcher(e);
         dispatcher.dispatch<core::MouseScrolledEvent>(BIND_EVENT_FN(CustomLayer::onMouseScrolled));
         dispatcher.dispatch<core::MouseMovedEvent>(BIND_EVENT_FN(CustomLayer::onMouseMoved));
+        dispatcher.dispatch<core::KeyPressedEvent>(BIND_EVENT_FN(CustomLayer::onKeyPressed));
+        dispatcher.dispatch<core::KeyReleasedEvent>(BIND_EVENT_FN(CustomLayer::onKeyReleased));
     }
     int m_windowWidth;
     int m_windowHeight;
@@ -44,6 +49,9 @@ class CustomLayer : public core::Layer
         m_mousePosYNorm = -((e.getY() * 2) / m_windowHeight) + 1;
         return false;
     }
+
+    bool onKeyPressed(core::KeyPressedEvent& e);
+    bool onKeyReleased(core::KeyReleasedEvent& e);
 
   private:
     std::vector<HappyCube> m_happyCubes;
@@ -66,6 +74,12 @@ class CustomLayer : public core::Layer
     float fov{45};
     float step{0.5};
     float m_mousePosXNorm, m_mousePosYNorm;
+    float m_deltaTime{0.0};
+    float m_lastFrame{0.0};
+
+    glm::vec3 m_cameraPos{0.0f, 0.0f, 10.0f};
+    glm::vec3 m_cameraFront{0.0f, 0.0f, -1.0f};
+    glm::vec3 m_cameraUp{0.0f, 1.0f, 0.0f};
 };
 
 class HelloWordApp : public core::Application

@@ -109,6 +109,7 @@ void Window::update()
 
     if(m_mainLayer != nullptr)
     {
+        m_mainLayer->onProcessInput(m_window);
         m_mainLayer->onUpdate();
     }
 

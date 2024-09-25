@@ -55,6 +55,31 @@ CustomLayer::~CustomLayer()
     glDeleteBuffers(1, &VBO);
 }
 
+void CustomLayer::onProcessInput(GLFWwindow* window)
+{
+    float currentFrame = glfwGetTime();
+    m_deltaTime = currentFrame - m_lastFrame;
+    m_lastFrame = currentFrame;
+    const float cameraSpeed = 2.5f * m_deltaTime;
+
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        m_cameraPos += cameraSpeed * m_cameraFront;
+    }
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        m_cameraPos -= cameraSpeed * m_cameraFront;
+    }
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        m_cameraPos -= glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * cameraSpeed;
+    }
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        m_cameraPos += glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * cameraSpeed;
+    }
+}
+
 void CustomLayer::onUpdate()
 {
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
@@ -62,12 +87,8 @@ void CustomLayer::onUpdate()
 
     shaderProgram->bind();
 
-    const float radius = 10.0f;
-    float camX = sin(glfwGetTime()) * radius;
-    float camZ = cos(glfwGetTime()) * radius;
-
     glm::mat4 view = glm::mat4(1.0f);
-    view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    view = glm::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(fov), (float)m_windowWidth / (float)m_windowHeight, 0.1f, 100.0f);
@@ -92,3 +113,7 @@ void CustomLayer::onUpdate()
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 }
+
+bool CustomLayer::onKeyPressed(core::KeyPressedEvent& e) { return false; }
+
+bool CustomLayer::onKeyReleased(core::KeyReleasedEvent& e) { return false; }
