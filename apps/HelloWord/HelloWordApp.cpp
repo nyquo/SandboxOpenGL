@@ -60,7 +60,7 @@ void CustomLayer::onProcessInput(GLFWwindow* window)
     float currentFrame = glfwGetTime();
     m_deltaTime = currentFrame - m_lastFrame;
     m_lastFrame = currentFrame;
-    const float cameraSpeed = 2.5f * m_deltaTime;
+    const float cameraSpeed = 10.0F * m_deltaTime;
 
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
@@ -87,6 +87,14 @@ void CustomLayer::onUpdate()
 
     shaderProgram->bind();
 
+    glm::vec3 direction;
+
+    direction.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+    direction.y = sin(glm::radians(m_pitch));
+    direction.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+
+    m_cameraFront = glm::normalize(direction);
+
     glm::mat4 view = glm::mat4(1.0f);
     view = glm::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
 
@@ -112,6 +120,29 @@ void CustomLayer::onUpdate()
         shaderProgram->setMat4("model", cube.m_modelMatrix);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
+}
+
+bool CustomLayer::onMouseMoved(core::MouseMovedEvent& e)
+{
+    if(m_firstMouse)
+    {
+        m_lastMouseX = e.getX();
+        m_lastMouseY = e.getY();
+        m_firstMouse = false;
+    }
+    float xOffset = e.getX() - m_lastMouseX;
+    float yOffset = m_lastMouseY - e.getY();
+    m_lastMouseX = e.getX();
+    m_lastMouseY = e.getY();
+    xOffset *= sensitivity;
+    yOffset *= sensitivity;
+
+    m_yaw += xOffset;
+    m_pitch += yOffset;
+
+    m_pitch = std::max(-89.0F, std::min(89.0F, m_pitch));
+
+    return false;
 }
 
 bool CustomLayer::onKeyPressed(core::KeyPressedEvent& e) { return false; }

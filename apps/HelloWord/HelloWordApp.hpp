@@ -43,13 +43,7 @@ class CustomLayer : public core::Layer
         fov = std::max(0.0f, std::min(90.0f, fov + (step * e.getYOffset())));
         return false;
     }
-    bool onMouseMoved(core::MouseMovedEvent& e)
-    {
-        m_mousePosXNorm = ((e.getX() * 2) / m_windowWidth) - 1;
-        m_mousePosYNorm = -((e.getY() * 2) / m_windowHeight) + 1;
-        return false;
-    }
-
+    bool onMouseMoved(core::MouseMovedEvent& e);
     bool onKeyPressed(core::KeyPressedEvent& e);
     bool onKeyReleased(core::KeyReleasedEvent& e);
 
@@ -73,9 +67,18 @@ class CustomLayer : public core::Layer
 
     float fov{45};
     float step{0.5};
-    float m_mousePosXNorm, m_mousePosYNorm;
+
+    float m_lastMouseX = m_windowWidth / 2;
+    float m_lastMouseY = m_windowHeight / 2;
+    const float sensitivity = 0.1f;
+
+    float m_yaw{-90.0};
+    float m_pitch{0.0};
+
     float m_deltaTime{0.0};
     float m_lastFrame{0.0};
+
+    bool m_firstMouse{true};
 
     glm::vec3 m_cameraPos{0.0f, 0.0f, 10.0f};
     glm::vec3 m_cameraFront{0.0f, 0.0f, -1.0f};

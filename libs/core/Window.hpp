@@ -2,6 +2,7 @@
 
 #include "CoreExport.hpp"
 #include "Events/Event.hpp"
+#include "Events/KeyEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Layer.hpp"
 #include "gl.h"
