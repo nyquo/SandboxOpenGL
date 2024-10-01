@@ -118,19 +118,19 @@ void CustomLayer::processInputs()
 
     if(isKeyPressed(GLFW_KEY_W))
     {
-        positionOffset.x += cameraSpeed;
+        positionOffset.z += cameraSpeed;
     }
     if(isKeyPressed(GLFW_KEY_S))
     {
-        positionOffset.x -= cameraSpeed;
+        positionOffset.z -= cameraSpeed;
     }
     if(isKeyPressed(GLFW_KEY_A))
     {
-        positionOffset.y -= cameraSpeed;
+        positionOffset.x -= cameraSpeed;
     }
     if(isKeyPressed(GLFW_KEY_D))
     {
-        positionOffset.y += cameraSpeed;
+        positionOffset.x += cameraSpeed;
     }
     m_camera.translateCameraRelative(positionOffset);
 }
