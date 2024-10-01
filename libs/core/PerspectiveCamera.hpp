@@ -25,7 +25,6 @@ class PerspectiveCamera : public Camera
     void updateProjection();
 
   private:
-    // TODO INIT THAT IN CONSTRUCTOR
     glm::vec3 m_position;
     glm::vec3 m_front{0.0F, 0.0F, -1.0F};
     glm::vec3 m_up;
