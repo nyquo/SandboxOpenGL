@@ -9,6 +9,7 @@
 #include <Events/WindowEvent.hpp>
 #include <Layer.hpp>
 #include <Logger.hpp>
+#include <PerspectiveCamera.hpp>
 #include <Shader.hpp>
 #include <Texture.hpp>
 #include <glm/glm.hpp>
@@ -18,22 +19,13 @@
 class CustomLayer : public core::Layer
 {
   public:
-    CustomLayer();
-
+    CustomLayer(float m_viewportWidth = 0, float m_viewportHeight = 0);
     ~CustomLayer();
 
     void onUpdate() override;
+    void onEvent(core::Event& e) override;
 
-    void onEvent(core::Event& e) override
-    {
-        core::EventDispatcher dispatcher(e);
-        dispatcher.dispatch<core::MouseScrolledEvent>(BIND_EVENT_FN(CustomLayer::onMouseScrolled));
-        dispatcher.dispatch<core::MouseMovedEvent>(BIND_EVENT_FN(CustomLayer::onMouseMoved));
-        dispatcher.dispatch<core::KeyPressedEvent>(BIND_EVENT_FN(CustomLayer::onKeyPressed));
-        dispatcher.dispatch<core::KeyReleasedEvent>(BIND_EVENT_FN(CustomLayer::onKeyReleased));
-    }
-    int m_windowWidth{800};
-    int m_windowHeight{600};
+    void setViewportSize(float viewportWidth, float viewportHeight);
 
   private:
     void processInputs();
@@ -51,24 +43,18 @@ class CustomLayer : public core::Layer
     std::unique_ptr<core::Shader> shaderProgram;
     std::unique_ptr<core::Texture> texture1, texture2;
 
-    float fov{45};
-    float step{2};
+    float m_viewportWidth;
+    float m_viewportHeight;
 
-    float m_lastMouseX = m_windowWidth / 2;
-    float m_lastMouseY = m_windowHeight / 2;
-    const float sensitivity = 0.1f;
-
-    float m_yaw{-90.0};
-    float m_pitch{0.0};
-
+    core::PerspectiveCamera m_camera;
+    float m_zoomOffset{2.0};
+    float m_mouseSensitivity{0.1F};
+    bool m_firstMouse{true};
+    float m_lastMouseX;
+    float m_lastMouseY;
+    float m_movementSpeed = 10.0F;
     float m_deltaTime{0.0};
     float m_lastFrame{0.0};
-
-    bool m_firstMouse{true};
-
-    glm::vec3 m_cameraPos{0.0f, 0.0f, 10.0f};
-    glm::vec3 m_cameraFront{0.0f, 0.0f, -1.0f};
-    glm::vec3 m_cameraUp{0.0f, 1.0f, 0.0f};
 };
 
 class HelloWordApp : public core::Application
@@ -76,12 +62,7 @@ class HelloWordApp : public core::Application
   public:
     HelloWordApp()
     {
-        getWindow().setLayer(std::make_shared<CustomLayer>());
-
-        auto customLayer = std::dynamic_pointer_cast<CustomLayer>(getWindow().getLayer());
-
-        customLayer->m_windowHeight = getWindow().getHeight();
-        customLayer->m_windowWidth = getWindow().getWidth();
+        getWindow().setLayer(std::make_shared<CustomLayer>(getWindow().getWidth(), getWindow().getHeight()));
     }
 
     void onEvent(core::Event& e) override
@@ -95,10 +76,7 @@ class HelloWordApp : public core::Application
     bool onWindowResized(core::WindowResizeEvent& e)
     {
         auto customLayer = std::dynamic_pointer_cast<CustomLayer>(getWindow().getLayer());
-
-        customLayer->m_windowHeight = e.getHeight();
-        customLayer->m_windowWidth = e.getWidth();
-
+        customLayer->setViewportSize(e.getWidth(), e.getHeight());
         return false;
     }
 };

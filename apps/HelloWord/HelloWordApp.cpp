@@ -2,7 +2,13 @@
 
 #include <random>
 
-CustomLayer::CustomLayer()
+CustomLayer::CustomLayer(float viewportWidth, float viewportHeight)
+  : m_viewportWidth(viewportWidth)
+  , m_viewportHeight(viewportHeight)
+  , m_camera(viewportWidth, viewportHeight, glm::vec3(0.0F, 0.0F, 10.0F))
+  , m_lastMouseX(m_viewportWidth / 2)
+  , m_lastMouseY(m_viewportHeight / 2)
+
 {
     for(int i = 0; i < 16; ++i)
     {
@@ -64,28 +70,14 @@ void CustomLayer::onUpdate()
 
     shaderProgram->bind();
 
-    glm::vec3 direction;
-
-    direction.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
-    direction.y = sin(glm::radians(m_pitch));
-    direction.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
-
-    m_cameraFront = glm::normalize(direction);
-
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp);
-
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(fov), (float)m_windowWidth / (float)m_windowHeight, 0.1f, 100.0f);
-
     texture1->bind();
     texture2->bind();
 
     shaderProgram->setInt("texture1", 0);
     shaderProgram->setInt("texture2", 1);
 
-    shaderProgram->setMat4("view", view);
-    shaderProgram->setMat4("projection", projection);
+    shaderProgram->setMat4("view", m_camera.getView());
+    shaderProgram->setMat4("projection", m_camera.getProjection());
 
     glBindVertexArray(VAO);
     for(auto& cube : m_happyCubes)
@@ -99,6 +91,22 @@ void CustomLayer::onUpdate()
     }
 }
 
+void CustomLayer::onEvent(core::Event& e)
+{
+    core::EventDispatcher dispatcher(e);
+    dispatcher.dispatch<core::MouseScrolledEvent>(BIND_EVENT_FN(CustomLayer::onMouseScrolled));
+    dispatcher.dispatch<core::MouseMovedEvent>(BIND_EVENT_FN(CustomLayer::onMouseMoved));
+    dispatcher.dispatch<core::KeyPressedEvent>(BIND_EVENT_FN(CustomLayer::onKeyPressed));
+    dispatcher.dispatch<core::KeyReleasedEvent>(BIND_EVENT_FN(CustomLayer::onKeyReleased));
+}
+
+void CustomLayer::setViewportSize(float viewportWidth, float viewportHeight)
+{
+    m_viewportWidth = viewportWidth;
+    m_viewportHeight = viewportHeight;
+    m_camera.setViewPortSize(viewportWidth, viewportHeight);
+}
+
 void CustomLayer::processInputs()
 {
     float currentFrame = glfwGetTime();
@@ -106,28 +114,31 @@ void CustomLayer::processInputs()
     m_lastFrame = currentFrame;
     const float cameraSpeed = 10.0F * m_deltaTime;
 
+    glm::vec3 positionOffset{0.0F, 0.0F, 0.0F};
+
     if(isKeyPressed(GLFW_KEY_W))
     {
-        m_cameraPos += cameraSpeed * m_cameraFront;
+        positionOffset.x += cameraSpeed;
     }
     if(isKeyPressed(GLFW_KEY_S))
     {
-        m_cameraPos -= cameraSpeed * m_cameraFront;
+        positionOffset.x -= cameraSpeed;
     }
     if(isKeyPressed(GLFW_KEY_A))
     {
-        m_cameraPos -= glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * cameraSpeed;
+        positionOffset.y -= cameraSpeed;
     }
     if(isKeyPressed(GLFW_KEY_D))
     {
-        m_cameraPos += glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * cameraSpeed;
+        positionOffset.y += cameraSpeed;
     }
+    m_camera.translateCameraRelative(positionOffset);
 }
 
 bool CustomLayer::onMouseScrolled(core::MouseScrolledEvent& e)
 {
-    fov = std::max(0.0f, std::min(90.0f, fov - (step * e.getYOffset())));
-    return false;
+    m_camera.adustFov(-m_zoomOffset * e.getYOffset());
+    return true;
 }
 
 bool CustomLayer::onMouseMoved(core::MouseMovedEvent& e)
@@ -142,15 +153,11 @@ bool CustomLayer::onMouseMoved(core::MouseMovedEvent& e)
     float yOffset = m_lastMouseY - e.getY();
     m_lastMouseX = e.getX();
     m_lastMouseY = e.getY();
-    xOffset *= sensitivity;
-    yOffset *= sensitivity;
+    xOffset *= m_mouseSensitivity;
+    yOffset *= m_mouseSensitivity;
+    m_camera.rotateCamera(xOffset, yOffset);
 
-    m_yaw += xOffset;
-    m_pitch += yOffset;
-
-    m_pitch = std::max(-89.0F, std::min(89.0F, m_pitch));
-
-    return false;
+    return true;
 }
 
 bool CustomLayer::onKeyPressed(core::KeyPressedEvent& e) { return false; }
