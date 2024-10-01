@@ -7,6 +7,8 @@
 #include "Layer.hpp"
 #include "gl.h"
 
+#include <glm/glm.hpp>
+
 #include <functional>
 #include <memory>
 #include <string>
@@ -23,7 +25,8 @@ class CORE_API Window
     Window operator=(Window&& other) = delete;
     ~Window();
 
-    void update();
+    void onUpdate();
+    void onEvent(Event& e);
 
     void setEventCallBack(std::function<void(Event&)>);
 
@@ -31,6 +34,10 @@ class CORE_API Window
 
     [[nodiscard]] unsigned int getWidth() const;
     [[nodiscard]] unsigned int getHeight() const;
+
+    [[nodiscard]] bool isKeyPressed(int key) const;
+    [[nodiscard]] bool isMouseButtonPressed(int button) const;
+    [[nodiscard]] glm::vec2 getMousePosition() const;
 
   private:
     static bool s_glfwInitialized;
@@ -57,10 +64,13 @@ class CORE_API Window
         return false;
     }
 
+    // temp
   public:
-    // Move this elsewhere ? Put layers in app?
-    void onEvent(Event& e);
-    void setLayer(std::shared_ptr<Layer> layer) { m_mainLayer = std::move(layer); }
+    void setLayer(std::shared_ptr<Layer> layer)
+    {
+        m_mainLayer = std::move(layer);
+        m_mainLayer->setWindow(this);
+    }
     std::shared_ptr<Layer> getLayer() { return m_mainLayer; }
 };
 

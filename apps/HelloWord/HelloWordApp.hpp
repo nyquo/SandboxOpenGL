@@ -22,8 +22,6 @@ class CustomLayer : public core::Layer
 
     ~CustomLayer();
 
-    void onProcessInput(GLFWwindow* window) override;
-
     void onUpdate() override;
 
     void onEvent(core::Event& e) override
@@ -34,32 +32,20 @@ class CustomLayer : public core::Layer
         dispatcher.dispatch<core::KeyPressedEvent>(BIND_EVENT_FN(CustomLayer::onKeyPressed));
         dispatcher.dispatch<core::KeyReleasedEvent>(BIND_EVENT_FN(CustomLayer::onKeyReleased));
     }
-    int m_windowWidth;
-    int m_windowHeight;
+    int m_windowWidth{800};
+    int m_windowHeight{600};
 
   private:
-    bool onMouseScrolled(core::MouseScrolledEvent& e)
-    {
-        fov = std::max(0.0f, std::min(90.0f, fov - (step * e.getYOffset())));
-        return false;
-    }
+    void processInputs();
+
+  private:
+    bool onMouseScrolled(core::MouseScrolledEvent& e);
     bool onMouseMoved(core::MouseMovedEvent& e);
     bool onKeyPressed(core::KeyPressedEvent& e);
     bool onKeyReleased(core::KeyReleasedEvent& e);
 
   private:
     std::vector<HappyCube> m_happyCubes;
-    /*{glm::vec3(0.0f, 0.0f, 0.0f),
-                                        glm::vec3(2.0f, 5.0f, -15.0f),
-                                        glm::vec3(-1.5f, -2.2f, -2.5f),
-                                        glm::vec3(-3.8f, -2.0f, -12.3f),
-                                        glm::vec3(2.4f, -0.4f, -3.5f),
-                                        glm::vec3(-1.7f, 3.0f, -7.5f),
-                                        glm::vec3(1.3f, -2.0f, -2.5f),
-                                        glm::vec3(1.5f, 2.0f, -2.5f),
-                                        glm::vec3(1.5f, 0.2f, -1.5f),
-                                        glm::vec3(-1.3f, 1.0f, -1.5f)};*/
-
     unsigned int VBO, VAO;
 
     std::unique_ptr<core::Shader> shaderProgram;

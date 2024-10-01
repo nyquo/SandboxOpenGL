@@ -55,33 +55,10 @@ CustomLayer::~CustomLayer()
     glDeleteBuffers(1, &VBO);
 }
 
-void CustomLayer::onProcessInput(GLFWwindow* window)
-{
-    float currentFrame = glfwGetTime();
-    m_deltaTime = currentFrame - m_lastFrame;
-    m_lastFrame = currentFrame;
-    const float cameraSpeed = 10.0F * m_deltaTime;
-
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    {
-        m_cameraPos += cameraSpeed * m_cameraFront;
-    }
-    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    {
-        m_cameraPos -= cameraSpeed * m_cameraFront;
-    }
-    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    {
-        m_cameraPos -= glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * cameraSpeed;
-    }
-    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    {
-        m_cameraPos += glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * cameraSpeed;
-    }
-}
-
 void CustomLayer::onUpdate()
 {
+    processInputs();
+
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -120,6 +97,37 @@ void CustomLayer::onUpdate()
         shaderProgram->setMat4("model", cube.m_modelMatrix);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
+}
+
+void CustomLayer::processInputs()
+{
+    float currentFrame = glfwGetTime();
+    m_deltaTime = currentFrame - m_lastFrame;
+    m_lastFrame = currentFrame;
+    const float cameraSpeed = 10.0F * m_deltaTime;
+
+    if(isKeyPressed(GLFW_KEY_W))
+    {
+        m_cameraPos += cameraSpeed * m_cameraFront;
+    }
+    if(isKeyPressed(GLFW_KEY_S))
+    {
+        m_cameraPos -= cameraSpeed * m_cameraFront;
+    }
+    if(isKeyPressed(GLFW_KEY_A))
+    {
+        m_cameraPos -= glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * cameraSpeed;
+    }
+    if(isKeyPressed(GLFW_KEY_D))
+    {
+        m_cameraPos += glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * cameraSpeed;
+    }
+}
+
+bool CustomLayer::onMouseScrolled(core::MouseScrolledEvent& e)
+{
+    fov = std::max(0.0f, std::min(90.0f, fov - (step * e.getYOffset())));
+    return false;
 }
 
 bool CustomLayer::onMouseMoved(core::MouseMovedEvent& e)

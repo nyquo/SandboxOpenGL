@@ -14,7 +14,7 @@ void Application::run()
 {
     while(m_continueRunning)
     {
-        m_mainWindow->update();
+        m_mainWindow->onUpdate();
     }
 }
 

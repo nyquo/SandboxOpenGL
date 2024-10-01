@@ -103,14 +103,13 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
 
 Window::~Window() {}
 
-void Window::update()
+void Window::onUpdate()
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     if(m_mainLayer != nullptr)
     {
-        m_mainLayer->onProcessInput(m_window);
         m_mainLayer->onUpdate();
     }
 
@@ -123,6 +122,17 @@ void Window::setEventCallBack(std::function<void(Event&)> callBack) { m_eventCal
 unsigned int Window::getWidth() const { return m_width; }
 
 unsigned int Window::getHeight() const { return m_height; }
+
+bool Window::isKeyPressed(int key) const { return glfwGetKey(m_window, key) == GLFW_PRESS; }
+
+bool Window::isMouseButtonPressed(int button) const { return glfwGetMouseButton(m_window, button) == GLFW_PRESS; }
+
+glm::vec2 Window::getMousePosition() const
+{
+    double x, y;
+    glfwGetCursorPos(m_window, &x, &y);
+    return {(float)x, (float)y};
+}
 
 void Window::onEvent(Event& e)
 {
