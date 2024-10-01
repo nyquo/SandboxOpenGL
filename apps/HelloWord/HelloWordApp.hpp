@@ -40,7 +40,7 @@ class CustomLayer : public core::Layer
   private:
     bool onMouseScrolled(core::MouseScrolledEvent& e)
     {
-        fov = std::max(0.0f, std::min(90.0f, fov + (step * e.getYOffset())));
+        fov = std::max(0.0f, std::min(90.0f, fov - (step * e.getYOffset())));
         return false;
     }
     bool onMouseMoved(core::MouseMovedEvent& e);
@@ -66,7 +66,7 @@ class CustomLayer : public core::Layer
     std::unique_ptr<core::Texture> texture1, texture2;
 
     float fov{45};
-    float step{0.5};
+    float step{2};
 
     float m_lastMouseX = m_windowWidth / 2;
     float m_lastMouseY = m_windowHeight / 2;
