@@ -48,7 +48,6 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         s_gladInitialized = true;
     }
@@ -138,6 +137,9 @@ void Window::onEvent(Event& e)
 {
     EventDispatcher dispatcher(e);
     dispatcher.dispatch<core::WindowResizeEvent>(BIND_EVENT_FN(Window::onWindowResized));
-    m_mainLayer->onEvent(e);
+    if(m_mainLayer)
+    {
+        m_mainLayer->onEvent(e);
+    }
 }
 }

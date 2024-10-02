@@ -19,7 +19,7 @@
 class CustomLayer : public core::Layer
 {
   public:
-    CustomLayer(float m_viewportWidth = 0, float m_viewportHeight = 0);
+    CustomLayer(float viewportWidth = 0, float viewportHeight = 0);
     ~CustomLayer();
 
     void onUpdate() override;
@@ -62,6 +62,7 @@ class HelloWordApp : public core::Application
   public:
     HelloWordApp()
     {
+        glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         getWindow().setLayer(std::make_shared<CustomLayer>(getWindow().getWidth(), getWindow().getHeight()));
     }
 

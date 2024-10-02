@@ -1,18 +1,18 @@
-set(AppName HelloWord)
+set(AppName Lighting)
 
 file(GLOB_RECURSE Headers
-	${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/*.h
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.h
 )
 
 file(GLOB_RECURSE Sources
-	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/*.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.c
 )
 
 file(GLOB_RECURSE Shaders
-	${CMAKE_CURRENT_SOURCE_DIR}/*.frag
-	${CMAKE_CURRENT_SOURCE_DIR}/*.vert
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.frag
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.vert
 )
 
 set(Links
@@ -35,33 +35,33 @@ target_include_directories(${AppName} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(IS_MULTI_CONFIG)
-    add_custom_target(copy_shadersHelloWord ALL
+    add_custom_target(copy_shadersLighting ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/shaders
         COMMENT "Copying shaders in the output directory"
     )
-    add_custom_target(copy_assetsHelloWord ALL
+    add_custom_target(copy_assetsLighting ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/assets
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/assets
         COMMENT "Copying shaders in the output directory"
     )
 else()
-    add_custom_target(copy_shadersHelloWord ALL
+    add_custom_target(copy_shadersLighting ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders
         COMMENT "Copying shaders in the output directory"
     )
-    add_custom_target(copy_assetsHelloWord ALL
+    add_custom_target(copy_assetsLighting ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/assets
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets
         COMMENT "Copying shaders in the output directory"
     )
 endif()
-add_dependencies(${AppName} copy_shadersHelloWord)
-add_dependencies(${AppName} copy_assetsHelloWord)
+add_dependencies(${AppName} copy_shadersLighting)
+add_dependencies(${AppName} copy_assetsLighting)
 
 set_target_properties(${AppName} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
