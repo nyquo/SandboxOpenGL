@@ -19,6 +19,7 @@ set(Links
     Core
     Glad
     glm::glm
+    imgui
 )
 
 set(RESSOURCES_FOLDER ${AppName}Ressources)
