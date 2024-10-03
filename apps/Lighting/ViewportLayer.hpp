@@ -27,8 +27,11 @@ class ViewportLayer : public core::Layer
 
   private:
     BasicCube m_cube{};
+    BasicCube m_lightCube{};
+
     unsigned VBO, VAO;
-    std::unique_ptr<core::Shader> m_shaderProgram;
+    unsigned m_lightVAO;
+    std::unique_ptr<core::Shader> m_cubeShader, m_lightCubeShader;
 
     float m_viewportWidth;
     float m_viewportHeight;

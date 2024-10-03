@@ -7,8 +7,12 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   , m_lastMouseX(m_viewportWidth / 2)
   , m_lastMouseY(m_viewportHeight / 2)
 {
-    m_shaderProgram = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
-                                                     std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
+    m_cubeShader = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
+                                                  std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
+
+    m_lightCubeShader =
+      std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.vert",
+                                     std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.frag");
 
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
@@ -25,11 +29,22 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    glGenVertexArrays(1, &m_lightVAO);
+    glBindVertexArray(m_lightVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
     glBindVertexArray(0);
 
     m_cube.m_modelMatrix = glm::mat4(1.0F);
     m_cube.m_position = glm::vec3(0.0F, 0.0F, 0.0F);
     m_cube.m_modelMatrix = glm::translate(m_cube.m_modelMatrix, m_cube.m_position);
+
+    m_lightCube.m_modelMatrix = glm::mat4(1.0F);
+    m_lightCube.m_position = glm::vec3(1.2F, 1.0F, 2.0F);
+    m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
+    m_lightCube.m_modelMatrix = glm::scale_slow(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
 }
 
 ViewportLayer::~ViewportLayer()
@@ -45,13 +60,26 @@ void ViewportLayer::onUpdate()
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_shaderProgram->bind();
+    m_cubeShader->bind();
 
-    m_shaderProgram->setMat4("view", m_camera.getView());
-    m_shaderProgram->setMat4("projection", m_camera.getProjection());
-    m_shaderProgram->setMat4("model", m_cube.m_modelMatrix);
+    m_cubeShader->setVec3("objectColor", 1.0F, 0.5F, 0.31F);
+    m_cubeShader->setVec3("lightColor", 1.0F, 1.0F, 1.0F);
+
+    m_cubeShader->setMat4("view", m_camera.getView());
+    m_cubeShader->setMat4("projection", m_camera.getProjection());
+    m_cubeShader->setMat4("model", m_cube.m_modelMatrix);
 
     glBindVertexArray(VAO);
+
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    m_lightCubeShader->bind();
+
+    m_lightCubeShader->setMat4("view", m_camera.getView());
+    m_lightCubeShader->setMat4("projection", m_camera.getProjection());
+    m_lightCubeShader->setMat4("model", m_lightCube.m_modelMatrix);
+
+    glBindVertexArray(m_lightVAO);
 
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }

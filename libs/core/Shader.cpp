@@ -145,6 +145,17 @@ void Shader::setMat4(const std::string& name, const glm::mat4& value) const
     glUniformMatrix4fv(glGetUniformLocation(m_programId, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void Shader::setVec3(const std::string& name, const glm::vec3& value) const
+{
+    glUniform3fv(glGetUniformLocation(m_programId, name.c_str()), 1, &value[0]);
+}
+
+void Shader::setVec3(const std::string& name, float x, float y, float z) const
+{
+    glm::vec3 vec(x, y, z);
+    setVec3(name, vec);
+}
+
 std::string Shader::parseFile(const fs::path& filePath)
 {
     Logger::logTrace("FilePath: " + filePath.filename().string());
