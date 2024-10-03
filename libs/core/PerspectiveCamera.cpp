@@ -46,8 +46,12 @@ void PerspectiveCamera::translateCamera(glm::vec3 translation)
 
 void PerspectiveCamera::translateCameraRelative(glm::vec3 translation)
 {
+    float y = m_position.y;
     m_position += (translation.z * m_front);
     m_position += (translation.x * glm::normalize(glm::cross(m_front, m_up)));
+
+    // prevent x/z movement to make y changes
+    m_position.y = y;
     m_position.y += translation.y;
     updateView();
 }

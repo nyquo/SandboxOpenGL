@@ -28,7 +28,7 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     glBindVertexArray(0);
 
     m_cube.m_modelMatrix = glm::mat4(1.0F);
-    m_cube.m_position = glm::vec3(0.0F, 0.0F, 10.0F);
+    m_cube.m_position = glm::vec3(0.0F, 0.0F, 0.0F);
     m_cube.m_modelMatrix = glm::translate(m_cube.m_modelMatrix, m_cube.m_position);
 }
 
@@ -94,6 +94,14 @@ void ViewportLayer::processInputs()
     if(isKeyPressed(GLFW_KEY_D))
     {
         positionOffset.x += cameraSpeed;
+    }
+    if(isKeyPressed(GLFW_KEY_SPACE))
+    {
+        positionOffset.y += cameraSpeed;
+    }
+    if(isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+    {
+        positionOffset.y -= cameraSpeed;
     }
     m_camera.translateCameraRelative(positionOffset);
 }
