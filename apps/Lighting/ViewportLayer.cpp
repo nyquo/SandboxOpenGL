@@ -42,11 +42,6 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     m_cube.m_modelMatrix = glm::mat4(1.0F);
     m_cube.m_position = glm::vec3(0.0F, 0.0F, 0.0F);
     m_cube.m_modelMatrix = glm::translate(m_cube.m_modelMatrix, m_cube.m_position);
-
-    m_lightCube.m_modelMatrix = glm::mat4(1.0F);
-    m_lightCube.m_position = glm::vec3(1.2F, 1.0F, 2.0F);
-    m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
-    m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
 }
 
 ViewportLayer::~ViewportLayer()
@@ -61,6 +56,13 @@ void ViewportLayer::onUpdate()
 
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_lightCube.m_modelMatrix = glm::mat4(1.0F);
+    m_lightCube.m_position.x = cos(glfwGetTime()) * 2.0f;
+    m_lightCube.m_position.z = sin(glfwGetTime()) * 2.0f;
+    m_lightCube.m_position.y = cos(glfwGetTime() * 5.0f) * 3.0f;
+    m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
+    m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
 
     m_cubeShader->bind();
 
