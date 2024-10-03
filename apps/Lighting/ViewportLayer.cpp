@@ -14,25 +14,27 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
       std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.vert",
                                      std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.frag");
 
+    // cube VBO
     glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
-
-    glBindVertexArray(VAO);
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER,
                  sizeof(m_cube.getRawVertices()) * m_cube.getVertexCount(),
                  m_cube.getRawVertices(),
                  GL_STATIC_DRAW);
 
-    // positions
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // cube VAO
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
+    // light cube VAO
     glGenVertexArrays(1, &m_lightVAO);
     glBindVertexArray(m_lightVAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     glBindVertexArray(0);
@@ -44,7 +46,7 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     m_lightCube.m_modelMatrix = glm::mat4(1.0F);
     m_lightCube.m_position = glm::vec3(1.2F, 1.0F, 2.0F);
     m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
-    m_lightCube.m_modelMatrix = glm::scale_slow(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
+    m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
 }
 
 ViewportLayer::~ViewportLayer()
@@ -64,10 +66,12 @@ void ViewportLayer::onUpdate()
 
     m_cubeShader->setVec3("objectColor", 1.0F, 0.5F, 0.31F);
     m_cubeShader->setVec3("lightColor", 1.0F, 1.0F, 1.0F);
+    m_cubeShader->setVec3("lightPos", m_lightCube.m_position);
 
     m_cubeShader->setMat4("view", m_camera.getView());
     m_cubeShader->setMat4("projection", m_camera.getProjection());
     m_cubeShader->setMat4("model", m_cube.m_modelMatrix);
+    m_cubeShader->setVec3("viewPos", m_camera.getPosition());
 
     glBindVertexArray(VAO);
 

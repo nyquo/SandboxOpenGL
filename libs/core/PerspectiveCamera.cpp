@@ -63,6 +63,8 @@ void PerspectiveCamera::setViewPortSize(float m_width, float m_height)
     updateProjection();
 }
 
+glm::vec3 PerspectiveCamera::getPosition() { return m_position; }
+
 void PerspectiveCamera::updateView()
 {
     glm::vec3 direction;
