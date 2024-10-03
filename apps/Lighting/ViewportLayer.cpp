@@ -7,7 +7,8 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   , m_lastMouseX(m_viewportWidth / 2)
   , m_lastMouseY(m_viewportHeight / 2)
 {
-    m_shaderProgram = std::make_unique<core::Shader>("shaders/BasicShader.vert", "shaders/BasicShader.frag");
+    m_shaderProgram = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
+                                                     std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
 
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);

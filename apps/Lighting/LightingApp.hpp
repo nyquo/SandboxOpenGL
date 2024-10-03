@@ -9,7 +9,7 @@ class LightingApp : public core::Application
   public:
     LightingApp()
     {
-        // glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         getWindow().setLayer(std::make_shared<ViewportLayer>(getWindow().getWidth(), getWindow().getHeight()));
     }
 

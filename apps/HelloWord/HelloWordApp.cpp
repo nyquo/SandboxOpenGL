@@ -28,7 +28,8 @@ CustomLayer::CustomLayer(float viewportWidth, float viewportHeight)
         cube.m_rotationVector = glm::vec3(((float)dist(rng)) / 100, ((float)dist(rng)) / 100, ((float)dist(rng)) / 100);
     }
 
-    shaderProgram = std::make_unique<core::Shader>("shaders/BasicShader.vert", "shaders/BasicShader.frag");
+    shaderProgram = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
+                                                   std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
 
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
@@ -49,8 +50,8 @@ CustomLayer::CustomLayer(float viewportWidth, float viewportHeight)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    texture1 = std::make_unique<core::Texture>("assets/container.jpg", GL_TEXTURE0);
-    texture2 = std::make_unique<core::Texture>("assets/awesomeface.png", GL_TEXTURE1);
+    texture1 = std::make_unique<core::Texture>("_HelloWord/assets/container.jpg", GL_TEXTURE0);
+    texture2 = std::make_unique<core::Texture>("_HelloWord/assets/awesomeface.png", GL_TEXTURE1);
 
     glBindVertexArray(0);
 };
