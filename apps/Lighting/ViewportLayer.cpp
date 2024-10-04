@@ -27,23 +27,24 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     // cube VAO
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     // light cube VAO
     glGenVertexArrays(1, &m_lightVAO);
     glBindVertexArray(m_lightVAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glBindVertexArray(0);
+    m_cubeTexture =
+      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2.png", GL_TEXTURE0);
 
-    m_cube.m_modelMatrix = glm::mat4(1.0F);
-    m_cube.m_position = glm::vec3(0.0F, 0.0F, 0.0F);
-    m_cube.m_modelMatrix = glm::translate(m_cube.m_modelMatrix, m_cube.m_position);
+    glBindVertexArray(0);
 }
 
 ViewportLayer::~ViewportLayer()
@@ -70,11 +71,12 @@ void ViewportLayer::onUpdate()
     m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
 
     m_cubeShader->bind();
+    m_cubeTexture->bind();
 
     m_cubeShader->setVec3("light.position", m_lightCube.m_position);
 
     m_cubeShader->setVec3("material.ambient", utils::toGlmVec4(m_guiData.m_ambientColor));
-    m_cubeShader->setVec3("material.diffuse", utils::toGlmVec4(m_guiData.m_diffuseColor));
+    m_cubeShader->setInt("material.diffuse", 0);
     m_cubeShader->setVec3("material.specular", utils::toGlmVec4(m_guiData.m_specularColor));
     m_cubeShader->setFloat("material.shininess", (float)m_guiData.m_shininess); // 2 ->512?
 

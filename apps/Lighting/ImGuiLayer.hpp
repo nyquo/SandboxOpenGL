@@ -9,8 +9,6 @@ struct GuiData
 {
     float m_lightCubeSpeed{1};
 
-    ImVec4 m_ambientColor{1.0f, 0.5f, 0.31f, 1.0f};
-    ImVec4 m_diffuseColor{1.0f, 0.5f, 0.31f, 1.0f};
     ImVec4 m_specularColor{0.5f, 0.5f, 0.5f, 1.0f};
     int m_shininess{32};
 

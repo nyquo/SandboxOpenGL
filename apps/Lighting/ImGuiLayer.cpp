@@ -17,8 +17,6 @@ void ImGuiLayer::onUpdate()
     ImGui::Begin("Options Window");
     ImGui::SliderFloat("Light cube speed", &m_guiData.m_lightCubeSpeed, 0.0f, 5.0f);
 
-    ImGui::ColorEdit3("Ambient cube mat", (float*)&m_guiData.m_ambientColor);
-    ImGui::ColorEdit3("Diffuse cube mat", (float*)&m_guiData.m_diffuseColor);
     ImGui::ColorEdit3("Specular cube mat", (float*)&m_guiData.m_specularColor);
     ImGui::SliderInt("Shininess", &m_guiData.m_shininess, 2, 512);
 

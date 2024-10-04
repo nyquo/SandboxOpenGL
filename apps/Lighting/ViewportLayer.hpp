@@ -6,6 +6,7 @@
 #include <Layer.hpp>
 #include <PerspectiveCamera.hpp>
 #include <Shader.hpp>
+#include <Texture.hpp>
 #include <glm/glm.hpp>
 
 class ViewportLayer : public core::Layer
@@ -31,6 +32,10 @@ class ViewportLayer : public core::Layer
 
   private:
     BasicCube m_cube{};
+    std::unique_ptr<core::Texture> m_cubeTexture;
+    std::unique_ptr<core::Shader> m_cubeShader;
+
+    std::unique_ptr<core::Shader> m_lightCubeShader;
     BasicCube m_lightCube{};
 
     double m_glfwTimeCount{0};
@@ -39,7 +44,6 @@ class ViewportLayer : public core::Layer
 
     unsigned VBO, VAO;
     unsigned m_lightVAO;
-    std::unique_ptr<core::Shader> m_cubeShader, m_lightCubeShader;
 
     float m_viewportWidth;
     float m_viewportHeight;
