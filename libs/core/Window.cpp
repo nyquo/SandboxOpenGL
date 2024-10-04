@@ -4,6 +4,9 @@
 #include "Events/MouseEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Logger.hpp"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 namespace core {
 
@@ -98,21 +101,44 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
         auto eventCallBack = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
         eventCallBack(e);
     });
+
+    IMGUI_CHECKVERSION();
+
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 }
 
-Window::~Window() {}
+Window::~Window()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
 
 void Window::onUpdate()
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    if(m_mainLayer != nullptr)
+    glfwPollEvents();
+
+    if(m_mainLayer)
     {
         m_mainLayer->onUpdate();
     }
 
-    glfwPollEvents();
+    if(m_uiLayer)
+    {
+        m_uiLayer->onUpdate();
+    }
+
     glfwSwapBuffers(m_window);
 }
 
@@ -140,6 +166,10 @@ void Window::onEvent(Event& e)
     if(m_mainLayer)
     {
         m_mainLayer->onEvent(e);
+    }
+    if(m_uiLayer)
+    {
+        m_uiLayer->onEvent(e);
     }
 }
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ImGuiLayer.hpp"
 #include "ViewportLayer.hpp"
 
 #include <Application.hpp>
@@ -9,8 +10,14 @@ class LightingApp : public core::Application
   public:
     LightingApp()
     {
+#ifdef NDEBUG
         glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        getWindow().setLayer(std::make_shared<ViewportLayer>(getWindow().getWidth(), getWindow().getHeight()));
+#endif
+        getWindow().setMainLayer(std::make_shared<ViewportLayer>(getWindow().getWidth(), getWindow().getHeight()));
+
+        auto imGuiLayer = std::make_shared<ImGuiLayer>();
+        imGuiLayer->setCloseCallBack([this]() { glfwSetWindowShouldClose(getWindow().getWindow(), GLFW_TRUE); });
+        getWindow().setUiLayer(imGuiLayer);
     }
 
     void onEvent(core::Event& e) override
@@ -23,7 +30,7 @@ class LightingApp : public core::Application
 
     bool onWindowResized(core::WindowResizeEvent& e)
     {
-        auto viewportLayer = std::dynamic_pointer_cast<ViewportLayer>(getWindow().getLayer());
+        auto viewportLayer = std::dynamic_pointer_cast<ViewportLayer>(getWindow().getMainLayer());
         viewportLayer->setViewportSize(e.getWidth(), e.getHeight());
         return false;
     }

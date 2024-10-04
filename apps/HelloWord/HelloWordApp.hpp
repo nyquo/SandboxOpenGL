@@ -63,7 +63,7 @@ class HelloWordApp : public core::Application
     HelloWordApp()
     {
         glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        getWindow().setLayer(std::make_shared<CustomLayer>(getWindow().getWidth(), getWindow().getHeight()));
+        getWindow().setMainLayer(std::make_shared<CustomLayer>(getWindow().getWidth(), getWindow().getHeight()));
     }
 
     void onEvent(core::Event& e) override
@@ -76,7 +76,7 @@ class HelloWordApp : public core::Application
 
     bool onWindowResized(core::WindowResizeEvent& e)
     {
-        auto customLayer = std::dynamic_pointer_cast<CustomLayer>(getWindow().getLayer());
+        auto customLayer = std::dynamic_pointer_cast<CustomLayer>(getWindow().getMainLayer());
         customLayer->setViewportSize(e.getWidth(), e.getHeight());
         return false;
     }

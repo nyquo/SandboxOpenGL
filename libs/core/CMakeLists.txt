@@ -17,6 +17,7 @@ set(PrivateLinks
 set(PublicLinks
     Io
     glm::glm
+    imgui
 )
 
 # For some reason building core shared produced runtime error with glad on windows

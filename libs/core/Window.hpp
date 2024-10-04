@@ -56,6 +56,7 @@ class CORE_API Window
   private:
     // add layer stack?
     std::shared_ptr<Layer> m_mainLayer;
+    std::shared_ptr<Layer> m_uiLayer;
 
     bool onWindowResized(core::WindowResizeEvent& e)
     {
@@ -66,12 +67,20 @@ class CORE_API Window
 
     // temp
   public:
-    void setLayer(std::shared_ptr<Layer> layer)
+    void setMainLayer(std::shared_ptr<Layer> layer)
     {
         m_mainLayer = std::move(layer);
         m_mainLayer->setWindow(this);
     }
-    std::shared_ptr<Layer> getLayer() { return m_mainLayer; }
+
+    void setUiLayer(std::shared_ptr<Layer> layer)
+    {
+        m_uiLayer = std::move(layer);
+        m_uiLayer->setWindow(this);
+    }
+
+    std::shared_ptr<Layer> getMainLayer() { return m_mainLayer; }
+    std::shared_ptr<Layer> getUiLayer() { return m_uiLayer; }
 };
 
 }

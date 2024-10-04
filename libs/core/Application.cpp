@@ -12,7 +12,7 @@ Application::~Application() { glfwTerminate(); }
 
 void Application::run()
 {
-    while(m_continueRunning)
+    while(m_continueRunning && !glfwWindowShouldClose(m_mainWindow->getWindow()))
     {
         m_mainWindow->onUpdate();
     }
