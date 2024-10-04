@@ -1,5 +1,7 @@
 #include "ViewportLayer.hpp"
 
+#include <Conversion.hpp>
+
 ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   : m_viewportWidth(viewportWidth)
   , m_viewportHeight(viewportHeight)
@@ -69,13 +71,16 @@ void ViewportLayer::onUpdate()
 
     m_cubeShader->bind();
 
-    m_cubeShader->setVec3("objectColor", 1.0F, 0.5F, 0.31F);
-    m_cubeShader->setVec3("lightColor", 1.0F, 1.0F, 1.0F);
-    m_cubeShader->setVec3("lightPos", m_lightCube.m_position);
+    m_cubeShader->setVec3("light.position", m_lightCube.m_position);
 
-    m_cubeShader->setFloat("ambientStrength", m_guiData.m_ambientStrength);   // 0 -> 1.0
-    m_cubeShader->setFloat("specularStrength", m_guiData.m_specularStrength); // 0 -> 1.0
-    m_cubeShader->setInt("shininess", m_guiData.m_shininess);                 // 0 ->2048?
+    m_cubeShader->setVec3("material.ambient", utils::toGlmVec4(m_guiData.m_ambientColor));
+    m_cubeShader->setVec3("material.diffuse", utils::toGlmVec4(m_guiData.m_diffuseColor));
+    m_cubeShader->setVec3("material.specular", utils::toGlmVec4(m_guiData.m_specularColor));
+    m_cubeShader->setFloat("material.shininess", (float)m_guiData.m_shininess); // 2 ->512?
+
+    m_cubeShader->setVec3("light.ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
+    m_cubeShader->setVec3("light.diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
+    m_cubeShader->setVec3("light.specular", utils::toGlmVec4(m_guiData.m_specularLight));
 
     m_cubeShader->setMat4("view", m_camera.getView());
     m_cubeShader->setMat4("projection", m_camera.getProjection());

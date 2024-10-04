@@ -16,9 +16,16 @@ void ImGuiLayer::onUpdate()
 
     ImGui::Begin("Options Window");
     ImGui::SliderFloat("Light cube speed", &m_guiData.m_lightCubeSpeed, 0.0f, 5.0f);
-    ImGui::SliderFloat("Ambient light strength", &m_guiData.m_ambientStrength, 0.0f, 1.0f);
-    ImGui::SliderFloat("Specular light strength", &m_guiData.m_specularStrength, 0.0f, 1.0f);
-    ImGui::SliderInt("Shininess", &m_guiData.m_shininess, 2, 2048);
+
+    ImGui::ColorEdit3("Ambient cube mat", (float*)&m_guiData.m_ambientColor);
+    ImGui::ColorEdit3("Diffuse cube mat", (float*)&m_guiData.m_diffuseColor);
+    ImGui::ColorEdit3("Specular cube mat", (float*)&m_guiData.m_specularColor);
+    ImGui::SliderInt("Shininess", &m_guiData.m_shininess, 2, 512);
+
+    ImGui::ColorEdit3("Ambient light color", (float*)&m_guiData.m_ambientLight);
+    ImGui::ColorEdit3("Diffuse light color", (float*)&m_guiData.m_diffuseLight);
+    ImGui::ColorEdit3("Specular light color", (float*)&m_guiData.m_specularLight);
+
     if(ImGui::Button("Exit app"))
     {
         if(m_closeCallBack)

@@ -8,9 +8,15 @@
 struct GuiData
 {
     float m_lightCubeSpeed{1};
-    float m_ambientStrength{0.1};
-    float m_specularStrength{0.5};
+
+    ImVec4 m_ambientColor{1.0f, 0.5f, 0.31f, 1.0f};
+    ImVec4 m_diffuseColor{1.0f, 0.5f, 0.31f, 1.0f};
+    ImVec4 m_specularColor{0.5f, 0.5f, 0.5f, 1.0f};
     int m_shininess{32};
+
+    ImVec4 m_ambientLight{0.2f, 0.2f, 0.2f, 1.0f};
+    ImVec4 m_diffuseLight{0.5f, 0.5f, 0.5f, 1.0f};
+    ImVec4 m_specularLight{1.0f, 1.0f, 1.0, 1.0f};
 };
 
 class ImGuiLayer : public core::Layer
