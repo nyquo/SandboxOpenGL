@@ -93,6 +93,8 @@ void ViewportLayer::onUpdate()
 
     m_lightCubeShader->bind();
 
+    m_lightCubeShader->setVec3("lightColor", utils::toGlmVec4(m_guiData.m_diffuseLight));
+
     m_lightCubeShader->setMat4("view", m_camera.getView());
     m_lightCubeShader->setMat4("projection", m_camera.getProjection());
     m_lightCubeShader->setMat4("model", m_lightCube.m_modelMatrix);
