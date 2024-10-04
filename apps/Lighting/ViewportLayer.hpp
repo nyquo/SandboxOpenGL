@@ -1,4 +1,5 @@
 #pragma once
+#include "ImGuiLayer.hpp"
 
 #include <BasicCube.hpp>
 #include <Events/MouseEvent.hpp>
@@ -19,6 +20,7 @@ class ViewportLayer : public core::Layer
     void setViewportSize(float viewportWidth, float viewportHeight);
 
     void setCameraMovement(bool cameraMovementEnabled);
+    void setGuiData(const GuiData& guiData);
 
   private:
     void processInputs();
@@ -30,6 +32,10 @@ class ViewportLayer : public core::Layer
   private:
     BasicCube m_cube{};
     BasicCube m_lightCube{};
+
+    double m_glfwTimeCount{0};
+    float m_lightCubePositionOffset{0};
+    GuiData m_guiData;
 
     unsigned VBO, VAO;
     unsigned m_lightVAO;

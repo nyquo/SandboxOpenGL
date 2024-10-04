@@ -18,6 +18,7 @@ class LightingApp : public core::Application
         getWindow().setMainLayer(m_viewportLayer);
 
         m_imGuiLayer->setCloseCallBack([this]() { glfwSetWindowShouldClose(getWindow().getWindow(), GLFW_TRUE); });
+        m_imGuiLayer->setDataChangedCallBack([this](const GuiData& data) { m_viewportLayer->setGuiData(data); });
         getWindow().setUiLayer(m_imGuiLayer);
     }
 

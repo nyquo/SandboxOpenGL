@@ -57,10 +57,13 @@ void ViewportLayer::onUpdate()
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    double offset = glfwGetTime() - m_glfwTimeCount;
+    m_glfwTimeCount = glfwGetTime();
+    m_lightCubePositionOffset += offset * m_guiData.m_lightCubeSpeed;
     m_lightCube.m_modelMatrix = glm::mat4(1.0F);
-    m_lightCube.m_position.x = cos(glfwGetTime()) * 2.0f;
-    m_lightCube.m_position.z = sin(glfwGetTime()) * 2.0f;
-    m_lightCube.m_position.y = cos(glfwGetTime() * 5.0f) * 3.0f;
+    m_lightCube.m_position.x = cos(m_lightCubePositionOffset) * 2.0f;
+    m_lightCube.m_position.z = sin(m_lightCubePositionOffset) * 2.0f;
+    m_lightCube.m_position.y = cos(m_lightCubePositionOffset * 5.0f) * 3.0f;
     m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
     m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
 
@@ -69,6 +72,10 @@ void ViewportLayer::onUpdate()
     m_cubeShader->setVec3("objectColor", 1.0F, 0.5F, 0.31F);
     m_cubeShader->setVec3("lightColor", 1.0F, 1.0F, 1.0F);
     m_cubeShader->setVec3("lightPos", m_lightCube.m_position);
+
+    m_cubeShader->setFloat("ambientStrength", m_guiData.m_ambientStrength);   // 0 -> 1.0
+    m_cubeShader->setFloat("specularStrength", m_guiData.m_specularStrength); // 0 -> 1.0
+    m_cubeShader->setInt("shininess", m_guiData.m_shininess);                 // 0 ->2048?
 
     m_cubeShader->setMat4("view", m_camera.getView());
     m_cubeShader->setMat4("projection", m_camera.getProjection());
@@ -105,6 +112,8 @@ void ViewportLayer::setViewportSize(float viewportWidth, float viewportHeight)
 }
 
 void ViewportLayer::setCameraMovement(bool cameraMovementEnabled) { m_cameraMovementEnabled = cameraMovementEnabled; }
+
+void ViewportLayer::setGuiData(const GuiData& guiData) { m_guiData = guiData; }
 
 void ViewportLayer::processInputs()
 {
