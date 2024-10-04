@@ -95,7 +95,8 @@ void ViewportLayer::onUpdate()
     m_cubeTexture->bind();
     m_cubeSpecularTexture->bind();
 
-    m_cubeShader->setVec3("light.position", m_lightCube.m_position);
+    m_cubeShader->setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+    // m_cubeShader->setVec3("light.position", m_lightCube.m_position);
 
     m_cubeShader->setInt("material.diffuse", 0);
     m_cubeShader->setInt("material.specular", 1);

@@ -13,7 +13,8 @@ struct Material {
 };
 
 struct Light {
-    vec3 position;
+    // vec3 position;
+    vec3 direction;
 
     vec3 ambient;
     vec3 diffuse;
@@ -24,10 +25,17 @@ uniform vec3 viewPos;
 uniform Material material;
 uniform Light light;
 
+/**
+  Note for later:
+  vec4 lightVector could  repalce position or direction. if w == 0 it is a directional  light. if w == 1 it is position light
+
+  */
+
 void main()
 {
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(light.position - FragPos);
+    vec3 lightDir = normalize(-light.direction);
+    // vec3 lightDir = normalize(light.position - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
 
     vec3 viewDir = normalize(viewPos - FragPos);
