@@ -95,8 +95,17 @@ void ViewportLayer::onUpdate()
     m_cubeTexture->bind();
     m_cubeSpecularTexture->bind();
 
+    // DIRECTIONAL LIGHT
     // m_cubeShader->setVec3("light.direction", -0.2f, -1.0f, -0.3f);
-    m_cubeShader->setVec3("light.position", m_lightCube.m_position);
+
+    // POSITION LIGHT
+    // m_cubeShader->setVec3("light.position", m_lightCube.m_position);
+
+    // SPOT LIGHT (FLASHLIGHT)
+    m_cubeShader->setVec3("light.position", m_camera.getPosition());
+    m_cubeShader->setVec3("light.direction", m_camera.getDirection());
+    m_cubeShader->setFloat("light.cutOff", glm::cos(glm::radians(m_guiData.m_cutOff)));
+    m_cubeShader->setFloat("light.outerCutOff", glm::cos(glm::radians(m_guiData.m_outerCutOff)));
 
     m_cubeShader->setInt("material.diffuse", 0);
     m_cubeShader->setInt("material.specular", 1);

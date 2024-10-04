@@ -15,6 +15,9 @@ struct GuiData
     ImVec4 m_ambientLight{0.2f, 0.2f, 0.2f, 1.0f};
     ImVec4 m_diffuseLight{0.5f, 0.5f, 0.5f, 1.0f};
     ImVec4 m_specularLight{1.0f, 1.0f, 1.0, 1.0f};
+
+    float m_cutOff{12.5f};
+    float m_outerCutOff{17.5};
 };
 
 class ImGuiLayer : public core::Layer

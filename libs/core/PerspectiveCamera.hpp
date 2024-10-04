@@ -21,6 +21,7 @@ class PerspectiveCamera : public Camera
     void setViewPortSize(float m_width, float m_height);
 
     glm::vec3 getPosition();
+    glm::vec3 getDirection();
 
   private:
     void updateView();

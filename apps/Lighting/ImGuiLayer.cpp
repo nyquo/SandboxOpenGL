@@ -24,6 +24,9 @@ void ImGuiLayer::onUpdate()
     ImGui::ColorEdit3("Diffuse light color", (float*)&m_guiData.m_diffuseLight);
     ImGui::ColorEdit3("Specular light color", (float*)&m_guiData.m_specularLight);
 
+    ImGui::SliderFloat("CutOff", &m_guiData.m_cutOff, 0, 30);
+    ImGui::SliderFloat("Outer CutOff", &m_guiData.m_outerCutOff, m_guiData.m_cutOff, m_guiData.m_cutOff * 2);
+
     if(ImGui::Button("Exit app"))
     {
         if(m_closeCallBack)
