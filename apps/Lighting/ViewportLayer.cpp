@@ -95,8 +95,8 @@ void ViewportLayer::onUpdate()
     m_cubeTexture->bind();
     m_cubeSpecularTexture->bind();
 
-    m_cubeShader->setVec3("light.direction", -0.2f, -1.0f, -0.3f);
-    // m_cubeShader->setVec3("light.position", m_lightCube.m_position);
+    // m_cubeShader->setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+    m_cubeShader->setVec3("light.position", m_lightCube.m_position);
 
     m_cubeShader->setInt("material.diffuse", 0);
     m_cubeShader->setInt("material.specular", 1);
@@ -106,6 +106,10 @@ void ViewportLayer::onUpdate()
     m_cubeShader->setVec3("light.ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
     m_cubeShader->setVec3("light.diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
     m_cubeShader->setVec3("light.specular", utils::toGlmVec4(m_guiData.m_specularLight));
+
+    m_cubeShader->setFloat("light.constant", 1.0f);
+    m_cubeShader->setFloat("light.linear", 0.09f);
+    m_cubeShader->setFloat("light.quadratic", 0.032f);
 
     m_cubeShader->setMat4("view", m_camera.getView());
     m_cubeShader->setMat4("projection", m_camera.getProjection());
