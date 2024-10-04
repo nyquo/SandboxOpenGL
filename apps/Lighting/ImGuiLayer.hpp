@@ -15,6 +15,7 @@ class ImGuiLayer : public core::Layer
     void onEvent(core::Event& e) override;
 
     void setCloseCallBack(std::function<void()> closeCallBack);
+    void setVisible(bool visible);
 
   private:
     void processInputs();
@@ -22,10 +23,6 @@ class ImGuiLayer : public core::Layer
   private:
     std::function<void()> m_closeCallBack;
 
-    // TEMP
   private:
-    // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    bool m_visible{false};
 };

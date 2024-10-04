@@ -18,6 +18,8 @@ class ViewportLayer : public core::Layer
 
     void setViewportSize(float viewportWidth, float viewportHeight);
 
+    void setCameraMovement(bool cameraMovementEnabled);
+
   private:
     void processInputs();
 
@@ -35,6 +37,8 @@ class ViewportLayer : public core::Layer
 
     float m_viewportWidth;
     float m_viewportHeight;
+
+    bool m_cameraMovementEnabled{true};
 
     // Camera var
     core::PerspectiveCamera m_camera;

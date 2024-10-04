@@ -40,13 +40,6 @@ bool Application::onWindowResized(WindowResizeEvent& e)
     return false;
 }
 
-bool Application::onKeyPressed(core::KeyPressedEvent& e)
-{
-    if(e.getKeyCode() == GLFW_KEY_ESCAPE)
-    {
-        m_continueRunning = false;
-    }
-    return true;
-}
+bool Application::onKeyPressed(core::KeyPressedEvent& e) { return false; }
 
 }

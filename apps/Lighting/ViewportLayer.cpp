@@ -104,63 +104,74 @@ void ViewportLayer::setViewportSize(float viewportWidth, float viewportHeight)
     m_camera.setViewPortSize(viewportWidth, viewportHeight);
 }
 
+void ViewportLayer::setCameraMovement(bool cameraMovementEnabled) { m_cameraMovementEnabled = cameraMovementEnabled; }
+
 void ViewportLayer::processInputs()
 {
     float currentFrame = glfwGetTime();
     m_deltaTime = currentFrame - m_lastFrame;
     m_lastFrame = currentFrame;
-    const float cameraSpeed = 10.0F * m_deltaTime;
 
-    glm::vec3 positionOffset{0.0F, 0.0F, 0.0F};
+    if(m_cameraMovementEnabled)
+    {
+        const float cameraSpeed = 10.0F * m_deltaTime;
+        glm::vec3 positionOffset{0.0F, 0.0F, 0.0F};
 
-    if(isKeyPressed(GLFW_KEY_W))
-    {
-        positionOffset.z += cameraSpeed;
+        if(isKeyPressed(GLFW_KEY_W))
+        {
+            positionOffset.z += cameraSpeed;
+        }
+        if(isKeyPressed(GLFW_KEY_S))
+        {
+            positionOffset.z -= cameraSpeed;
+        }
+        if(isKeyPressed(GLFW_KEY_A))
+        {
+            positionOffset.x -= cameraSpeed;
+        }
+        if(isKeyPressed(GLFW_KEY_D))
+        {
+            positionOffset.x += cameraSpeed;
+        }
+        if(isKeyPressed(GLFW_KEY_SPACE))
+        {
+            positionOffset.y += cameraSpeed;
+        }
+        if(isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+        {
+            positionOffset.y -= cameraSpeed;
+        }
+        m_camera.translateCameraRelative(positionOffset);
     }
-    if(isKeyPressed(GLFW_KEY_S))
-    {
-        positionOffset.z -= cameraSpeed;
-    }
-    if(isKeyPressed(GLFW_KEY_A))
-    {
-        positionOffset.x -= cameraSpeed;
-    }
-    if(isKeyPressed(GLFW_KEY_D))
-    {
-        positionOffset.x += cameraSpeed;
-    }
-    if(isKeyPressed(GLFW_KEY_SPACE))
-    {
-        positionOffset.y += cameraSpeed;
-    }
-    if(isKeyPressed(GLFW_KEY_LEFT_SHIFT))
-    {
-        positionOffset.y -= cameraSpeed;
-    }
-    m_camera.translateCameraRelative(positionOffset);
 }
 
 bool ViewportLayer::onMouseScrolled(core::MouseScrolledEvent& e)
 {
-    m_camera.adustFov(-m_zoomOffset * e.getYOffset());
+    if(m_cameraMovementEnabled)
+    {
+        m_camera.adustFov(-m_zoomOffset * e.getYOffset());
+    }
     return true;
 }
 
 bool ViewportLayer::onMouseMoved(core::MouseMovedEvent& e)
 {
-    if(m_firstMouse)
+    if(m_cameraMovementEnabled)
     {
+        if(m_firstMouse)
+        {
+            m_lastMouseX = e.getX();
+            m_lastMouseY = e.getY();
+            m_firstMouse = false;
+        }
+        float xOffset = e.getX() - m_lastMouseX;
+        float yOffset = m_lastMouseY - e.getY();
         m_lastMouseX = e.getX();
         m_lastMouseY = e.getY();
-        m_firstMouse = false;
+        xOffset *= m_mouseSensitivity;
+        yOffset *= m_mouseSensitivity;
+        m_camera.rotateCamera(xOffset, yOffset);
     }
-    float xOffset = e.getX() - m_lastMouseX;
-    float yOffset = m_lastMouseY - e.getY();
-    m_lastMouseX = e.getX();
-    m_lastMouseY = e.getY();
-    xOffset *= m_mouseSensitivity;
-    yOffset *= m_mouseSensitivity;
-    m_camera.rotateCamera(xOffset, yOffset);
 
     return true;
 }

@@ -6,6 +6,10 @@ ImGuiLayer::~ImGuiLayer() {}
 
 void ImGuiLayer::onUpdate()
 {
+    if(!m_visible)
+    {
+        return;
+    }
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -27,5 +31,7 @@ void ImGuiLayer::onUpdate()
 void ImGuiLayer::onEvent(core::Event& e) {}
 
 void ImGuiLayer::setCloseCallBack(std::function<void()> closeCallBack) { m_closeCallBack = closeCallBack; }
+
+void ImGuiLayer::setVisible(bool visible) { m_visible = visible; }
 
 void ImGuiLayer::processInputs() {}
