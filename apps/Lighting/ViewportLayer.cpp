@@ -165,20 +165,20 @@ bool ViewportLayer::onMouseScrolled(core::MouseScrolledEvent& e)
 
 bool ViewportLayer::onMouseMoved(core::MouseMovedEvent& e)
 {
-    if(m_cameraMovementEnabled)
+    if(m_firstMouse)
     {
-        if(m_firstMouse)
-        {
-            m_lastMouseX = e.getX();
-            m_lastMouseY = e.getY();
-            m_firstMouse = false;
-        }
-        float xOffset = e.getX() - m_lastMouseX;
-        float yOffset = m_lastMouseY - e.getY();
         m_lastMouseX = e.getX();
         m_lastMouseY = e.getY();
-        xOffset *= m_mouseSensitivity;
-        yOffset *= m_mouseSensitivity;
+        m_firstMouse = false;
+    }
+    float xOffset = e.getX() - m_lastMouseX;
+    float yOffset = m_lastMouseY - e.getY();
+    m_lastMouseX = e.getX();
+    m_lastMouseY = e.getY();
+    xOffset *= m_mouseSensitivity;
+    yOffset *= m_mouseSensitivity;
+    if(m_cameraMovementEnabled)
+    {
         m_camera.rotateCamera(xOffset, yOffset);
     }
 
