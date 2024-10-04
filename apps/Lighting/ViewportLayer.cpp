@@ -75,7 +75,6 @@ void ViewportLayer::onUpdate()
 
     m_cubeShader->setVec3("light.position", m_lightCube.m_position);
 
-    m_cubeShader->setVec3("material.ambient", utils::toGlmVec4(m_guiData.m_ambientColor));
     m_cubeShader->setInt("material.diffuse", 0);
     m_cubeShader->setVec3("material.specular", utils::toGlmVec4(m_guiData.m_specularColor));
     m_cubeShader->setFloat("material.shininess", (float)m_guiData.m_shininess); // 2 ->512?
