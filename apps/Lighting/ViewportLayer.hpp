@@ -31,6 +31,9 @@ class ViewportLayer : public core::Layer
     bool onMouseMoved(core::MouseMovedEvent& e);
 
   private:
+    // TEMP
+    std::vector<glm::mat4> m_cubeModelMatrix;
+
     BasicCube m_cube{};
     std::unique_ptr<core::Texture> m_cubeTexture;
     std::unique_ptr<core::Texture> m_cubeSpecularTexture;

@@ -2,6 +2,8 @@
 
 #include <Conversion.hpp>
 
+#include <random>
+
 ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   : m_viewportWidth(viewportWidth)
   , m_viewportHeight(viewportHeight)
@@ -46,6 +48,27 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     m_cubeSpecularTexture =
       std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2_specular.png", GL_TEXTURE1);
 
+    // TEMP
+    for(int i = 0; i < 16; ++i)
+    {
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 80);
+
+        glm::vec3 pos{((float)dist(rng) - 40) / 10, ((float)dist(rng) - 40) / 10, ((float)dist(rng) - 40) / 10};
+
+        dist = std::uniform_int_distribution<std::mt19937::result_type>(0, 100);
+        glm::vec3 rotVector{(((float)dist(rng)) / 100, ((float)dist(rng)) / 100, ((float)dist(rng)) / 100)};
+
+        dist = std::uniform_int_distribution<std::mt19937::result_type>(0, 360);
+        int rotationDegree = dist(rng);
+
+        glm::mat4 modelMat{1.0F};
+        modelMat = glm::translate(modelMat, pos);
+        modelMat = glm::rotate(modelMat, (float)rotationDegree, rotVector);
+        m_cubeModelMatrix.push_back(modelMat);
+    }
+
     glBindVertexArray(0);
 }
 
@@ -85,12 +108,15 @@ void ViewportLayer::onUpdate()
 
     m_cubeShader->setMat4("view", m_camera.getView());
     m_cubeShader->setMat4("projection", m_camera.getProjection());
-    m_cubeShader->setMat4("model", m_cube.m_modelMatrix);
     m_cubeShader->setVec3("viewPos", m_camera.getPosition());
 
     glBindVertexArray(VAO);
 
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    for(auto& cube : m_cubeModelMatrix)
+    {
+        m_cubeShader->setMat4("model", cube);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
 
     m_lightCubeShader->bind();
 
