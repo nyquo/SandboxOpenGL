@@ -7,7 +7,7 @@
 
 struct GuiData
 {
-    float m_lightCubeSpeed{1};
+    glm::vec3 m_lightCubePosition{2.0F, 2.0f, 2.0f};
 
     ImVec4 m_specularColor{0.5f, 0.5f, 0.5f, 1.0f};
     int m_shininess{32};

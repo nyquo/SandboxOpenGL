@@ -43,6 +43,8 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
 
     m_cubeTexture =
       std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2.png", GL_TEXTURE0);
+    m_cubeSpecularTexture =
+      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2_specular.png", GL_TEXTURE1);
 
     glBindVertexArray(0);
 }
@@ -60,22 +62,20 @@ void ViewportLayer::onUpdate()
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    double offset = glfwGetTime() - m_glfwTimeCount;
-    m_glfwTimeCount = glfwGetTime();
-    m_lightCubePositionOffset += offset * m_guiData.m_lightCubeSpeed;
+    m_lightCube.m_position = m_guiData.m_lightCubePosition;
+
     m_lightCube.m_modelMatrix = glm::mat4(1.0F);
-    m_lightCube.m_position.x = cos(m_lightCubePositionOffset) * 2.0f;
-    m_lightCube.m_position.z = sin(m_lightCubePositionOffset) * 2.0f;
-    m_lightCube.m_position.y = cos(m_lightCubePositionOffset * 5.0f) * 3.0f;
     m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
     m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
 
     m_cubeShader->bind();
     m_cubeTexture->bind();
+    m_cubeSpecularTexture->bind();
 
     m_cubeShader->setVec3("light.position", m_lightCube.m_position);
 
     m_cubeShader->setInt("material.diffuse", 0);
+    m_cubeShader->setInt("material.specular", 1);
     m_cubeShader->setVec3("material.specular", utils::toGlmVec4(m_guiData.m_specularColor));
     m_cubeShader->setFloat("material.shininess", (float)m_guiData.m_shininess); // 2 ->512?
 

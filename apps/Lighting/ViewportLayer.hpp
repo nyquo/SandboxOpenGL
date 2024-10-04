@@ -33,6 +33,7 @@ class ViewportLayer : public core::Layer
   private:
     BasicCube m_cube{};
     std::unique_ptr<core::Texture> m_cubeTexture;
+    std::unique_ptr<core::Texture> m_cubeSpecularTexture;
     std::unique_ptr<core::Shader> m_cubeShader;
 
     std::unique_ptr<core::Shader> m_lightCubeShader;
