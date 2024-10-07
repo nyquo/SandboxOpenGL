@@ -2,6 +2,7 @@
 #include "PerspectiveCamera.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <algorithm>
 
 namespace core {
 
