@@ -69,6 +69,11 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
         m_cubeModelMatrix.push_back(modelMat);
     }
 
+    m_lightCubePos = {glm::vec3(0.7f, 0.2f, 2.0f),
+                      glm::vec3(2.3f, -3.3f, -4.0f),
+                      glm::vec3(-4.0f, 2.0f, -12.0f),
+                      glm::vec3(0.0f, 0.0f, -3.0f)};
+
     glBindVertexArray(0);
 }
 
@@ -85,41 +90,76 @@ void ViewportLayer::onUpdate()
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_lightCube.m_position = m_guiData.m_lightCubePosition;
+    // DRAW LIGHTS
+    m_lightCubeShader->bind();
 
-    m_lightCube.m_modelMatrix = glm::mat4(1.0F);
-    m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
-    m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
+    glBindVertexArray(m_lightVAO);
+
+    for(auto& lightCubePos : m_lightCubePos)
+    {
+        m_lightCube.m_position = lightCubePos;
+
+        m_lightCube.m_modelMatrix = glm::mat4(1.0F);
+        m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
+        m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
+
+        m_lightCubeShader->setVec3("lightColor", utils::toGlmVec4(m_guiData.m_diffuseLight));
+
+        m_lightCubeShader->setMat4("view", m_camera.getView());
+        m_lightCubeShader->setMat4("projection", m_camera.getProjection());
+        m_lightCubeShader->setMat4("model", m_lightCube.m_modelMatrix);
+
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    // DRAW CUBES
 
     m_cubeShader->bind();
     m_cubeTexture->bind();
     m_cubeSpecularTexture->bind();
 
-    // DIRECTIONAL LIGHT
-    // m_cubeShader->setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+    // directional light
+    m_cubeShader->setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+    m_cubeShader->setVec3("dirLight.ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
+    m_cubeShader->setVec3("dirLight.diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
+    m_cubeShader->setVec3("dirLight.specular", utils::toGlmVec4(m_guiData.m_specularLight));
 
-    // POSITION LIGHT
-    // m_cubeShader->setVec3("light.position", m_lightCube.m_position);
+    // point lights
+    for(int i = 0; i < m_lightCubePos.size(); ++i)
+    {
+        std::string str = "pointLights[" + std::to_string(i) + "].";
 
-    // SPOT LIGHT (FLASHLIGHT)
-    m_cubeShader->setVec3("light.position", m_camera.getPosition());
-    m_cubeShader->setVec3("light.direction", m_camera.getDirection());
-    m_cubeShader->setFloat("light.cutOff", glm::cos(glm::radians(m_guiData.m_cutOff)));
-    m_cubeShader->setFloat("light.outerCutOff", glm::cos(glm::radians(m_guiData.m_outerCutOff)));
+        m_cubeShader->setVec3(str + "position", m_lightCubePos[i]);
 
+        m_cubeShader->setVec3(str + "ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
+        m_cubeShader->setVec3(str + "diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
+        m_cubeShader->setVec3(str + "specular", utils::toGlmVec4(m_guiData.m_specularLight));
+
+        m_cubeShader->setFloat(str + "constant", 1.0f);
+        m_cubeShader->setFloat(str + "linear", 0.09f);
+        m_cubeShader->setFloat(str + "quadratic", 0.032f);
+    }
+
+    // spot light (flash light)
+    m_cubeShader->setVec3("spotLight.position", m_camera.getPosition());
+    m_cubeShader->setVec3("spotLight.direction", m_camera.getDirection());
+    m_cubeShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(m_guiData.m_cutOff)));
+    m_cubeShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(m_guiData.m_outerCutOff)));
+
+    m_cubeShader->setVec3("spotLight.ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
+    m_cubeShader->setVec3("spotLight.diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
+    m_cubeShader->setVec3("spotLight.specular", utils::toGlmVec4(m_guiData.m_specularLight));
+
+    m_cubeShader->setFloat("spotLight.constant", 1.0f);
+    m_cubeShader->setFloat("spotLight.linear", 0.09f);
+    m_cubeShader->setFloat("spotLight.quadratic", 0.032f);
+
+    // material properties
     m_cubeShader->setInt("material.diffuse", 0);
     m_cubeShader->setInt("material.specular", 1);
-    m_cubeShader->setVec3("material.specular", utils::toGlmVec4(m_guiData.m_specularColor));
     m_cubeShader->setFloat("material.shininess", (float)m_guiData.m_shininess); // 2 ->512?
 
-    m_cubeShader->setVec3("light.ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
-    m_cubeShader->setVec3("light.diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
-    m_cubeShader->setVec3("light.specular", utils::toGlmVec4(m_guiData.m_specularLight));
-
-    m_cubeShader->setFloat("light.constant", 1.0f);
-    m_cubeShader->setFloat("light.linear", 0.09f);
-    m_cubeShader->setFloat("light.quadratic", 0.032f);
-
+    // transform matrices
     m_cubeShader->setMat4("view", m_camera.getView());
     m_cubeShader->setMat4("projection", m_camera.getProjection());
     m_cubeShader->setVec3("viewPos", m_camera.getPosition());
@@ -131,18 +171,6 @@ void ViewportLayer::onUpdate()
         m_cubeShader->setMat4("model", cube);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-
-    m_lightCubeShader->bind();
-
-    m_lightCubeShader->setVec3("lightColor", utils::toGlmVec4(m_guiData.m_diffuseLight));
-
-    m_lightCubeShader->setMat4("view", m_camera.getView());
-    m_lightCubeShader->setMat4("projection", m_camera.getProjection());
-    m_lightCubeShader->setMat4("model", m_lightCube.m_modelMatrix);
-
-    glBindVertexArray(m_lightVAO);
-
-    glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void ViewportLayer::onEvent(core::Event& e)

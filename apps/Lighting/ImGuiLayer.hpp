@@ -9,7 +9,6 @@ struct GuiData
 {
     glm::vec3 m_lightCubePosition{2.0F, 2.0f, 2.0f};
 
-    ImVec4 m_specularColor{0.5f, 0.5f, 0.5f, 1.0f};
     int m_shininess{32};
 
     ImVec4 m_ambientLight{0.2f, 0.2f, 0.2f, 1.0f};

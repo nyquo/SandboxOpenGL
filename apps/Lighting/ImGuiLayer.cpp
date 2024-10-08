@@ -17,7 +17,6 @@ void ImGuiLayer::onUpdate()
     ImGui::Begin("Options Window");
     ImGui::DragFloat3("Light cube pos", (float*)&m_guiData.m_lightCubePosition, 0.01f);
 
-    ImGui::ColorEdit3("Specular cube mat", (float*)&m_guiData.m_specularColor);
     ImGui::SliderInt("Shininess", &m_guiData.m_shininess, 2, 512);
 
     ImGui::ColorEdit3("Ambient light color", (float*)&m_guiData.m_ambientLight);
