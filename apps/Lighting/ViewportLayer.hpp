@@ -33,7 +33,6 @@ class ViewportLayer : public core::Layer
   private:
     // TEMP
     std::vector<glm::mat4> m_cubeModelMatrix;
-    std::vector<glm::vec3> m_lightCubePos;
 
     BasicCube m_cube{};
     std::unique_ptr<core::Texture> m_cubeTexture;

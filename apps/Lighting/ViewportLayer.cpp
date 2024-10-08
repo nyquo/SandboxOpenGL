@@ -69,11 +69,6 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
         m_cubeModelMatrix.push_back(modelMat);
     }
 
-    m_lightCubePos = {glm::vec3(0.7f, 0.2f, 2.0f),
-                      glm::vec3(2.3f, -3.3f, -4.0f),
-                      glm::vec3(-4.0f, 2.0f, -12.0f),
-                      glm::vec3(0.0f, 0.0f, -3.0f)};
-
     glBindVertexArray(0);
 }
 
@@ -95,7 +90,7 @@ void ViewportLayer::onUpdate()
 
     glBindVertexArray(m_lightVAO);
 
-    for(auto& lightCubePos : m_lightCubePos)
+    for(auto& lightCubePos : m_guiData.m_lightCubePos)
     {
         m_lightCube.m_position = lightCubePos;
 
@@ -103,7 +98,7 @@ void ViewportLayer::onUpdate()
         m_lightCube.m_modelMatrix = glm::translate(m_lightCube.m_modelMatrix, m_lightCube.m_position);
         m_lightCube.m_modelMatrix = glm::scale(m_lightCube.m_modelMatrix, glm::vec3(0.2F));
 
-        m_lightCubeShader->setVec3("lightColor", utils::toGlmVec4(m_guiData.m_diffuseLight));
+        m_lightCubeShader->setVec3("lightColor", utils::toGlmVec4(m_guiData.m_diffusePointLight));
 
         m_lightCubeShader->setMat4("view", m_camera.getView());
         m_lightCubeShader->setMat4("projection", m_camera.getProjection());
@@ -119,21 +114,21 @@ void ViewportLayer::onUpdate()
     m_cubeSpecularTexture->bind();
 
     // directional light
-    m_cubeShader->setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-    m_cubeShader->setVec3("dirLight.ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
-    m_cubeShader->setVec3("dirLight.diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
-    m_cubeShader->setVec3("dirLight.specular", utils::toGlmVec4(m_guiData.m_specularLight));
+    m_cubeShader->setVec3("dirLight.direction", m_guiData.m_dirLightDirection);
+    m_cubeShader->setVec3("dirLight.ambient", utils::toGlmVec4(m_guiData.m_ambientDirLight));
+    m_cubeShader->setVec3("dirLight.diffuse", utils::toGlmVec4(m_guiData.m_diffuseDirLight));
+    m_cubeShader->setVec3("dirLight.specular", utils::toGlmVec4(m_guiData.m_specularDirLight));
 
     // point lights
-    for(int i = 0; i < m_lightCubePos.size(); ++i)
+    for(int i = 0; i < m_guiData.m_lightCubePos.size(); ++i)
     {
         std::string str = "pointLights[" + std::to_string(i) + "].";
 
-        m_cubeShader->setVec3(str + "position", m_lightCubePos[i]);
+        m_cubeShader->setVec3(str + "position", m_guiData.m_lightCubePos[i]);
 
-        m_cubeShader->setVec3(str + "ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
-        m_cubeShader->setVec3(str + "diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
-        m_cubeShader->setVec3(str + "specular", utils::toGlmVec4(m_guiData.m_specularLight));
+        m_cubeShader->setVec3(str + "ambient", utils::toGlmVec4(m_guiData.m_ambientPointLight));
+        m_cubeShader->setVec3(str + "diffuse", utils::toGlmVec4(m_guiData.m_specularPointLight));
+        m_cubeShader->setVec3(str + "specular", utils::toGlmVec4(m_guiData.m_specularPointLight));
 
         m_cubeShader->setFloat(str + "constant", 1.0f);
         m_cubeShader->setFloat(str + "linear", 0.09f);
@@ -146,9 +141,9 @@ void ViewportLayer::onUpdate()
     m_cubeShader->setFloat("spotLight.cutOff", glm::cos(glm::radians(m_guiData.m_cutOff)));
     m_cubeShader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(m_guiData.m_outerCutOff)));
 
-    m_cubeShader->setVec3("spotLight.ambient", utils::toGlmVec4(m_guiData.m_ambientLight));
-    m_cubeShader->setVec3("spotLight.diffuse", utils::toGlmVec4(m_guiData.m_diffuseLight));
-    m_cubeShader->setVec3("spotLight.specular", utils::toGlmVec4(m_guiData.m_specularLight));
+    m_cubeShader->setVec3("spotLight.ambient", utils::toGlmVec4(m_guiData.m_ambientFlashLight));
+    m_cubeShader->setVec3("spotLight.diffuse", utils::toGlmVec4(m_guiData.m_diffuseFlashLight));
+    m_cubeShader->setVec3("spotLight.specular", utils::toGlmVec4(m_guiData.m_specularFlashLight));
 
     m_cubeShader->setFloat("spotLight.constant", 1.0f);
     m_cubeShader->setFloat("spotLight.linear", 0.09f);
