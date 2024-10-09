@@ -50,8 +50,8 @@ CustomLayer::CustomLayer(float viewportWidth, float viewportHeight)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    texture1 = std::make_unique<core::Texture>("_HelloWord/assets/container.jpg", GL_TEXTURE0);
-    texture2 = std::make_unique<core::Texture>("_HelloWord/assets/awesomeface.png", GL_TEXTURE1);
+    texture1 = std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container.jpg", GL_TEXTURE0);
+    texture2 = std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/awesomeface.png", GL_TEXTURE1);
 
     glBindVertexArray(0);
 };
