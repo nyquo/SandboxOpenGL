@@ -43,10 +43,11 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    m_cubeTexture =
-      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2.png", GL_TEXTURE0);
+    m_cubeTexture = std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2.png");
+    glActiveTexture(GL_TEXTURE0);
     m_cubeSpecularTexture =
-      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2_specular.png", GL_TEXTURE1);
+      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2_specular.png");
+    glActiveTexture(GL_TEXTURE1);
 
     // TEMP
     for(int i = 0; i < 16; ++i)
@@ -108,10 +109,7 @@ void ViewportLayer::onUpdate()
     }
 
     // DRAW CUBES
-
     m_cubeShader->bind();
-    m_cubeTexture->bind();
-    m_cubeSpecularTexture->bind();
 
     // directional light
     m_cubeShader->setVec3("dirLight.direction", m_guiData.m_dirLightDirection);
@@ -150,6 +148,10 @@ void ViewportLayer::onUpdate()
     m_cubeShader->setFloat("spotLight.quadratic", 0.032f);
 
     // material properties
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_cubeTexture->getId());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, m_cubeSpecularTexture->getId());
     m_cubeShader->setInt("material.diffuse", 0);
     m_cubeShader->setInt("material.specular", 1);
     m_cubeShader->setFloat("material.shininess", (float)m_guiData.m_shininess); // 2 ->512?

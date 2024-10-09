@@ -53,3 +53,15 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(glm)
+
+##########
+# Assimp #
+##########
+
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG c35200e38ea8f058812b83de2ef32c6093b0ece2 #refs/tags/v5.4.3
+)
+
+FetchContent_MakeAvailable(assimp)
