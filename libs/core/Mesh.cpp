@@ -12,6 +12,13 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     setupMesh();
 }
 
+Mesh::~Mesh()
+{
+    glDeleteBuffers(1, &m_ebo);
+    glDeleteBuffers(1, &m_vbo);
+    glDeleteVertexArrays(1, &m_vao);
+}
+
 void Mesh::draw(Shader& shader)
 {
     unsigned int diffuseNb = 1;

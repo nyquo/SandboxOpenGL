@@ -18,12 +18,19 @@ struct Vertex
 class Mesh
 {
   public:
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    Mesh(const Mesh& other) = delete;
+    Mesh(Mesh&& other) = delete;
+    Mesh operator=(const Mesh& other) = delete;
+    Mesh operator=(Mesh&& other) = delete;
+    ~Mesh();
+
+    void draw(Shader& shader);
+
+  public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
-
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    void draw(Shader& shader);
 
   private:
     unsigned int m_vao, m_vbo, m_ebo;
