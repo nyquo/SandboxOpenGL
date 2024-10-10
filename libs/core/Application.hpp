@@ -12,7 +12,7 @@ namespace core {
 class CORE_API Application
 {
   public:
-    Application();
+    Application(std::string mainWindowName = "HelloWord");
     Application(const Application& other) = delete;
     Application(Application&& other) = delete;
     Application operator=(const Application& other) = delete;

@@ -2,8 +2,8 @@
 
 namespace core {
 
-Application::Application()
-  : m_mainWindow(std::make_unique<Window>("Hello word", 800, 600))
+Application::Application(std::string mainWindowName)
+  : m_mainWindow(std::make_unique<Window>(mainWindowName, 800, 600))
 {
     m_mainWindow->setEventCallBack(BIND_EVENT_FN(Application::onEvent));
 }
