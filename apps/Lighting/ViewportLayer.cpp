@@ -43,10 +43,11 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    m_cubeTexture = std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2.png");
+    m_cubeTexture =
+      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2.png", "texture_diffuse");
     glActiveTexture(GL_TEXTURE0);
-    m_cubeSpecularTexture =
-      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2_specular.png");
+    m_cubeSpecularTexture = std::make_unique<core::Texture>(
+      std::string(RESSOURCES_FOLDER) + "/assets/container2_specular.png", "texture_specular");
     glActiveTexture(GL_TEXTURE1);
 
     // TEMP

@@ -6,7 +6,8 @@ namespace core {
 
 // TODO Add static dic to load text only once
 
-Texture::Texture(const fs::path& texturePath)
+Texture::Texture(const fs::path& texturePath, std::string type)
+  : m_type(type)
 {
     static bool isInit{false};
     if(!isInit)
@@ -62,8 +63,25 @@ Texture::Texture(Texture&& other) noexcept
     other.m_textureId = 0;
 }
 
+Texture& Texture::operator=(Texture&& other) noexcept
+{
+    m_textureId = other.m_textureId;
+    m_width = other.m_width;
+    m_height = other.m_height;
+    m_channels = other.m_channels;
+    delete[] m_data;
+    m_data = std::move(other.m_data);
+    m_type = std::move(m_type);
+
+    // Prevent the texture from being deleted (using glDeleteTexture)
+    other.m_textureId = 0;
+
+    return *this;
+}
+
 Texture::~Texture()
 {
+    delete[] m_data;
     if(m_textureId != 0)
     {
         glDeleteTextures(1, &m_textureId);

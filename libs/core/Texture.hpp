@@ -15,11 +15,11 @@ namespace fs = std::filesystem;
 class CORE_API Texture
 {
   public:
-    Texture(const fs::path& texturePath);
+    Texture(const fs::path& texturePath, std::string type);
     Texture(const Texture& other) = delete;
     Texture(Texture&& other) noexcept;
-    Texture operator=(const Texture& other) = delete;
-    Texture operator=(Texture&& other) = delete;
+    Texture& operator=(const Texture& other) = delete;
+    Texture& operator=(Texture&& other) noexcept;
     ~Texture();
 
     [[nodiscard]] std::string getType() const;

@@ -14,7 +14,7 @@ namespace core {
 
 namespace fs = std::filesystem;
 
-class Model
+class CORE_API Model
 {
   public:
     Model(fs::path& path);
@@ -29,8 +29,11 @@ class Model
   private:
     void loadModel(fs::path& path);
     void processNode(aiNode* node, const aiScene* scene);
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    std::vector<Texture> loadMaterialTexures(aiMaterial* mat, aiTextureType type, std::string typeName);
+    void processMesh(aiMesh* mesh, const aiScene* scene);
+    void loadMaterialTexures(aiMaterial* mat,
+                             aiTextureType type,
+                             std::string typeName,
+                             std::vector<Texture>& vectorToFill);
 
   private:
     std::vector<Mesh> m_meshes;
