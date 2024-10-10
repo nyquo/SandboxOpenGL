@@ -56,7 +56,6 @@ Texture::Texture(Texture&& other) noexcept
   , m_width(other.m_width)
   , m_height(other.m_height)
   , m_channels(other.m_channels)
-  , m_data(std::move(other.m_data))
   , m_type(std::move(other.m_type))
 {
     // Prevent the texture from being deleted (using glDeleteTexture)
@@ -69,8 +68,6 @@ Texture& Texture::operator=(Texture&& other) noexcept
     m_width = other.m_width;
     m_height = other.m_height;
     m_channels = other.m_channels;
-    delete[] m_data;
-    m_data = std::move(other.m_data);
     m_type = std::move(m_type);
 
     // Prevent the texture from being deleted (using glDeleteTexture)
@@ -81,7 +78,7 @@ Texture& Texture::operator=(Texture&& other) noexcept
 
 Texture::~Texture()
 {
-    delete[] m_data;
+    // m_data is already deleted in the constructor by stbi_image_free
     if(m_textureId != 0)
     {
         glDeleteTextures(1, &m_textureId);
