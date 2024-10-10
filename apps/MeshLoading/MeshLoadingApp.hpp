@@ -20,6 +20,7 @@ class MeshLoadingApp : public core::Application
 
         m_imGuiLayer->setCloseCallBack([this]() { glfwSetWindowShouldClose(getWindow().getWindow(), GLFW_TRUE); });
         m_imGuiLayer->setDataChangedCallBack([this](const GuiData& data) { m_viewportLayer->setGuiData(data); });
+        m_imGuiLayer->setLoadModelCallBack([this]() { m_viewportLayer->loadModel(); });
         getWindow().setUiLayer(m_imGuiLayer);
     }
 

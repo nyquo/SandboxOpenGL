@@ -4,6 +4,7 @@
 #include <BasicCube.hpp>
 #include <Events/MouseEvent.hpp>
 #include <Layer.hpp>
+#include <Model.hpp>
 #include <PerspectiveCamera.hpp>
 #include <Shader.hpp>
 #include <Texture.hpp>
@@ -23,6 +24,8 @@ class ViewportLayer : public core::Layer
     void setCameraMovement(bool cameraMovementEnabled);
     void setGuiData(const GuiData& guiData);
 
+    void loadModel();
+
   private:
     void processInputs();
 
@@ -31,23 +34,22 @@ class ViewportLayer : public core::Layer
     bool onMouseMoved(core::MouseMovedEvent& e);
 
   private:
+    std::unique_ptr<core::Model> m_model;
     // TEMP
-    std::vector<glm::mat4> m_cubeModelMatrix;
+    // std::vector<glm::mat4> m_cubeModelMatrix;
 
-    BasicCube m_cube{};
-    std::unique_ptr<core::Texture> m_cubeTexture;
-    std::unique_ptr<core::Texture> m_cubeSpecularTexture;
-    std::unique_ptr<core::Shader> m_cubeShader;
+    // BasicCube m_cube{};
+    // std::unique_ptr<core::Texture> m_cubeTexture;
+    // std::unique_ptr<core::Texture> m_cubeSpecularTexture;
+    // std::unique_ptr<core::Shader> m_cubeShader;
 
-    std::unique_ptr<core::Shader> m_lightCubeShader;
-    BasicCube m_lightCube{};
+    // std::unique_ptr<core::Shader> m_lightCubeShader;
+
+    // BasicCube m_lightCube{};
 
     double m_glfwTimeCount{0};
     float m_lightCubePositionOffset{0};
     GuiData m_guiData;
-
-    unsigned VBO, VAO;
-    unsigned m_lightVAO;
 
     float m_viewportWidth;
     float m_viewportHeight;
