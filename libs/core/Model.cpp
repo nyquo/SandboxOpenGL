@@ -22,7 +22,7 @@ void Model::loadModel(fs::path& path)
 {
     Assimp::Importer importer;
     // TODO consider using aiProcess_GenNormals
-    const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(path.string().c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -30,7 +30,7 @@ void Model::loadModel(fs::path& path)
         return;
     }
 
-    m_directory = path.parent_path();
+    m_directory = path.parent_path().string();
 
     processNode(scene->mRootNode, scene);
 }
