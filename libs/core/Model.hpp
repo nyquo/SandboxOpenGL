@@ -17,7 +17,7 @@ namespace fs = std::filesystem;
 class CORE_API Model
 {
   public:
-    Model(fs::path& path);
+    Model(const fs::path& path);
     Model(const Model& other) = delete;
     Model(Model&& other) = delete;
     Model operator=(const Model& other) = delete;
@@ -27,7 +27,7 @@ class CORE_API Model
     void draw(Shader& shader);
 
   private:
-    void loadModel(fs::path& path);
+    void loadModel(const fs::path& path);
     void processNode(aiNode* node, const aiScene* scene);
     void processMesh(aiMesh* mesh, const aiScene* scene);
     void loadMaterialTexures(aiMaterial* mat,

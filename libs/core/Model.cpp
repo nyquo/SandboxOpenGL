@@ -6,7 +6,7 @@
 
 namespace core {
 
-Model::Model(fs::path& path) {}
+Model::Model(const fs::path& path) { loadModel(path); }
 
 Model::~Model() {}
 
@@ -18,7 +18,7 @@ void Model::draw(Shader& shader)
     }
 }
 
-void Model::loadModel(fs::path& path)
+void Model::loadModel(const fs::path& path)
 {
     Assimp::Importer importer;
     // TODO consider using aiProcess_GenNormals
@@ -105,6 +105,7 @@ void Model::loadMaterialTexures(aiMaterial* mat,
         aiString str;
         mat->GetTexture(type, i, &str);
         vectorToFill.emplace_back(str.C_Str(), typeName);
+        vectorToFill.emplace_back(m_directory + fs::path::preferred_separator + str.C_Str(), typeName);
     }
 }
 

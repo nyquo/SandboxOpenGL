@@ -12,6 +12,8 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   , m_lastMouseX(m_viewportWidth / 2)
   , m_lastMouseY(m_viewportHeight / 2)
 {
+    m_modelShader = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.vert",
+                                                   std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.frag");
     // m_cubeShader = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
     //                                               std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
 
@@ -88,6 +90,18 @@ void ViewportLayer::onUpdate()
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    if(m_model)
+    {
+        m_modelShader->bind();
+
+        // // transform matrices
+        m_modelShader->setMat4("view", m_camera.getView());
+        m_modelShader->setMat4("projection", m_camera.getProjection());
+        m_modelShader->setVec3("viewPos", m_camera.getPosition());
+
+        m_model->draw(*m_modelShader);
+    }
+
     // // DRAW LIGHTS
     // m_lightCubeShader->bind();
 
@@ -158,11 +172,6 @@ void ViewportLayer::onUpdate()
     // m_cubeShader->setInt("material.specular", 1);
     // m_cubeShader->setFloat("material.shininess", (float)m_guiData.m_shininess); // 2 ->512?
 
-    // // transform matrices
-    // m_cubeShader->setMat4("view", m_camera.getView());
-    // m_cubeShader->setMat4("projection", m_camera.getProjection());
-    // m_cubeShader->setVec3("viewPos", m_camera.getPosition());
-
     // glBindVertexArray(VAO);
 
     // for(auto& cube : m_cubeModelMatrix)
@@ -193,6 +202,7 @@ void ViewportLayer::setGuiData(const GuiData& guiData) { m_guiData = guiData; }
 void ViewportLayer::loadModel()
 {
     core::Logger::logInfo("Loading model from path: " + std::string(m_guiData.m_modelPath));
+    m_model.reset(new core::Model(std::filesystem::path(m_guiData.m_modelPath)));
 }
 
 void ViewportLayer::processInputs()
