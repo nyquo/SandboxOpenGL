@@ -1,8 +1,9 @@
 #include "Camera.hpp"
+#include "CoreExport.hpp"
 
 namespace core {
 
-class PerspectiveCamera : public Camera
+class CORE_API PerspectiveCamera : public Camera
 {
   public:
     PerspectiveCamera(float viewportWidth = 0,

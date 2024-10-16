@@ -32,7 +32,7 @@ struct GuiData
     float m_cutOff{12.5f};
     float m_outerCutOff{17.5};
 
-    char m_modelPath[128];
+    char m_modelPath[128] = "";
 };
 
 class ImGuiLayer : public core::Layer
