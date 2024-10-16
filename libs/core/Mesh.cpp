@@ -16,6 +16,9 @@ Mesh::Mesh(Mesh&& other) noexcept
   : vertices(std::move(other.vertices))
   , indices(std::move(other.indices))
   , textures(std::move(other.textures))
+  , m_vao(other.m_vao)
+  , m_vbo(other.m_vbo)
+  , m_ebo(other.m_ebo)
 {
     other.m_ebo = 0;
     other.m_vbo = 0;
