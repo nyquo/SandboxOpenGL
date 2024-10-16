@@ -104,7 +104,6 @@ void Model::loadMaterialTexures(aiMaterial* mat,
     {
         aiString str;
         mat->GetTexture(type, i, &str);
-        vectorToFill.emplace_back(str.C_Str(), typeName);
         vectorToFill.emplace_back(m_directory + fs::path::preferred_separator + str.C_Str(), typeName);
     }
 }
