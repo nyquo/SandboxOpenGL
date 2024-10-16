@@ -6,6 +6,7 @@
 #include <stb_image.h>
 
 #include <filesystem>
+#include <map>
 #include <string>
 
 namespace core {
@@ -26,10 +27,18 @@ class CORE_API Texture
     [[nodiscard]] unsigned int getId() const;
 
   private:
-    GLuint m_textureId;
-    int m_width, m_height, m_channels;
-    unsigned char* m_data;
-    std::string m_type;
+    struct TextureData
+    {
+        GLuint textureId;
+        int width, height, channels;
+        unsigned char* data;
+        std::string type;
+    };
+
+    TextureData m_textureData;
+    fs::path m_path;
+
+    static std::map<fs::path, std::pair<unsigned int, TextureData>> m_loadedCount;
 };
 
 }
