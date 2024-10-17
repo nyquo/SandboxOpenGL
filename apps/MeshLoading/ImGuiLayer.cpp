@@ -1,6 +1,6 @@
 #include "ImGuiLayer.hpp"
 
-ImGuiLayer::ImGuiLayer() {}
+ImGuiLayer::ImGuiLayer() { glDisable(GL_MULTISAMPLE); }
 
 ImGuiLayer::~ImGuiLayer() {}
 
@@ -26,6 +26,8 @@ void ImGuiLayer::onUpdate()
         }
     }
 
+    ImGui::Checkbox("Enable MSAA", &m_guiData.m_enableMSAA);
+
     if(ImGui::Button("Exit app"))
     {
         if(m_closeCallBack)
@@ -42,6 +44,19 @@ void ImGuiLayer::onUpdate()
     if(m_dataChangedCallBack)
     {
         m_dataChangedCallBack(m_guiData);
+    }
+
+    if(m_guiData.m_enableMSAA != m_guiData.m_oldEnablerMSAA)
+    {
+        m_guiData.m_oldEnablerMSAA = m_guiData.m_enableMSAA;
+        if(m_guiData.m_enableMSAA)
+        {
+            glEnable(GL_MULTISAMPLE);
+        }
+        else
+        {
+            glDisable(GL_MULTISAMPLE);
+        }
     }
 }
 
