@@ -16,12 +16,12 @@ class MeshLoadingApp : public core::Application
     {
         glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        getWindow().setMainLayer(m_viewportLayer);
+        getWindow().pushLayer(m_viewportLayer);
 
         m_imGuiLayer->setCloseCallBack([this]() { glfwSetWindowShouldClose(getWindow().getWindow(), GLFW_TRUE); });
         m_imGuiLayer->setDataChangedCallBack([this](const GuiData& data) { m_viewportLayer->setGuiData(data); });
         m_imGuiLayer->setLoadModelCallBack([this]() { m_viewportLayer->loadModel(); });
-        getWindow().setUiLayer(m_imGuiLayer);
+        getWindow().pushUiLayer(m_imGuiLayer);
     }
 
     void onEvent(core::Event& e) override
@@ -35,8 +35,10 @@ class MeshLoadingApp : public core::Application
 
     bool onWindowResized(core::WindowResizeEvent& e)
     {
-        auto viewportLayer = std::dynamic_pointer_cast<ViewportLayer>(getWindow().getMainLayer());
-        viewportLayer->setViewportSize(e.getWidth(), e.getHeight());
+        if(m_viewportLayer)
+        {
+            m_viewportLayer->setViewportSize(e.getWidth(), e.getHeight());
+        }
         return false;
     }
 

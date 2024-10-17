@@ -12,6 +12,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace core {
 
@@ -52,11 +53,9 @@ class CORE_API Window
     unsigned int m_width;
     unsigned int m_height;
 
-    // TEMP
   private:
-    // add layer stack?
-    std::shared_ptr<Layer> m_mainLayer;
-    std::shared_ptr<Layer> m_uiLayer;
+    std::vector<std::shared_ptr<Layer>> m_layers;
+    std::vector<std::shared_ptr<Layer>> m_uiLayers;
 
     bool onWindowResized(core::WindowResizeEvent& e)
     {
@@ -67,20 +66,10 @@ class CORE_API Window
 
     // temp
   public:
-    void setMainLayer(std::shared_ptr<Layer> layer)
-    {
-        m_mainLayer = std::move(layer);
-        m_mainLayer->setWindow(this);
-    }
-
-    void setUiLayer(std::shared_ptr<Layer> layer)
-    {
-        m_uiLayer = std::move(layer);
-        m_uiLayer->setWindow(this);
-    }
-
-    std::shared_ptr<Layer> getMainLayer() { return m_mainLayer; }
-    std::shared_ptr<Layer> getUiLayer() { return m_uiLayer; }
+    void pushLayer(std::shared_ptr<Layer> layer);
+    void pushUiLayer(std::shared_ptr<Layer> layer);
+    void removeLayer(std::shared_ptr<Layer> layer);
+    void removeUiLayer(std::shared_ptr<Layer> layer);
 };
 
 }
