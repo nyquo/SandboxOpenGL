@@ -1,7 +1,6 @@
 #pragma once
 #include "ImGuiLayer.hpp"
 
-#include <BasicCube.hpp>
 #include <Events/MouseEvent.hpp>
 #include <Layer.hpp>
 #include <Model.hpp>
@@ -38,7 +37,6 @@ class ViewportLayer : public core::Layer
     // TEMP
     // std::vector<glm::mat4> m_cubeModelMatrix;
 
-    // BasicCube m_cube{};
     // std::unique_ptr<core::Texture> m_cubeTexture;
     // std::unique_ptr<core::Texture> m_cubeSpecularTexture;
     std::unique_ptr<core::Shader> m_modelShader;

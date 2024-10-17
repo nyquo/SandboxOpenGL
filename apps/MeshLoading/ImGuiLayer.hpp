@@ -11,6 +11,8 @@ struct GuiData
 {
     char m_modelPath[128] = "/home/nicolas/Downloads/backpack/backpack.obj";
 
+    bool m_enableOverlayInfo;
+
     bool m_enableMSAA{false};
     bool m_oldEnablerMSAA{false};
 };

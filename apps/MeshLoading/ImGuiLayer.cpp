@@ -10,9 +10,6 @@ void ImGuiLayer::onUpdate()
     {
         return;
     }
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
 
     ImGui::Begin("Options Window");
 
@@ -26,6 +23,7 @@ void ImGuiLayer::onUpdate()
         }
     }
 
+    ImGui::Checkbox("Enable Info Overlay", &m_guiData.m_enableOverlayInfo);
     ImGui::Checkbox("Enable MSAA", &m_guiData.m_enableMSAA);
 
     if(ImGui::Button("Exit app"))
@@ -36,9 +34,6 @@ void ImGuiLayer::onUpdate()
         }
     }
     ImGui::End();
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     // TODO check if it has actually changed?
     if(m_dataChangedCallBack)

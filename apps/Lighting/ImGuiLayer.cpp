@@ -10,8 +10,6 @@ void ImGuiLayer::onUpdate()
     {
         return;
     }
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
     ImGui::Begin("Options Window");
@@ -41,7 +39,6 @@ void ImGuiLayer::onUpdate()
     ImGui::ColorEdit3("F Diffuse light color", (float*)&m_guiData.m_diffuseFlashLight);
     ImGui::ColorEdit3("F Specular light color", (float*)&m_guiData.m_specularFlashLight);
 
-
     if(ImGui::Button("Exit app"))
     {
         if(m_closeCallBack)
@@ -50,9 +47,6 @@ void ImGuiLayer::onUpdate()
         }
     }
     ImGui::End();
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     // TODO check if it has actually changed?
     if(m_dataChangedCallBack)

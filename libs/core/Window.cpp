@@ -135,10 +135,15 @@ void Window::onUpdate()
         layer->onUpdate();
     }
 
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
     for(auto& layer : m_uiLayers)
     {
         layer->onUpdate();
     }
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     glfwSwapBuffers(m_window);
 }
 

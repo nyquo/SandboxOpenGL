@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ImGuiLayer.hpp"
+#include "OverlayInfoLayer.hpp"
 #include "ViewportLayer.hpp"
 
 #include <Application.hpp>
@@ -13,15 +14,21 @@ class MeshLoadingApp : public core::Application
       : core::Application("Model displayer")
       , m_imGuiLayer(std::make_shared<ImGuiLayer>())
       , m_viewportLayer(std::make_shared<ViewportLayer>(getWindow().getWidth(), getWindow().getHeight()))
+      , m_overlayInfo(std::make_shared<OverlayInfoLayer>())
     {
         glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         getWindow().pushLayer(m_viewportLayer);
 
         m_imGuiLayer->setCloseCallBack([this]() { glfwSetWindowShouldClose(getWindow().getWindow(), GLFW_TRUE); });
-        m_imGuiLayer->setDataChangedCallBack([this](const GuiData& data) { m_viewportLayer->setGuiData(data); });
+        m_imGuiLayer->setDataChangedCallBack([this](const GuiData& data) {
+            m_overlayInfo->setVisible(data.m_enableOverlayInfo);
+            m_viewportLayer->setGuiData(data);
+        });
         m_imGuiLayer->setLoadModelCallBack([this]() { m_viewportLayer->loadModel(); });
+
         getWindow().pushUiLayer(m_imGuiLayer);
+        getWindow().pushUiLayer(m_overlayInfo);
     }
 
     void onEvent(core::Event& e) override
@@ -67,6 +74,7 @@ class MeshLoadingApp : public core::Application
   private:
     std::shared_ptr<ImGuiLayer> m_imGuiLayer;
     std::shared_ptr<ViewportLayer> m_viewportLayer;
+    std::shared_ptr<OverlayInfoLayer> m_overlayInfo;
 
     bool m_showImGuiLayer{false};
     bool m_cameraMovementEnabled{true};
