@@ -56,7 +56,7 @@ Mesh::~Mesh()
     }
 }
 
-void Mesh::draw(Shader& shader)
+void Mesh::draw(Shader& shader) const
 {
     unsigned int diffuseNb = 1;
     unsigned int specularNb = 1;

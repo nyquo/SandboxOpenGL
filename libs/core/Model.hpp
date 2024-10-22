@@ -24,7 +24,7 @@ class CORE_API Model
     Model operator=(Model&& other) = delete;
     ~Model();
 
-    void draw(Shader& shader);
+    void draw(Shader& shader) const;
 
   private:
     void loadModel(const fs::path& path);

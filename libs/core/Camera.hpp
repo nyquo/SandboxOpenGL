@@ -1,5 +1,8 @@
-#include <glm/glm.hpp>
+#pragma once
+
 #include "CoreExport.hpp"
+
+#include <glm/glm.hpp>
 
 namespace core {
 

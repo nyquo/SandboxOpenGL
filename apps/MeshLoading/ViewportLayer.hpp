@@ -1,10 +1,12 @@
 #pragma once
 #include "ImGuiLayer.hpp"
 
+#include <BasicRenderer.hpp>
 #include <Events/MouseEvent.hpp>
 #include <Layer.hpp>
 #include <Model.hpp>
 #include <PerspectiveCamera.hpp>
+#include <Scene.hpp>
 #include <Shader.hpp>
 #include <Texture.hpp>
 #include <glm/glm.hpp>
@@ -33,13 +35,15 @@ class ViewportLayer : public core::Layer
     bool onMouseMoved(core::MouseMovedEvent& e);
 
   private:
-    std::unique_ptr<core::Model> m_model;
+    core::Scene m_scene;
+    core::BasicRenderer m_renderer;
+    std::shared_ptr<core::PerspectiveCamera> m_camera;
+
     // TEMP
     // std::vector<glm::mat4> m_cubeModelMatrix;
 
     // std::unique_ptr<core::Texture> m_cubeTexture;
     // std::unique_ptr<core::Texture> m_cubeSpecularTexture;
-    std::unique_ptr<core::Shader> m_modelShader;
 
     // std::unique_ptr<core::Shader> m_lightCubeShader;
 
@@ -55,7 +59,6 @@ class ViewportLayer : public core::Layer
     bool m_cameraMovementEnabled{true};
 
     // Camera var
-    core::PerspectiveCamera m_camera;
     float m_zoomOffset{2.0};
     float m_mouseSensitivity{0.1F};
     bool m_firstMouse{true};

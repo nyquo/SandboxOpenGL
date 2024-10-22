@@ -6,33 +6,20 @@
 ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   : m_viewportWidth(viewportWidth)
   , m_viewportHeight(viewportHeight)
-  , m_camera(viewportWidth, viewportHeight, glm::vec3(0.0F, 0.0F, 10.0F))
+  , m_camera(std::make_shared<core::PerspectiveCamera>(viewportWidth, viewportHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
   , m_lastMouseX(m_viewportWidth / 2)
   , m_lastMouseY(m_viewportHeight / 2)
-{
-    m_modelShader = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.vert",
-                                                   std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.frag");
-}
+{}
 
 ViewportLayer::~ViewportLayer() {}
 
 void ViewportLayer::onUpdate()
 {
     processInputs();
-
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    if(m_model)
-    {
-        m_modelShader->bind();
-
-        m_modelShader->setMat4("view", m_camera.getView());
-        m_modelShader->setMat4("projection", m_camera.getProjection());
-        m_modelShader->setMat4("model", glm::mat4(1.0f));
-
-        m_model->draw(*m_modelShader);
-    }
+    m_renderer.beginFrame();
+    m_renderer.renderScene(m_scene, m_camera);
+    m_renderer.endFrame();
 }
 
 void ViewportLayer::onEvent(core::Event& e)
@@ -46,7 +33,7 @@ void ViewportLayer::setViewportSize(float viewportWidth, float viewportHeight)
 {
     m_viewportWidth = viewportWidth;
     m_viewportHeight = viewportHeight;
-    m_camera.setViewPortSize(viewportWidth, viewportHeight);
+    m_camera->setViewPortSize(viewportWidth, viewportHeight);
 }
 
 void ViewportLayer::setCameraMovement(bool cameraMovementEnabled) { m_cameraMovementEnabled = cameraMovementEnabled; }
@@ -56,7 +43,7 @@ void ViewportLayer::setGuiData(const GuiData& guiData) { m_guiData = guiData; }
 void ViewportLayer::loadModel()
 {
     core::Logger::logInfo("Loading model from path: " + std::string(m_guiData.m_modelPath));
-    m_model.reset(new core::Model(std::filesystem::path(m_guiData.m_modelPath)));
+    m_scene.addModel(std::make_shared<core::Model>(std::filesystem::path(m_guiData.m_modelPath)));
 }
 
 void ViewportLayer::processInputs()
@@ -94,7 +81,7 @@ void ViewportLayer::processInputs()
         {
             positionOffset.y -= cameraSpeed;
         }
-        m_camera.translateCameraRelative(positionOffset);
+        m_camera->translateCameraRelative(positionOffset);
     }
 }
 
@@ -102,7 +89,7 @@ bool ViewportLayer::onMouseScrolled(core::MouseScrolledEvent& e)
 {
     if(m_cameraMovementEnabled)
     {
-        m_camera.adustFov(-m_zoomOffset * e.getYOffset());
+        m_camera->adustFov(-m_zoomOffset * e.getYOffset());
     }
     return true;
 }
@@ -123,7 +110,7 @@ bool ViewportLayer::onMouseMoved(core::MouseMovedEvent& e)
     yOffset *= m_mouseSensitivity;
     if(m_cameraMovementEnabled)
     {
-        m_camera.rotateCamera(xOffset, yOffset);
+        m_camera->rotateCamera(xOffset, yOffset);
     }
 
     return true;

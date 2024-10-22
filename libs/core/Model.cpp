@@ -10,7 +10,7 @@ Model::Model(const fs::path& path) { loadModel(path); }
 
 Model::~Model() {}
 
-void Model::draw(Shader& shader)
+void Model::draw(Shader& shader) const
 {
     for(auto& mesh : m_meshes)
     {
@@ -104,7 +104,7 @@ void Model::loadMaterialTexures(aiMaterial* mat,
     {
         aiString str;
         mat->GetTexture(type, i, &str);
-        std::string separator(1,fs::path::preferred_separator);
+        std::string separator(1, fs::path::preferred_separator);
         fs::path texturePath = m_directory + separator + std::string(str.C_Str());
         vectorToFill.emplace_back(texturePath.string(), typeName);
     }

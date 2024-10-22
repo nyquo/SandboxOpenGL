@@ -25,7 +25,7 @@ class CORE_API Mesh
     Mesh& operator=(Mesh&& other) noexcept;
     ~Mesh();
 
-    void draw(Shader& shader);
+    void draw(Shader& shader) const;
 
   public:
     std::vector<Vertex> vertices;
