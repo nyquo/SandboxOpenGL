@@ -28,8 +28,8 @@ CustomLayer::CustomLayer(float viewportWidth, float viewportHeight)
         cube.m_rotationVector = glm::vec3(((float)dist(rng)) / 100, ((float)dist(rng)) / 100, ((float)dist(rng)) / 100);
     }
 
-    shaderProgram = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
-                                                   std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
+    shaderProgram = std::make_unique<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
+                                                       std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
 
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
@@ -51,10 +51,10 @@ CustomLayer::CustomLayer(float viewportWidth, float viewportHeight)
     glEnableVertexAttribArray(1);
 
     texture1 =
-      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container.jpg", "texture_diffuse");
+      std::make_unique<renderer::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container.jpg", "texture_diffuse");
     glActiveTexture(GL_TEXTURE0);
-    texture2 =
-      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/awesomeface.png", "texture_diffuse");
+    texture2 = std::make_unique<renderer::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/awesomeface.png",
+                                                   "texture_diffuse");
     glActiveTexture(GL_TEXTURE1);
 
     glBindVertexArray(0);

@@ -40,13 +40,13 @@ class CustomLayer : public core::Layer
     std::vector<HappyCube> m_happyCubes;
     unsigned int VBO, VAO;
 
-    std::unique_ptr<core::Shader> shaderProgram;
-    std::unique_ptr<core::Texture> texture1, texture2;
+    std::unique_ptr<renderer::Shader> shaderProgram;
+    std::unique_ptr<renderer::Texture> texture1, texture2;
 
     float m_viewportWidth;
     float m_viewportHeight;
 
-    core::PerspectiveCamera m_camera;
+    renderer::PerspectiveCamera m_camera;
     float m_zoomOffset{2.0};
     float m_mouseSensitivity{0.1F};
     bool m_firstMouse{true};

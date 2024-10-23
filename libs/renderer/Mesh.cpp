@@ -2,7 +2,7 @@
 
 #include <gl.h>
 
-namespace core {
+namespace renderer {
 
 Mesh::Mesh(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, std::vector<Texture>&& textures)
   : vertices(std::move(vertices))

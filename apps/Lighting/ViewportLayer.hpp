@@ -35,11 +35,11 @@ class ViewportLayer : public core::Layer
     std::vector<glm::mat4> m_cubeModelMatrix;
 
     BasicCube m_cube{};
-    std::unique_ptr<core::Texture> m_cubeTexture;
-    std::unique_ptr<core::Texture> m_cubeSpecularTexture;
-    std::unique_ptr<core::Shader> m_cubeShader;
+    std::unique_ptr<renderer::Texture> m_cubeTexture;
+    std::unique_ptr<renderer::Texture> m_cubeSpecularTexture;
+    std::unique_ptr<renderer::Shader> m_cubeShader;
 
-    std::unique_ptr<core::Shader> m_lightCubeShader;
+    std::unique_ptr<renderer::Shader> m_lightCubeShader;
     BasicCube m_lightCube{};
 
     double m_glfwTimeCount{0};
@@ -55,7 +55,7 @@ class ViewportLayer : public core::Layer
     bool m_cameraMovementEnabled{true};
 
     // Camera var
-    core::PerspectiveCamera m_camera;
+    renderer::PerspectiveCamera m_camera;
     float m_zoomOffset{2.0};
     float m_mouseSensitivity{0.1F};
     bool m_firstMouse{true};

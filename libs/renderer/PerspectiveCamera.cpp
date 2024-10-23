@@ -2,9 +2,10 @@
 #include "PerspectiveCamera.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
+
 #include <algorithm>
 
-namespace core {
+namespace renderer {
 
 PerspectiveCamera::PerspectiveCamera(
   float viewportWidth, float viewPortHeight, glm::vec3 position, float yaw, float pitch)

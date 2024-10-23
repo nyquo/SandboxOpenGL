@@ -1,14 +1,14 @@
 #pragma once
 
-#include "CoreExport.hpp"
+#include "RendererExport.hpp"
 
 #include <Model.hpp>
 
 #include <vector>
 
-namespace core {
+namespace renderer {
 
-class CORE_API Scene
+class RENDERER_API Scene
 {
   public:
     using CModelsIt = std::vector<std::shared_ptr<Model>>::const_iterator;

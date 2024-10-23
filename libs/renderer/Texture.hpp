@@ -1,19 +1,19 @@
 #pragma once
 
-#include "CoreExport.hpp"
-#include "gl.h"
+#include "RendererExport.hpp"
 
+#include <gl.h>
 #include <stb_image.h>
 
 #include <filesystem>
 #include <map>
 #include <string>
 
-namespace core {
+namespace renderer {
 
 namespace fs = std::filesystem;
 
-class CORE_API Texture
+class RENDERER_API Texture
 {
   public:
     Texture(const fs::path& texturePath, std::string type);

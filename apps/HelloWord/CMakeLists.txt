@@ -17,6 +17,7 @@ file(GLOB_RECURSE Shaders
 
 set(Links
     Core
+    Renderer
     Glad
     glm::glm
 )

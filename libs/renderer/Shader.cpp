@@ -8,7 +8,7 @@
 #include <fstream>
 #include <vector>
 
-namespace core {
+namespace renderer {
 
 Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
 {
@@ -39,12 +39,12 @@ Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
         glDeleteShader(vertexShader);
 
         // Log error
-        Logger::logError("Vertex shader compilation error:");
-        Logger::logError(infoLog.data());
+        core::Logger::logError("Vertex shader compilation error:");
+        core::Logger::logError(infoLog.data());
 
         return;
     }
-    Logger::logTrace("Vertex Shader compilation success!");
+    core::Logger::logTrace("Vertex Shader compilation success!");
 
     // Create an empty fragment shader handle
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -74,12 +74,12 @@ Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
         glDeleteShader(vertexShader);
 
         // Log error
-        Logger::logError("Fragment shader compilation error:");
-        Logger::logError(infoLog.data());
+        core::Logger::logError("Fragment shader compilation error:");
+        core::Logger::logError(infoLog.data());
 
         return;
     }
-    Logger::logTrace("Fragment Shader compilation success!");
+    core::Logger::logTrace("Fragment Shader compilation success!");
 
     // Vertex and fragment shaders are successfully compiled.
     // Now time to link them together into a program.
@@ -112,12 +112,12 @@ Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
         glDeleteShader(fragmentShader);
 
         // Use the infoLog as you see fit.
-        Logger::logError("Shader linking error:");
-        Logger::logError(infoLog.data());
+        core::Logger::logError("Shader linking error:");
+        core::Logger::logError(infoLog.data());
 
         return;
     }
-    Logger::logTrace("Shader linking success!");
+    core::Logger::logTrace("Shader linking success!");
 
     // Always detach shaders after a successful link.
     glDetachShader(m_programId, vertexShader);
@@ -158,11 +158,11 @@ void Shader::setVec3(const std::string& name, float x, float y, float z) const
 
 std::string Shader::parseFile(const fs::path& filePath)
 {
-    Logger::logTrace("FilePath: " + filePath.filename().string());
+    core::Logger::logTrace("FilePath: " + filePath.filename().string());
     std::ifstream file(filePath);
     if(!file.is_open())
     {
-        Logger::logError("File " + filePath.string() + " could not be opened!");
+        core::Logger::logError("File " + filePath.string() + " could not be opened!");
         return "";
     }
     std::string str;
@@ -172,7 +172,7 @@ std::string Shader::parseFile(const fs::path& filePath)
         content.append(str + "\n");
     }
 
-    Logger::logTrace("Shader content: " + content);
+    core::Logger::logTrace("Shader content: " + content);
     return content;
 }
 

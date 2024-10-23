@@ -1,4 +1,4 @@
-set(AppName Lighting)
+set(LibName Renderer)
 
 file(GLOB_RECURSE Headers
         ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
@@ -10,30 +10,48 @@ file(GLOB_RECURSE Sources
         ${CMAKE_CURRENT_SOURCE_DIR}/*.c
 )
 
-file(GLOB_RECURSE Shaders
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.frag
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.vert
-)
-
-set(Links
-    Core
+set(PrivateLinks
     Glad
-    glm::glm
-    imgui
-    Utils
-    Renderer
+    Core
 )
 
-set(RESSOURCES_FOLDER ${AppName}Ressources)
+set(PublicLinks
+    Io
+    glm::glm
+    assimp::assimp
+)
+
+set(RESSOURCES_FOLDER ${LibName}Ressources)
 
 set(Definitions
     RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
 )
 
-add_executable(${AppName} ${Sources} ${Headers} ${Shaders})
-target_link_libraries(${AppName} PRIVATE ${Links})
-target_include_directories(${AppName} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_definitions(${AppName} PRIVATE ${Definitions})
+# For some reason building core shared produced runtime error with glad on windows
+# As fighting we cmake and windows is not the purpose of this repo, this will be build
+# statically on windows for now
+if(WIN32)
+        add_library(${LibName} STATIC
+                ${Headers}
+                ${Sources}
+        )
+
+#	if(BUILD_SHARED_LIBS)
+#		target_compile_definitions(${LibName} PRIVATE RENDERER_API_EXPORT)
+#	endif()
+else()
+        add_library(${LibName}
+                ${Headers}
+                ${Sources}
+        )
+endif()
+
+
+
+target_link_libraries(${LibName} PRIVATE ${PrivateLinks})
+target_link_libraries(${LibName} PUBLIC ${PublicLinks} )
+target_include_directories(${LibName} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_definitions(${LibName} PRIVATE ${Definitions})
 
 #TODO Use symlink to avoid copy?
 #TODO YT comment found on a cmake video: Use a custom target and custom command to run the copying/symlink operation only when necessary.
@@ -45,33 +63,18 @@ target_compile_definitions(${AppName} PRIVATE ${Definitions})
 
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(IS_MULTI_CONFIG)
-    add_custom_target(copy_shaders${AppName} ALL
+    add_custom_target(copy_shaders${LibName} ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${RESSOURCES_FOLDER}/shaders
-        COMMENT "Copying ${AppName} shaders in the output directory"
-    )
-    add_custom_target(copy_assets${AppName} ALL
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/assets
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${RESSOURCES_FOLDER}/assets
-        COMMENT "Copying ${AppName} assets in the output directory"
+        COMMENT "Copying ${LibName} shaders in the output directory"
     )
 else()
-    add_custom_target(copy_shaders${AppName} ALL
+    add_custom_target(copy_shaders${LibName} ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${RESSOURCES_FOLDER}/shaders
-        COMMENT "Copying ${AppName} shaders in the output directory"
-    )
-    add_custom_target(copy_assets${AppName} ALL
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/assets
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${RESSOURCES_FOLDER}/assets
-        COMMENT "Copying ${AppName} assets in the output directory"
+        COMMENT "Copying ${LibName} shaders in the output directory"
     )
 endif()
-add_dependencies(${AppName} copy_shadersLighting)
-add_dependencies(${AppName} copy_assetsLighting)
-
-set_target_properties(${AppName} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
+add_dependencies(${LibName} copy_shaders${LibName})

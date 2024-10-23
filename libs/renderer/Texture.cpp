@@ -2,7 +2,7 @@
 
 #include "Logger.hpp"
 
-namespace core {
+namespace renderer {
 
 std::map<fs::path, std::pair<unsigned int, Texture::TextureData>> Texture::m_loadedCount = {};
 

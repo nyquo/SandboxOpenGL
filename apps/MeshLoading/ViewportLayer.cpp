@@ -6,7 +6,7 @@
 ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   : m_viewportWidth(viewportWidth)
   , m_viewportHeight(viewportHeight)
-  , m_camera(std::make_shared<core::PerspectiveCamera>(viewportWidth, viewportHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
+  , m_camera(std::make_shared<renderer::PerspectiveCamera>(viewportWidth, viewportHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
   , m_lastMouseX(m_viewportWidth / 2)
   , m_lastMouseY(m_viewportHeight / 2)
 {}
@@ -43,7 +43,7 @@ void ViewportLayer::setGuiData(const GuiData& guiData) { m_guiData = guiData; }
 void ViewportLayer::loadModel()
 {
     core::Logger::logInfo("Loading model from path: " + std::string(m_guiData.m_modelPath));
-    m_scene.addModel(std::make_shared<core::Model>(std::filesystem::path(m_guiData.m_modelPath)));
+    m_scene.addModel(std::make_shared<renderer::Model>(std::filesystem::path(m_guiData.m_modelPath)));
 }
 
 void ViewportLayer::processInputs()

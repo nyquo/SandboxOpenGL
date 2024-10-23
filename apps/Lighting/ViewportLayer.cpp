@@ -11,12 +11,12 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   , m_lastMouseX(m_viewportWidth / 2)
   , m_lastMouseY(m_viewportHeight / 2)
 {
-    m_cubeShader = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
-                                                  std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
+    m_cubeShader = std::make_unique<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.vert",
+                                                      std::string(RESSOURCES_FOLDER) + "/shaders/BasicShader.frag");
 
     m_lightCubeShader =
-      std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.vert",
-                                     std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.frag");
+      std::make_unique<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.vert",
+                                         std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.frag");
 
     // cube VBO
     glGenBuffers(1, &VBO);
@@ -44,9 +44,9 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
     glEnableVertexAttribArray(0);
 
     m_cubeTexture =
-      std::make_unique<core::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2.png", "texture_diffuse");
+      std::make_unique<renderer::Texture>(std::string(RESSOURCES_FOLDER) + "/assets/container2.png", "texture_diffuse");
     glActiveTexture(GL_TEXTURE0);
-    m_cubeSpecularTexture = std::make_unique<core::Texture>(
+    m_cubeSpecularTexture = std::make_unique<renderer::Texture>(
       std::string(RESSOURCES_FOLDER) + "/assets/container2_specular.png", "texture_specular");
     glActiveTexture(GL_TEXTURE1);
 

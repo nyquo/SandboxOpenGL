@@ -6,7 +6,7 @@
 
 #include <memory>
 
-namespace core {
+namespace renderer {
 
 class CORE_API Renderer
 {

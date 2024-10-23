@@ -1,11 +1,11 @@
 #pragma once
 
-#include "CoreExport.hpp"
 #include "Renderer.hpp"
+#include "RendererExport.hpp"
 
-namespace core {
+namespace renderer {
 
-class CORE_API BasicRenderer : public Renderer
+class RENDERER_API BasicRenderer : public Renderer
 {
   public:
     BasicRenderer();
@@ -21,6 +21,6 @@ class CORE_API BasicRenderer : public Renderer
     void setViewport(int width, int height, int x = 0, int y = 0) override;
 
   private:
-    std::unique_ptr<core::Shader> m_modelShader;
+    std::unique_ptr<Shader> m_modelShader;
 };
 }

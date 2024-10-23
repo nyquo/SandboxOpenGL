@@ -35,9 +35,9 @@ class ViewportLayer : public core::Layer
     bool onMouseMoved(core::MouseMovedEvent& e);
 
   private:
-    core::Scene m_scene;
-    core::BasicRenderer m_renderer;
-    std::shared_ptr<core::PerspectiveCamera> m_camera;
+    renderer::Scene m_scene;
+    renderer::BasicRenderer m_renderer;
+    std::shared_ptr<renderer::PerspectiveCamera> m_camera;
 
     // TEMP
     // std::vector<glm::mat4> m_cubeModelMatrix;

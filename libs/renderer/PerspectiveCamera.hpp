@@ -1,7 +1,7 @@
 #include "Camera.hpp"
 #include "CoreExport.hpp"
 
-namespace core {
+namespace renderer {
 
 class CORE_API PerspectiveCamera : public Camera
 {

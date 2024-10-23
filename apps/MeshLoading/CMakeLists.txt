@@ -18,6 +18,7 @@ file(GLOB_RECURSE Shaders
 set(Links
     Core
     Glad
+    Renderer
     glm::glm
     imgui
     Utils

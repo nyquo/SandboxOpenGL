@@ -2,12 +2,12 @@
 
 #include <Logger.hpp>
 
-namespace core {
+namespace renderer {
 
 BasicRenderer::BasicRenderer()
 {
-    m_modelShader = std::make_unique<core::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.vert",
-                                                   std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.frag");
+    m_modelShader = std::make_unique<Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.vert",
+                                             std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.frag");
 }
 
 void BasicRenderer::beginFrame() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); }

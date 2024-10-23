@@ -1,17 +1,17 @@
 #pragma once
 
-#include "CoreExport.hpp"
+#include "RendererExport.hpp"
 
 #include <glm/glm.hpp>
 
 #include <filesystem>
 #include <string>
 
-namespace core {
+namespace renderer {
 
 namespace fs = std::filesystem;
 
-class CORE_API Shader
+class RENDERER_API Shader
 {
   public:
     Shader(const fs::path& vertexPath, const fs::path& fragmentPath);

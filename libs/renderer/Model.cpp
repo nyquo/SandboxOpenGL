@@ -4,7 +4,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-namespace core {
+namespace renderer {
 
 Model::Model(const fs::path& path) { loadModel(path); }
 

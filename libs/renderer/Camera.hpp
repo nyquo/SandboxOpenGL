@@ -1,12 +1,12 @@
 #pragma once
 
-#include "CoreExport.hpp"
+#include "RendererExport.hpp"
 
 #include <glm/glm.hpp>
 
-namespace core {
+namespace renderer {
 
-class CORE_API Camera
+class RENDERER_API Camera
 {
   public:
     Camera(const glm::mat4& projection = glm::mat4(1.0F), const glm::mat4& view = glm::mat4(1.0F))

@@ -1,6 +1,6 @@
 #include "Scene.hpp"
 
-namespace core {
+namespace renderer {
 
 Scene::Scene()
 {

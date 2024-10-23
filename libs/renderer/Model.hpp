@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Mesh.hpp"
+#include "RendererExport.hpp"
 #include "Shader.hpp"
 
 #include <assimp/material.h>
@@ -10,11 +11,11 @@
 #include <filesystem>
 #include <vector>
 
-namespace core {
+namespace renderer {
 
 namespace fs = std::filesystem;
 
-class CORE_API Model
+class RENDERER_API Model
 {
   public:
     Model(const fs::path& path);
