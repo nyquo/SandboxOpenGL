@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BasicCube.hpp"
 #include "Renderer.hpp"
 #include "RendererExport.hpp"
 
@@ -22,5 +23,8 @@ class RENDERER_API BasicRenderer : public Renderer
 
   private:
     std::unique_ptr<Shader> m_modelShader;
+
+    // temp TO DELTE
+    mutable BasicCube m_cube;
 };
 }

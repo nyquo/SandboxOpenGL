@@ -14,6 +14,28 @@ void BasicRenderer::beginFrame() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER
 
 void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> camera) const
 {
+    // TEMP draw point lights as cube
+    m_cube.m_shader->bind();
+    glBindVertexArray(m_cube.m_vao);
+    for(const auto& pointLight : scene.getPointLights())
+    {
+        m_cube.m_position = pointLight.m_position;
+
+        m_cube.m_modelMatrix = glm::mat4(1.0F);
+        m_cube.m_modelMatrix = glm::translate(m_cube.m_modelMatrix, m_cube.m_position);
+        m_cube.m_modelMatrix = glm::scale(m_cube.m_modelMatrix, glm::vec3(0.2F));
+
+        m_cube.m_shader->setVec3("lightColor", pointLight.m_diffuseColor);
+
+        m_cube.m_shader->setMat4("view", camera->getView());
+        m_cube.m_shader->setMat4("projection", camera->getProjection());
+        m_cube.m_shader->setMat4("model", m_cube.m_modelMatrix);
+
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    // END TEMP
+
     m_modelShader->bind();
 
     // Directional light
