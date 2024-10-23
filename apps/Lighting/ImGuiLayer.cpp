@@ -10,7 +10,6 @@ void ImGuiLayer::onUpdate()
     {
         return;
     }
-    ImGui::NewFrame();
 
     ImGui::Begin("Options Window");
 
