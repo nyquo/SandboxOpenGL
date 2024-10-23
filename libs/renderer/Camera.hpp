@@ -15,6 +15,7 @@ class RENDERER_API Camera
     {}
     virtual ~Camera() = default;
 
+    [[nodiscard]] virtual glm::vec3 getPosition() = 0;
     [[nodiscard]] glm::mat4 getProjection() const { return m_projection; }
     [[nodiscard]] glm::mat4 getView() const { return m_view; }
 

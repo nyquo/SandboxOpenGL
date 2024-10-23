@@ -23,9 +23,38 @@ void ImGuiLayer::onUpdate()
         }
     }
 
+    ImGui::Text("Directional light");
+    ImGui::DragFloat3("Direction", (float*)&m_guiData.m_directionalLight.m_direction);
+    ImGui::ColorEdit3("D Ambient light color", (float*)&m_guiData.m_directionalLight.m_ambientColor);
+    ImGui::ColorEdit3("D Diffuse light color", (float*)&m_guiData.m_directionalLight.m_diffuseColor);
+    ImGui::ColorEdit3("D Specular light color", (float*)&m_guiData.m_directionalLight.m_specularColor);
+
+    if(ImGui::Button("Add Point light"))
+    {
+        m_guiData.m_pointLights.emplace_back(renderer::PointLight(glm::vec3(0.0f, 1.0f, 0.0f),
+                                                                  glm::vec3(0.2f, 0.2f, 0.2f),
+                                                                  glm::vec3(0.5f, 0.5f, 0.5f),
+                                                                  glm::vec3(1.0f, 1.0f, 1.0)));
+    }
+
+    for(int i = 0; i < m_guiData.m_pointLights.size(); ++i)
+    {
+        std::string name = "Point Light " + std::to_string(i);
+        if(ImGui::TreeNode(name.c_str()))
+        {
+            ImGui::DragFloat3("position", (float*)&m_guiData.m_pointLights[i], 0.01f);
+            ImGui::ColorEdit3("D Ambient light color", (float*)&m_guiData.m_pointLights[i].m_ambientColor);
+            ImGui::ColorEdit3("D Diffuse light color", (float*)&m_guiData.m_pointLights[i].m_diffuseColor);
+            ImGui::ColorEdit3("D Specular light color", (float*)&m_guiData.m_pointLights[i].m_specularColor);
+            if(ImGui::Button("remove"))
+            {
+                m_guiData.m_pointLights.erase(std::next(m_guiData.m_pointLights.begin(), i));
+            }
+            ImGui::TreePop();
+        }
+    }
     ImGui::Checkbox("Enable Info Overlay", &m_guiData.m_enableOverlayInfo);
     ImGui::Checkbox("Enable MSAA", &m_guiData.m_enableMSAA);
-
     if(ImGui::Button("Exit app"))
     {
         if(m_closeCallBack)

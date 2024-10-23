@@ -38,7 +38,14 @@ void ViewportLayer::setViewportSize(float viewportWidth, float viewportHeight)
 
 void ViewportLayer::setCameraMovement(bool cameraMovementEnabled) { m_cameraMovementEnabled = cameraMovementEnabled; }
 
-void ViewportLayer::setGuiData(const GuiData& guiData) { m_guiData = guiData; }
+void ViewportLayer::setGuiData(const GuiData& guiData)
+{
+    renderer::DirectionalLight light;
+    m_scene.setDirectionalLight(guiData.m_directionalLight);
+    m_scene.clearPointLights();
+    m_scene.setPointLightVec(guiData.m_pointLights);
+    m_guiData = guiData;
+}
 
 void ViewportLayer::loadModel()
 {
