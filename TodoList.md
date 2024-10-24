@@ -7,3 +7,4 @@ This might need to bump up to opengl 4.1
 - Add a "Entity" that have child entitys that can be models, or light for example.
 - drag and drop using https://www.glfw.org/docs/3.3/input_guide.html#path_drop
 - consider replacing the m_visible in the onUpdate of layers by a mecanism to remove layer from the window vector
+- Add to the renderer a wireframe mode
