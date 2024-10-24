@@ -1,0 +1,13 @@
+# Blender 4.1.1 MTL File: 'GravelyPlane.blend'
+# www.blender.org
+
+newmtl GravellySand.001
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd gravelly_sand_diff_4k.jpg
+map_Ns gravelly_sand_rough_4k.exr
+map_Bump -bm 1.000000 gravelly_sand_nor_gl_4k.exr

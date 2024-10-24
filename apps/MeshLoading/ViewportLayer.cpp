@@ -9,7 +9,10 @@ ViewportLayer::ViewportLayer(float viewportWidth, float viewportHeight)
   , m_camera(std::make_shared<renderer::PerspectiveCamera>(viewportWidth, viewportHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
   , m_lastMouseX(m_viewportWidth / 2)
   , m_lastMouseY(m_viewportHeight / 2)
-{}
+{
+    m_scene.addModel(std::make_shared<renderer::Model>(
+      std::filesystem::path(std::string(RESSOURCES_FOLDER) + "/assets/GravelyPlane/GravelyPlane.obj")));
+}
 
 ViewportLayer::~ViewportLayer() {}
 
