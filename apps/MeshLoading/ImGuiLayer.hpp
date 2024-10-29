@@ -41,6 +41,8 @@ class ImGuiLayer : public core::Layer
     void setLoadModelCallBack(std::function<void()> loadModelCallBack);
     void setVisible(bool visible);
 
+    const GuiData& getGuiData() const;
+
   private:
     void processInputs();
 

@@ -29,6 +29,8 @@ class MeshLoadingApp : public core::Application
 
         getWindow().pushUiLayer(m_imGuiLayer);
         getWindow().pushUiLayer(m_overlayInfo);
+
+        m_viewportLayer->setGuiData(m_imGuiLayer->getGuiData());
     }
 
     void onEvent(core::Event& e) override

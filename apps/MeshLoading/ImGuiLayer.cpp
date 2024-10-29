@@ -100,4 +100,6 @@ void ImGuiLayer::setLoadModelCallBack(std::function<void()> loadModelCallBack)
 
 void ImGuiLayer::setVisible(bool visible) { m_visible = visible; }
 
+const GuiData& ImGuiLayer::getGuiData() const { return m_guiData; }
+
 void ImGuiLayer::processInputs() {}
