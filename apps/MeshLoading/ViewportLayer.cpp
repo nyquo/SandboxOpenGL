@@ -53,7 +53,9 @@ void ViewportLayer::setGuiData(const GuiData& guiData)
 void ViewportLayer::loadModel()
 {
     core::Logger::logInfo("Loading model from path: " + std::string(m_guiData.m_modelPath));
-    m_scene.addModel(std::make_shared<renderer::Model>(std::filesystem::path(m_guiData.m_modelPath)));
+    auto model = std::make_shared<renderer::Model>(std::filesystem::path(m_guiData.m_modelPath));
+    model->outline = true;
+    m_scene.addModel(model);
 }
 
 void ViewportLayer::processInputs()

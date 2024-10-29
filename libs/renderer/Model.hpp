@@ -42,6 +42,10 @@ class RENDERER_API Model
     std::vector<Mesh> m_meshes;
     glm::mat4 m_modelMat{1.0f};
     std::string m_directory;
+
+    // temp
+  public:
+    bool outline{false};
 };
 
 }

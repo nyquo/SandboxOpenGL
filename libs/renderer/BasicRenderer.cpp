@@ -12,7 +12,7 @@ BasicRenderer::BasicRenderer()
                                                std::string(RESSOURCES_FOLDER) + "/shaders/modelOutline.frag");
     glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 }
 
 void BasicRenderer::beginFrame() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); }
@@ -77,9 +77,16 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
     m_modelShader->setVec3("viewPos", camera->getPosition());
 
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilMask(0xFF);
     for(const auto& model : scene.getModels())
     {
+        if(model->outline)
+        {
+            glStencilMask(0xFF);
+        }
+        else
+        {
+            glStencilMask(0x00);
+        }
         m_modelShader->setMat4("model", model->getModelMat());
         model->draw(*m_modelShader);
     }
@@ -99,8 +106,11 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
     glDisable(GL_DEPTH_TEST);
     for(const auto& model : scene.getModels())
     {
-        m_outlineShader->setMat4("model", model->getModelMat());
-        model->draw(*m_outlineShader);
+        if(model->outline)
+        {
+            m_outlineShader->setMat4("model", model->getModelMat());
+            model->draw(*m_outlineShader);
+        }
     }
     glStencilMask(0xFF);
     glStencilFunc(GL_ALWAYS, 0, 0xFF);
