@@ -8,7 +8,7 @@ BasicRenderer::BasicRenderer()
 {
     m_modelShader = std::make_unique<Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.vert",
                                              std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.frag");
-    m_outlineShader = std::make_unique<Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.vert",
+    m_outlineShader = std::make_unique<Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/modelOutline.vert",
                                                std::string(RESSOURCES_FOLDER) + "/shaders/modelOutline.frag");
     glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -99,8 +99,7 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
     glDisable(GL_DEPTH_TEST);
     for(const auto& model : scene.getModels())
     {
-        glm::mat4 modelMatScaled = glm::scale(model->getModelMat(), glm::vec3(1.1f, 1.1f, 1.1f));
-        m_outlineShader->setMat4("model", modelMatScaled);
+        m_outlineShader->setMat4("model", model->getModelMat());
         model->draw(*m_outlineShader);
     }
     glStencilMask(0xFF);
