@@ -22,6 +22,8 @@ glm::mat4 Model::getModelMat() const { return m_modelMat; }
 
 void Model::setModelMat(const glm::mat4& modelMat) { m_modelMat = modelMat; }
 
+std::string Model::getName() const { return m_modelName; }
+
 void Model::loadModel(const fs::path& path)
 {
     Assimp::Importer importer;
@@ -35,6 +37,7 @@ void Model::loadModel(const fs::path& path)
     }
 
     m_directory = path.parent_path().string();
+    m_modelName = path.filename().stem().string();
 
     processNode(scene->mRootNode, scene);
 }

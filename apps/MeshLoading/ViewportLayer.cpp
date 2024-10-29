@@ -47,16 +47,23 @@ void ViewportLayer::setGuiData(const GuiData& guiData)
     m_scene.setDirectionalLight(guiData.m_directionalLight);
     m_scene.clearPointLights();
     m_scene.setPointLightVec(guiData.m_pointLights);
+
+    // TDOO CLEANUP THIS AS SOON AS POSSIBLE
+    auto sceneModels = m_scene.getModels();
+    for(int i = 1; i < sceneModels.size(); ++i)
+    {
+        if(m_guiData.m_models.size() > i - 1)
+        {
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), m_guiData.m_models.at(i - 1).m_position);
+            sceneModels[i]->outline = m_guiData.m_models.at(i - 1).m_outline;
+            sceneModels[i]->setModelMat(model);
+        }
+    }
+
     m_guiData = guiData;
 }
 
-void ViewportLayer::loadModel()
-{
-    core::Logger::logInfo("Loading model from path: " + std::string(m_guiData.m_modelPath));
-    auto model = std::make_shared<renderer::Model>(std::filesystem::path(m_guiData.m_modelPath));
-    model->outline = true;
-    m_scene.addModel(model);
-}
+void ViewportLayer::loadModel(std::shared_ptr<renderer::Model> model) { m_scene.addModel(model); }
 
 void ViewportLayer::processInputs()
 {

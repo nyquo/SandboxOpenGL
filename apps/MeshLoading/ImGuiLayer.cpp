@@ -53,6 +53,18 @@ void ImGuiLayer::onUpdate()
             ImGui::TreePop();
         }
     }
+
+    for(int i = 0; i < m_guiData.m_models.size(); ++i)
+    {
+        std::string name = m_guiData.m_models[i].m_name + std::to_string(i);
+        if(ImGui::TreeNode(name.c_str()))
+        {
+            ImGui::DragFloat3("position", (float*)&m_guiData.m_models[i].m_position, 0.01f);
+            ImGui::Checkbox("Outline", &m_guiData.m_models[i].m_outline);
+            ImGui::TreePop();
+        }
+    }
+
     ImGui::Checkbox("Enable Info Overlay", &m_guiData.m_enableOverlayInfo);
     ImGui::Checkbox("Enable MSAA", &m_guiData.m_enableMSAA);
     if(ImGui::Button("Exit app"))
@@ -99,6 +111,13 @@ void ImGuiLayer::setLoadModelCallBack(std::function<void()> loadModelCallBack)
 }
 
 void ImGuiLayer::setVisible(bool visible) { m_visible = visible; }
+
+void ImGuiLayer::modelLoaded(const std::string& name)
+{
+    ModelData mData;
+    mData.m_name = name;
+    m_guiData.m_models.push_back(mData);
+}
 
 const GuiData& ImGuiLayer::getGuiData() const { return m_guiData; }
 

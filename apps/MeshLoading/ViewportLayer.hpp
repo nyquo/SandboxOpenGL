@@ -25,7 +25,7 @@ class ViewportLayer : public core::Layer
     void setCameraMovement(bool cameraMovementEnabled);
     void setGuiData(const GuiData& guiData);
 
-    void loadModel();
+    void loadModel(std::shared_ptr<renderer::Model> model);
 
   private:
     void processInputs();

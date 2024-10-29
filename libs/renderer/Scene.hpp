@@ -17,7 +17,7 @@ class RENDERER_API Scene
 
     Scene();
 
-    const auto& getModels() const { return m_models; }
+    /*const*/ auto& getModels() const { return m_models; }
 
     void addModel(std::shared_ptr<Model> model);
     void clearScene();

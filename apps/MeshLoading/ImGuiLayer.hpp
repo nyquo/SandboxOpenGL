@@ -10,6 +10,13 @@
 #include <string>
 #include <vector>
 
+struct ModelData
+{
+    std::string m_name;
+    glm::vec3 m_position{0.0f, 0.0f, 0.0f};
+    bool m_outline{true};
+};
+
 struct GuiData
 {
     char m_modelPath[128] = "/home/nicolas/Downloads/backpack/backpack.obj";
@@ -20,6 +27,7 @@ struct GuiData
                                                   glm::vec3(1.0f, 1.0f, 1.0f)};
 
     std::vector<renderer::PointLight> m_pointLights{};
+    std::vector<ModelData> m_models;
 
     bool m_enableOverlayInfo;
 
@@ -40,6 +48,7 @@ class ImGuiLayer : public core::Layer
     void setDataChangedCallBack(std::function<void(const GuiData&)> dataChangedCallBack);
     void setLoadModelCallBack(std::function<void()> loadModelCallBack);
     void setVisible(bool visible);
+    void modelLoaded(const std::string& name);
 
     const GuiData& getGuiData() const;
 

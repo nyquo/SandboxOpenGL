@@ -6,6 +6,7 @@
 
 #include <Application.hpp>
 #include <Events/KeyEvent.hpp>
+#include <Logger.hpp>
 
 class MeshLoadingApp : public core::Application
 {
@@ -25,7 +26,17 @@ class MeshLoadingApp : public core::Application
             m_overlayInfo->setVisible(data.m_enableOverlayInfo);
             m_viewportLayer->setGuiData(data);
         });
-        m_imGuiLayer->setLoadModelCallBack([this]() { m_viewportLayer->loadModel(); });
+        m_imGuiLayer->setLoadModelCallBack([this]() {
+            core::Logger::logInfo("Loading model from path: " + std::string(m_imGuiLayer->getGuiData().m_modelPath));
+            auto model =
+              std::make_shared<renderer::Model>(std::filesystem::path(m_imGuiLayer->getGuiData().m_modelPath));
+            model->outline = true;
+            if(model->getName() != "")
+            {
+                m_viewportLayer->loadModel(model);
+                m_imGuiLayer->modelLoaded(model->getName());
+            }
+        });
 
         getWindow().pushUiLayer(m_imGuiLayer);
         getWindow().pushUiLayer(m_overlayInfo);
