@@ -18,6 +18,10 @@ void Model::draw(Shader& shader) const
     }
 }
 
+glm::mat4 Model::getModelMat() const { return m_modelMat; }
+
+void Model::setModelMat(const glm::mat4& modelMat) { m_modelMat = modelMat; }
+
 void Model::loadModel(const fs::path& path)
 {
     Assimp::Importer importer;

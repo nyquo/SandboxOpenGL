@@ -26,6 +26,8 @@ class RENDERER_API Model
     ~Model();
 
     void draw(Shader& shader) const;
+    glm::mat4 getModelMat() const;
+    void setModelMat(const glm::mat4& modelMat);
 
   private:
     void loadModel(const fs::path& path);
@@ -38,6 +40,7 @@ class RENDERER_API Model
 
   private:
     std::vector<Mesh> m_meshes;
+    glm::mat4 m_modelMat{1.0f};
     std::string m_directory;
 };
 

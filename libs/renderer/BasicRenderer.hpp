@@ -23,6 +23,7 @@ class RENDERER_API BasicRenderer : public Renderer
 
   private:
     std::unique_ptr<Shader> m_modelShader;
+    std::unique_ptr<Shader> m_outlineShader;
 
     // temp TO DELTE
     mutable BasicCube m_cube;
