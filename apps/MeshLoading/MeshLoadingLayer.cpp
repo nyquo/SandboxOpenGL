@@ -40,6 +40,7 @@ void MeshLoadingLayer::onImGuiRender()
     {
         return;
     }
+
     ImGui::Begin("Options Window");
 
     ImGui::InputText("Model path", m_guiData.m_modelPath, IM_ARRAYSIZE(m_guiData.m_modelPath));
@@ -98,7 +99,22 @@ void MeshLoadingLayer::onImGuiRender()
         glfwSetWindowShouldClose(m_window->getWindow(), GLFW_TRUE);
     }
     ImGui::End();
+}
 
+void MeshLoadingLayer::setViewportSize(float viewportWidth, float viewportHeight)
+{
+    m_viewportWidth = viewportWidth;
+    m_viewportHeight = viewportHeight;
+    m_camera->setViewPortSize(viewportWidth, viewportHeight);
+}
+
+void MeshLoadingLayer::setCameraMovement(bool cameraMovementEnabled)
+{
+    m_cameraMovementEnabled = cameraMovementEnabled;
+}
+
+void MeshLoadingLayer::updateData()
+{
     if(m_guiData.m_enableMSAA != m_guiData.m_oldEnablerMSAA)
     {
         m_guiData.m_oldEnablerMSAA = m_guiData.m_enableMSAA;
@@ -120,28 +136,12 @@ void MeshLoadingLayer::onImGuiRender()
             m_onDisplayOverlayChanged(m_guiData.m_displayOverlayInfo);
         }
     }
-}
 
-void MeshLoadingLayer::setViewportSize(float viewportWidth, float viewportHeight)
-{
-    m_viewportWidth = viewportWidth;
-    m_viewportHeight = viewportHeight;
-    m_camera->setViewPortSize(viewportWidth, viewportHeight);
-}
-
-void MeshLoadingLayer::setCameraMovement(bool cameraMovementEnabled)
-{
-    m_cameraMovementEnabled = cameraMovementEnabled;
-}
-
-void MeshLoadingLayer::updateData()
-{
     renderer::DirectionalLight light;
     m_scene.setDirectionalLight(m_guiData.m_directionalLight);
     m_scene.clearPointLights();
     m_scene.setPointLightVec(m_guiData.m_pointLights);
 
-    // TDOO CLEANUP THIS AS SOON AS POSSIBLE
     auto sceneModels = m_scene.getModels();
     for(int i = 1; i < sceneModels.size(); ++i)
     {

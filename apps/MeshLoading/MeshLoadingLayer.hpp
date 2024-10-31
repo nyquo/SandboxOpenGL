@@ -48,13 +48,11 @@ class MeshLoadingLayer : public core::Layer
     void onEvent(core::Event& e) override;
     void onImGuiRender() override;
 
-    void setViewportSize(float viewportWidth, float viewportHeight);
-
-    void setCameraMovement(bool cameraMovementEnabled);
     void updateData();
-
     void loadModel(fs::path path);
 
+    void setViewportSize(float viewportWidth, float viewportHeight);
+    void setCameraMovement(bool cameraMovementEnabled);
     void setShowUi(bool showUi);
     void setDisplayOverlayChangedCallBack(std::function<void(bool)> callBack);
 

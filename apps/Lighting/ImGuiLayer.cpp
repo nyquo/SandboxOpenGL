@@ -4,7 +4,7 @@ ImGuiLayer::ImGuiLayer() {}
 
 ImGuiLayer::~ImGuiLayer() {}
 
-void ImGuiLayer::onUpdate()
+void ImGuiLayer::onImGuiRender()
 {
     if(!m_visible)
     {
