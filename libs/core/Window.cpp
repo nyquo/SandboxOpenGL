@@ -4,9 +4,10 @@
 #include "Events/MouseEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Logger.hpp"
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 namespace core {
 
@@ -130,21 +131,7 @@ void Window::onUpdate()
     glClear(GL_COLOR_BUFFER_BIT);
 
     glfwPollEvents();
-
-    for(auto& layer : m_layers)
-    {
-        layer->onUpdate();
-    }
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    for(auto& layer : m_uiLayers)
-    {
-        layer->onUpdate();
-    }
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    m_layerStack.onUpdate();
     glfwSwapBuffers(m_window);
 }
 
@@ -165,53 +152,18 @@ glm::vec2 Window::getMousePosition() const
     return {(float)x, (float)y};
 }
 
-void Window::pushLayer(std::shared_ptr<Layer> layer)
-{
-    if(std::find(m_layers.begin(), m_layers.end(), layer) == m_layers.end())
-    {
-        layer->setWindow(this);
-        m_layers.push_back(layer);
-    }
-}
+void Window::pushLayer(std::shared_ptr<Layer> layer) { m_layerStack.pushLayer(layer); }
 
-void Window::pushUiLayer(std::shared_ptr<Layer> layer)
-{
-    if(std::find(m_uiLayers.begin(), m_uiLayers.end(), layer) == m_uiLayers.end())
-    {
-        layer->setWindow(this);
-        m_uiLayers.push_back(layer);
-    }
-}
+void Window::pushUiLayer(std::shared_ptr<Layer> layer) { m_layerStack.pushUiLayer(layer); }
 
-void Window::removeLayer(std::shared_ptr<Layer> layer)
-{
-    auto itLayer = std::find(m_layers.begin(), m_layers.end(), layer);
-    if(itLayer != m_layers.end())
-    {
-        m_layers.erase(itLayer);
-    }
-}
+void Window::removeLayer(std::shared_ptr<Layer> layer) { m_layerStack.removeLayer(layer); }
 
-void Window::removeUiLayer(std::shared_ptr<Layer> layer)
-{
-    auto itLayer = std::find(m_uiLayers.begin(), m_uiLayers.end(), layer);
-    if(itLayer != m_uiLayers.end())
-    {
-        m_uiLayers.erase(itLayer);
-    }
-}
+void Window::removeUiLayer(std::shared_ptr<Layer> layer) { m_layerStack.removeUiLayer(layer); }
 
 void Window::onEvent(Event& e)
 {
     EventDispatcher dispatcher(e);
     dispatcher.dispatch<core::WindowResizeEvent>(BIND_EVENT_FN(Window::onWindowResized));
-    for(auto& layer : m_layers)
-    {
-        layer->onEvent(e);
-    }
-    for(auto& layer : m_uiLayers)
-    {
-        layer->onEvent(e);
-    }
+    m_layerStack.onEvent(e);
 }
 }

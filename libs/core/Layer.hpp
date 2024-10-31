@@ -14,6 +14,10 @@ class CORE_API Layer
 {
   public:
     Layer(Window* window = nullptr);
+    Layer(const Layer& other) = delete;
+    Layer(Layer&& other) = delete;
+    Layer operator=(const Layer& other) = delete;
+    Layer operator=(Layer&& other) = delete;
 
     virtual void onUpdate() = 0;
     virtual void onEvent(Event& event) = 0;

@@ -5,6 +5,7 @@
 #include "Events/KeyEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Layer.hpp"
+#include "LayerStack.hpp"
 #include "gl.h"
 
 #include <glm/glm.hpp>
@@ -12,7 +13,6 @@
 #include <functional>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace core {
 
@@ -45,6 +45,7 @@ class CORE_API Window
     static bool s_gladInitialized;
 
     GLFWwindow* m_window;
+    LayerStack m_layerStack{this};
 
     std::function<void(Event&)> m_eventCallBack;
 
@@ -54,9 +55,6 @@ class CORE_API Window
     unsigned int m_height;
 
   private:
-    std::vector<std::shared_ptr<Layer>> m_layers;
-    std::vector<std::shared_ptr<Layer>> m_uiLayers;
-
     bool onWindowResized(core::WindowResizeEvent& e)
     {
         m_width = e.getWidth();

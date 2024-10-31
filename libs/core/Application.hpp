@@ -17,7 +17,7 @@ class CORE_API Application
     Application(Application&& other) = delete;
     Application operator=(const Application& other) = delete;
     Application operator=(Application&& other) = delete;
-    ~Application();
+    virtual ~Application();
 
   public:
     void run();
