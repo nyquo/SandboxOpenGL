@@ -12,7 +12,7 @@ Layer::Layer(Window* window)
 
 bool Layer::isKeyPressed(int key) const
 {
-    if(m_window)
+    if(m_window != nullptr)
     {
         return m_window->isKeyPressed(key);
     }
@@ -23,7 +23,7 @@ bool Layer::isKeyPressed(int key) const
 
 bool Layer::isMouseButtonPressed(int button) const
 {
-    if(m_window)
+    if(m_window != nullptr)
     {
         return m_window->isMouseButtonPressed(button);
     }
@@ -34,7 +34,7 @@ bool Layer::isMouseButtonPressed(int button) const
 
 glm::vec2 Layer::getMousePosition() const
 {
-    if(m_window)
+    if(m_window != nullptr)
     {
         return m_window->getMousePosition();
     }

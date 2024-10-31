@@ -41,9 +41,9 @@ class CORE_API Window
     [[nodiscard]] glm::vec2 getMousePosition() const;
 
     void pushLayer(std::shared_ptr<Layer> layer);
-    void pushUiLayer(std::shared_ptr<Layer> layer);
+    void pushOverlayLayer(std::shared_ptr<Layer> layer);
     void removeLayer(std::shared_ptr<Layer> layer);
-    void removeUiLayer(std::shared_ptr<Layer> layer);
+    void removeOverlayLayer(std::shared_ptr<Layer> layer);
 
   private:
     static bool s_glfwInitialized;

@@ -1,12 +1,9 @@
 #include "OverlayInfoLayer.hpp"
 
-void OverlayInfoLayer::onUpdate()
-{
-    if(!m_visible)
-    {
-        return;
-    }
+#include "imgui.h"
 
+void OverlayInfoLayer::onImGuiRender()
+{
     float fps = ImGui::GetIO().Framerate;
 
     ImGui::SetNextWindowPos(ImVec2(10, 10));
@@ -21,7 +18,3 @@ void OverlayInfoLayer::onUpdate()
     }
     ImGui::End();
 }
-
-void OverlayInfoLayer::onEvent(core::Event& e) {}
-
-void OverlayInfoLayer::setVisible(bool visible) { m_visible = visible; }

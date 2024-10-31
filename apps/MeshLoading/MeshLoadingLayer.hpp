@@ -1,5 +1,4 @@
 #pragma once
-#include "ImGuiLayer.hpp"
 
 #include <BasicRenderer.hpp>
 #include <Events/MouseEvent.hpp>
@@ -11,21 +10,51 @@
 #include <Texture.hpp>
 #include <glm/glm.hpp>
 
-class ViewportLayer : public core::Layer
+namespace fs = std::filesystem;
+
+struct ModelData
+{
+    std::string m_name;
+    glm::vec3 m_position{0.0f, 0.0f, 0.0f};
+    bool m_outline{true};
+};
+
+struct GuiData
+{
+    char m_modelPath[128] = "/home/nicolas/Downloads/backpack/backpack.obj";
+
+    renderer::DirectionalLight m_directionalLight{glm::vec3(-0.2f, -1.0f, -0.3f),
+                                                  glm::vec3(0.2f, 0.2f, 0.2f),
+                                                  glm::vec3(0.5f, 0.5f, 0.5f),
+                                                  glm::vec3(1.0f, 1.0f, 1.0f)};
+
+    std::vector<renderer::PointLight> m_pointLights{};
+    std::vector<ModelData> m_models;
+
+    bool m_enableOverlayInfo;
+
+    bool m_enableMSAA{true};
+    bool m_oldEnablerMSAA{false};
+};
+
+class MeshLoadingLayer : public core::Layer
 {
   public:
-    ViewportLayer(float viewportWidth = 0, float viewportHeight = 0);
-    ~ViewportLayer();
+    MeshLoadingLayer(float viewportWidth = 0, float viewportHeight = 0);
+    ~MeshLoadingLayer();
 
     void onUpdate() override;
     void onEvent(core::Event& e) override;
+    void onImGuiRender() override;
 
     void setViewportSize(float viewportWidth, float viewportHeight);
 
     void setCameraMovement(bool cameraMovementEnabled);
-    void setGuiData(const GuiData& guiData);
+    void updateData();
 
-    void loadModel(std::shared_ptr<renderer::Model> model);
+    void loadModel(fs::path path);
+
+    void setShowUi(bool showUi);
 
   private:
     void processInputs();
@@ -39,15 +68,7 @@ class ViewportLayer : public core::Layer
     renderer::BasicRenderer m_renderer;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
 
-    // TEMP
-    // std::vector<glm::mat4> m_cubeModelMatrix;
-
-    // std::unique_ptr<core::Texture> m_cubeTexture;
-    // std::unique_ptr<core::Texture> m_cubeSpecularTexture;
-
-    // std::unique_ptr<core::Shader> m_lightCubeShader;
-
-    // BasicCube m_lightCube{};
+    bool m_showUi;
 
     double m_glfwTimeCount{0};
     float m_lightCubePositionOffset{0};

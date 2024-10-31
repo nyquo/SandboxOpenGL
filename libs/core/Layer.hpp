@@ -18,9 +18,11 @@ class CORE_API Layer
     Layer(Layer&& other) = delete;
     Layer operator=(const Layer& other) = delete;
     Layer operator=(Layer&& other) = delete;
+    virtual ~Layer() = default;
 
-    virtual void onUpdate() = 0;
-    virtual void onEvent(Event& event) = 0;
+    virtual void onEvent(Event& event){};
+    virtual void onUpdate(){};
+    virtual void onImGuiRender(){};
 
     [[nodiscard]] bool isKeyPressed(int key) const;
     [[nodiscard]] bool isMouseButtonPressed(int button) const;
@@ -28,8 +30,12 @@ class CORE_API Layer
 
     void setWindow(Window* window);
 
-  private:
+    [[nodiscard]] bool isEnabled() const { return m_enabled; }
+    void setEnabled(bool enabled) { m_enabled = enabled; }
+
+  protected:
     Window* m_window;
+    bool m_enabled{true};
 };
 
 }

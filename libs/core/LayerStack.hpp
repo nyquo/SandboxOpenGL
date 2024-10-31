@@ -19,11 +19,12 @@ class CORE_API LayerStack
     LayerStack(LayerStack&& other) = delete;
     LayerStack operator=(const LayerStack& other) = delete;
     LayerStack operator=(LayerStack&& other) = delete;
+    ~LayerStack() = default;
 
-    void pushLayer(std::shared_ptr<Layer> layer);
-    void pushUiLayer(std::shared_ptr<Layer> layer);
-    void removeLayer(std::shared_ptr<Layer> layer);
-    void removeUiLayer(std::shared_ptr<Layer> layer);
+    void pushLayer(const std::shared_ptr<Layer>& layer);
+    void pushOverlayLayer(const std::shared_ptr<Layer>& layer);
+    void removeLayer(const std::shared_ptr<Layer>& layer);
+    void removeOverlayLayer(const std::shared_ptr<Layer>& layer);
 
     void onUpdate();
     void onEvent(Event& e);

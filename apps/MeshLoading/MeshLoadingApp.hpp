@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ImGuiLayer.hpp"
+#include "MeshLoadingLayer.hpp"
 #include "OverlayInfoLayer.hpp"
-#include "ViewportLayer.hpp"
+#include "imgui.h"
 
 #include <Application.hpp>
 #include <Events/KeyEvent.hpp>
@@ -13,35 +13,16 @@ class MeshLoadingApp : public core::Application
   public:
     MeshLoadingApp()
       : core::Application("Model displayer")
-      , m_imGuiLayer(std::make_shared<ImGuiLayer>())
-      , m_viewportLayer(std::make_shared<ViewportLayer>(getWindow().getWidth(), getWindow().getHeight()))
+      , m_meshLoadingLayer(std::make_shared<MeshLoadingLayer>(getWindow().getWidth(), getWindow().getHeight()))
       , m_overlayInfo(std::make_shared<OverlayInfoLayer>())
     {
+        ImGuiIO& io = ImGui::GetIO();
+        // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
         glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-        getWindow().pushLayer(m_viewportLayer);
-
-        m_imGuiLayer->setCloseCallBack([this]() { glfwSetWindowShouldClose(getWindow().getWindow(), GLFW_TRUE); });
-        m_imGuiLayer->setDataChangedCallBack([this](const GuiData& data) {
-            m_overlayInfo->setVisible(data.m_enableOverlayInfo);
-            m_viewportLayer->setGuiData(data);
-        });
-        m_imGuiLayer->setLoadModelCallBack([this]() {
-            core::Logger::logInfo("Loading model from path: " + std::string(m_imGuiLayer->getGuiData().m_modelPath));
-            auto model =
-              std::make_shared<renderer::Model>(std::filesystem::path(m_imGuiLayer->getGuiData().m_modelPath));
-            model->outline = true;
-            if(model->getName() != "")
-            {
-                m_viewportLayer->loadModel(model);
-                m_imGuiLayer->modelLoaded(model->getName());
-            }
-        });
-
-        getWindow().pushUiLayer(m_imGuiLayer);
-        getWindow().pushUiLayer(m_overlayInfo);
-
-        m_viewportLayer->setGuiData(m_imGuiLayer->getGuiData());
+        getWindow().pushLayer(m_meshLoadingLayer);
+        getWindow().pushOverlayLayer(m_overlayInfo);
     }
 
     void onEvent(core::Event& e) override
@@ -55,9 +36,9 @@ class MeshLoadingApp : public core::Application
 
     bool onWindowResized(core::WindowResizeEvent& e)
     {
-        if(m_viewportLayer)
+        if(m_meshLoadingLayer)
         {
-            m_viewportLayer->setViewportSize(e.getWidth(), e.getHeight());
+            m_meshLoadingLayer->setViewportSize(e.getWidth(), e.getHeight());
         }
         return false;
     }
@@ -76,19 +57,18 @@ class MeshLoadingApp : public core::Application
                 cursorMode = GLFW_CURSOR_DISABLED;
             }
             glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, cursorMode);
-            m_showImGuiLayer = !m_showImGuiLayer;
-            m_imGuiLayer->setVisible(m_showImGuiLayer);
+            m_showUi = !m_showUi;
+            m_meshLoadingLayer->setShowUi(m_showUi);
             m_cameraMovementEnabled = !m_cameraMovementEnabled;
-            m_viewportLayer->setCameraMovement(m_cameraMovementEnabled);
+            m_meshLoadingLayer->setCameraMovement(m_cameraMovementEnabled);
         }
         return false;
     }
 
   private:
-    std::shared_ptr<ImGuiLayer> m_imGuiLayer;
-    std::shared_ptr<ViewportLayer> m_viewportLayer;
+    std::shared_ptr<MeshLoadingLayer> m_meshLoadingLayer;
     std::shared_ptr<OverlayInfoLayer> m_overlayInfo;
 
-    bool m_showImGuiLayer{false};
+    bool m_showUi{false};
     bool m_cameraMovementEnabled{true};
 };

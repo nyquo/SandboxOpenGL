@@ -109,8 +109,9 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
 
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -154,11 +155,11 @@ glm::vec2 Window::getMousePosition() const
 
 void Window::pushLayer(std::shared_ptr<Layer> layer) { m_layerStack.pushLayer(layer); }
 
-void Window::pushUiLayer(std::shared_ptr<Layer> layer) { m_layerStack.pushUiLayer(layer); }
+void Window::pushOverlayLayer(std::shared_ptr<Layer> layer) { m_layerStack.pushOverlayLayer(layer); }
 
 void Window::removeLayer(std::shared_ptr<Layer> layer) { m_layerStack.removeLayer(layer); }
 
-void Window::removeUiLayer(std::shared_ptr<Layer> layer) { m_layerStack.removeUiLayer(layer); }
+void Window::removeOverlayLayer(std::shared_ptr<Layer> layer) { m_layerStack.removeOverlayLayer(layer); }
 
 void Window::onEvent(Event& e)
 {

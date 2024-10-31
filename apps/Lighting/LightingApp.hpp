@@ -19,7 +19,7 @@ class LightingApp : public core::Application
 
         m_imGuiLayer->setCloseCallBack([this]() { glfwSetWindowShouldClose(getWindow().getWindow(), GLFW_TRUE); });
         m_imGuiLayer->setDataChangedCallBack([this](const GuiData& data) { m_viewportLayer->setGuiData(data); });
-        getWindow().pushUiLayer(m_imGuiLayer);
+        getWindow().pushOverlayLayer(m_imGuiLayer);
     }
 
     void onEvent(core::Event& e) override
