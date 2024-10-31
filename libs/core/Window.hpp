@@ -40,6 +40,11 @@ class CORE_API Window
     [[nodiscard]] bool isMouseButtonPressed(int button) const;
     [[nodiscard]] glm::vec2 getMousePosition() const;
 
+    void pushLayer(std::shared_ptr<Layer> layer);
+    void pushUiLayer(std::shared_ptr<Layer> layer);
+    void removeLayer(std::shared_ptr<Layer> layer);
+    void removeUiLayer(std::shared_ptr<Layer> layer);
+
   private:
     static bool s_glfwInitialized;
     static bool s_gladInitialized;
@@ -61,13 +66,6 @@ class CORE_API Window
         m_height = e.getHeight();
         return false;
     }
-
-    // temp
-  public:
-    void pushLayer(std::shared_ptr<Layer> layer);
-    void pushUiLayer(std::shared_ptr<Layer> layer);
-    void removeLayer(std::shared_ptr<Layer> layer);
-    void removeUiLayer(std::shared_ptr<Layer> layer);
 };
 
 }

@@ -1,14 +1,22 @@
 #include "LayerStack.hpp"
 
+#include <Window.hpp>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
+#include <stdexcept>
 
 namespace core {
 
 LayerStack::LayerStack(Window* window)
   : m_window(window)
-{}
+{
+    if(!window)
+    {
+        throw std::invalid_argument("Layer stack created without a window");
+    }
+}
 
 void LayerStack::pushLayer(std::shared_ptr<Layer> layer)
 {
@@ -48,14 +56,21 @@ void LayerStack::removeUiLayer(std::shared_ptr<Layer> layer)
 
 void LayerStack::onUpdate()
 {
+    // update 3D layers
     for(auto& layer : m_layers)
     {
         layer->onUpdate();
     }
 
+    // update imgui layers
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.DisplaySize = ImVec2(m_window->getWidth(), m_window->getHeight());
+
     for(auto& layer : m_uiLayers)
     {
         layer->onUpdate();
