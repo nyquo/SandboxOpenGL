@@ -10,3 +10,4 @@ This might need to bump up to opengl 4.1
 - Add to the renderer a wireframe mode
 - Add onAttach and onDetach to Layer (and init values in here in apps)
 - Change granularity of float of skylight
+- add docking in the whole window
