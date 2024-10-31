@@ -31,7 +31,8 @@ struct GuiData
     std::vector<renderer::PointLight> m_pointLights{};
     std::vector<ModelData> m_models;
 
-    bool m_enableOverlayInfo;
+    bool m_displayOverlayInfo{true};
+    bool m_oldDisplayOverlayInfo{false};
 
     bool m_enableMSAA{true};
     bool m_oldEnablerMSAA{false};
@@ -55,6 +56,7 @@ class MeshLoadingLayer : public core::Layer
     void loadModel(fs::path path);
 
     void setShowUi(bool showUi);
+    void setDisplayOverlayChangedCallBack(std::function<void(bool)> callBack);
 
   private:
     void processInputs();
@@ -62,6 +64,8 @@ class MeshLoadingLayer : public core::Layer
   private:
     bool onMouseScrolled(core::MouseScrolledEvent& e);
     bool onMouseMoved(core::MouseMovedEvent& e);
+
+    std::function<void(bool)> m_onDisplayOverlayChanged;
 
   private:
     renderer::Scene m_scene;

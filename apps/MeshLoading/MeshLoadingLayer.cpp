@@ -91,7 +91,7 @@ void MeshLoadingLayer::onImGuiRender()
         }
     }
 
-    ImGui::Checkbox("Enable Info Overlay", &m_guiData.m_enableOverlayInfo);
+    ImGui::Checkbox("Enable Info Overlay", &m_guiData.m_displayOverlayInfo);
     ImGui::Checkbox("Enable MSAA", &m_guiData.m_enableMSAA);
     if(ImGui::Button("Exit app"))
     {
@@ -109,6 +109,15 @@ void MeshLoadingLayer::onImGuiRender()
         else
         {
             glDisable(GL_MULTISAMPLE);
+        }
+    }
+
+    if(m_guiData.m_displayOverlayInfo != m_guiData.m_oldDisplayOverlayInfo)
+    {
+        m_guiData.m_oldDisplayOverlayInfo = m_guiData.m_displayOverlayInfo;
+        if(m_onDisplayOverlayChanged)
+        {
+            m_onDisplayOverlayChanged(m_guiData.m_displayOverlayInfo);
         }
     }
 }
@@ -233,4 +242,9 @@ bool MeshLoadingLayer::onMouseMoved(core::MouseMovedEvent& e)
     }
 
     return true;
+}
+
+void MeshLoadingLayer::setDisplayOverlayChangedCallBack(std::function<void(bool)> callBack)
+{
+    m_onDisplayOverlayChanged = callBack;
 }

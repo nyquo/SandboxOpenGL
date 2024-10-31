@@ -23,6 +23,9 @@ class MeshLoadingApp : public core::Application
 
         getWindow().pushLayer(m_meshLoadingLayer);
         getWindow().pushOverlayLayer(m_overlayInfo);
+
+        m_meshLoadingLayer->setDisplayOverlayChangedCallBack(
+          [&](bool displayOverlay) { m_overlayInfo->setEnabled(displayOverlay); });
     }
 
     void onEvent(core::Event& e) override
