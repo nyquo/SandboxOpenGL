@@ -23,6 +23,8 @@ class RENDERER_API Sprite : public Entity
 
     void draw(Shader& shader) const final;
 
+    std::string getName() const;
+
   public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -31,6 +33,7 @@ class RENDERER_API Sprite : public Entity
   private:
     unsigned int m_vao{0}, m_vbo{0}, m_ebo{0};
     void setupMesh();
+    std::string m_textureName;
 };
 
 }

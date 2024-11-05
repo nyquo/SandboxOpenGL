@@ -21,6 +21,8 @@ Sprite::Sprite(const fs::path& path)
     textures.emplace_back(path.string().c_str(), "texture_diffuse1");
 
     setupMesh();
+
+    m_textureName = path.filename().stem().string();
 };
 
 Sprite::Sprite(Sprite&& other) noexcept
@@ -94,6 +96,8 @@ void Sprite::draw(Shader& shader) const
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
+
+std::string Sprite::getName() const { return m_textureName; }
 
 void Sprite::setupMesh()
 {

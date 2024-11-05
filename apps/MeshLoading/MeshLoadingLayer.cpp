@@ -199,7 +199,8 @@ void MeshLoadingLayer::loadSprite(fs::path path)
     m_scene.addEntity(sprite);
 
     ModelData mData;
-    mData.m_name = "sprite x";
+    mData.m_outline = false;
+    mData.m_name = sprite->getName();
     m_guiData.m_models.push_back(mData);
 }
 
