@@ -9,7 +9,6 @@
 
 namespace renderer {
 
-// TODO optimize all the copies made here and between imgui layers
 class RENDERER_API Scene
 {
   public:

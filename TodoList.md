@@ -14,3 +14,4 @@ This might need to bump up to opengl 4.1
 - add camera movement separate class
 - fix camera movement on top and bottom edge
 - add fbo abstractions
+- Optimize copys between scene and layers/renderer
