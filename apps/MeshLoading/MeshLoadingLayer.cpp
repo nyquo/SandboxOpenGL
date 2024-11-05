@@ -3,6 +3,7 @@
 #include <Conversion.hpp>
 #include <Input.hpp>
 #include <Logger.hpp>
+#include <Sprite.hpp>
 #include <Window.hpp>
 
 MeshLoadingLayer::MeshLoadingLayer(float viewportWidth, float viewportHeight)
@@ -49,6 +50,13 @@ void MeshLoadingLayer::onImGuiRender()
     if(ImGui::Button("Load model"))
     {
         loadModel(fs::path(m_guiData.m_modelPath));
+    }
+
+    ImGui::InputText("Sprite path", m_guiData.m_spritePath, IM_ARRAYSIZE(m_guiData.m_spritePath));
+
+    if(ImGui::Button("Load sprite"))
+    {
+        loadSprite(fs::path(m_guiData.m_spritePath));
     }
 
     ImGui::Text("Directional light");
@@ -181,6 +189,18 @@ void MeshLoadingLayer::loadModel(fs::path path)
     {
         core::Logger::logError("Error loading model");
     }
+}
+
+void MeshLoadingLayer::loadSprite(fs::path path)
+{
+    std::shared_ptr<renderer::Sprite> sprite = std::make_shared<renderer::Sprite>(path);
+    core::Logger::logInfo("Loading sprite from path: ", path);
+
+    m_scene.addEntity(sprite);
+
+    ModelData mData;
+    mData.m_name = "sprite x";
+    m_guiData.m_models.push_back(mData);
 }
 
 void MeshLoadingLayer::setShowUi(bool showUi) { m_showUi = showUi; }

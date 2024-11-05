@@ -23,6 +23,8 @@ struct GuiData
 {
     char m_modelPath[128] = "/home/nicolas/Downloads/backpack/backpack.obj";
 
+    char m_spritePath[128] = "/home/nicolas/Perso/SandboxOpenGL/apps/MeshLoading/assets/grass.png";
+
     renderer::DirectionalLight m_directionalLight{glm::vec3(-0.2f, -1.0f, -0.3f),
                                                   glm::vec3(0.2f, 0.2f, 0.2f),
                                                   glm::vec3(0.5f, 0.5f, 0.5f),
@@ -53,6 +55,7 @@ class MeshLoadingLayer : public core::Layer
 
     void updateData();
     void loadModel(fs::path path);
+    void loadSprite(fs::path path);
 
     void setViewportSize(float viewportWidth, float viewportHeight);
     void setCameraMovement(bool cameraMovementEnabled);

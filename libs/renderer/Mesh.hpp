@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Vertex.hpp"
+
 #include <RendererExport.hpp>
 #include <Shader.hpp>
 #include <Texture.hpp>
@@ -8,13 +10,6 @@
 #include <vector>
 
 namespace renderer {
-
-struct RENDERER_API Vertex
-{
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec2 texCoords;
-};
 
 class RENDERER_API Mesh
 {
