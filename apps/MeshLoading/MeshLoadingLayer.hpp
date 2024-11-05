@@ -36,6 +36,9 @@ struct GuiData
 
     bool m_enableMSAA{true};
     bool m_oldEnablerMSAA{false};
+
+    bool m_wireFrame{false};
+    bool m_oldWireFrame{true};
 };
 
 class MeshLoadingLayer : public core::Layer

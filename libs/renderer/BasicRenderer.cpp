@@ -19,6 +19,14 @@ void BasicRenderer::beginFrame() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER
 
 void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> camera) const
 {
+    if(m_wireFrame)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    else
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
     // TEMP draw point lights as cube
     glStencilMask(0x00);
     m_cube.m_shader->bind();

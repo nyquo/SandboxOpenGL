@@ -95,6 +95,7 @@ void MeshLoadingLayer::onImGuiRender()
 
     ImGui::Checkbox("Enable Info Overlay", &m_guiData.m_displayOverlayInfo);
     ImGui::Checkbox("Enable MSAA", &m_guiData.m_enableMSAA);
+    ImGui::Checkbox("Wireframe", &m_guiData.m_wireFrame);
     if(ImGui::Button("Exit app"))
     {
         if(m_onExit)
@@ -139,6 +140,12 @@ void MeshLoadingLayer::updateData()
         {
             m_onDisplayOverlayChanged(m_guiData.m_displayOverlayInfo);
         }
+    }
+
+    if(m_guiData.m_wireFrame != m_guiData.m_oldWireFrame)
+    {
+        m_guiData.m_oldWireFrame = m_guiData.m_wireFrame;
+        m_renderer.setWireFrame(m_guiData.m_wireFrame);
     }
 
     renderer::DirectionalLight light;

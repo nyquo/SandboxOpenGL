@@ -20,6 +20,7 @@ class RENDERER_API BasicRenderer : public Renderer
     void renderScene(const Scene& scene, std::shared_ptr<Camera> camera) const override;
     void endFrame() override;
     void setViewport(int width, int height, int x = 0, int y = 0) override;
+    void setWireFrame(bool wireFrame) { m_wireFrame = wireFrame; }
 
   private:
     std::unique_ptr<Shader> m_modelShader;
@@ -27,5 +28,8 @@ class RENDERER_API BasicRenderer : public Renderer
 
     // temp TO DELTE
     mutable BasicCube m_cube;
+
+    bool m_wireFrame{false};
 };
+
 }
