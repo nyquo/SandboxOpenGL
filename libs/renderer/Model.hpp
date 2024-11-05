@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Entity.hpp"
 #include "Mesh.hpp"
 #include "RendererExport.hpp"
 #include "Shader.hpp"
@@ -15,7 +16,7 @@ namespace renderer {
 
 namespace fs = std::filesystem;
 
-class RENDERER_API Model
+class RENDERER_API Model : public Entity
 {
   public:
     Model(const fs::path& path);
@@ -26,8 +27,6 @@ class RENDERER_API Model
     ~Model();
 
     void draw(Shader& shader) const;
-    glm::mat4 getModelMat() const;
-    void setModelMat(const glm::mat4& modelMat);
     std::string getName() const;
 
   private:
@@ -41,7 +40,6 @@ class RENDERER_API Model
 
   private:
     std::vector<Mesh> m_meshes;
-    glm::mat4 m_modelMat{1.0f};
     std::string m_directory{""};
     std::string m_modelName{""};
 

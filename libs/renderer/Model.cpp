@@ -18,10 +18,6 @@ void Model::draw(Shader& shader) const
     }
 }
 
-glm::mat4 Model::getModelMat() const { return m_modelMat; }
-
-void Model::setModelMat(const glm::mat4& modelMat) { m_modelMat = modelMat; }
-
 std::string Model::getName() const { return m_modelName; }
 
 void Model::loadModel(const fs::path& path)
