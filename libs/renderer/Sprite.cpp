@@ -6,10 +6,10 @@ namespace renderer {
 
 Sprite::Sprite(const fs::path& path)
 {
-    Vertex tl{{-0.5, 0.5, 0.0}, {0, 0, 1}, {-0.5, 0.5}};
-    Vertex tr{{0.5, 0.5, 0.0}, {0, 0, 1}, {0.5, 0.5}};
-    Vertex bl{{-0.5, -0.5, 0.0}, {0, 0, 1}, {-0.5, -0.5}};
-    Vertex br{{0.5, -0.5, 0.0}, {0, 0, 1}, {0.5, -0.5}};
+    Vertex tl{{-0.5, 0.5, 0.0}, {0, 0, 1}, {0, 1}};
+    Vertex tr{{0.5, 0.5, 0.0}, {0, 0, 1}, {1, 1}};
+    Vertex bl{{-0.5, -0.5, 0.0}, {0, 0, 1}, {0, 0}};
+    Vertex br{{0.5, -0.5, 0.0}, {0, 0, 1}, {1, 0}};
 
     vertices.push_back(tl);
     vertices.push_back(tr);
