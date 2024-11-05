@@ -72,7 +72,7 @@ class MeshLoadingLayer : public core::Layer
     renderer::BasicRenderer m_renderer;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
 
-    bool m_showUi;
+    bool m_showUi{false};
 
     double m_glfwTimeCount{0};
     float m_lightCubePositionOffset{0};
