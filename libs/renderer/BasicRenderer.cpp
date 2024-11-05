@@ -77,7 +77,7 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
     m_modelShader->setVec3("viewPos", camera->getPosition());
 
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    for(const auto& model : scene.getModels())
+    for(const auto& model : scene.getEntities())
     {
         if(model->outline)
         {
@@ -104,7 +104,7 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilMask(0x00);
     glDisable(GL_DEPTH_TEST);
-    for(const auto& model : scene.getModels())
+    for(const auto& model : scene.getEntities())
     {
         if(model->outline)
         {

@@ -24,6 +24,10 @@ class RENDERER_API Entity
 
   protected:
     glm::mat4 m_modelMat{1.0f};
+
+    // temp
+  public:
+    bool outline{false};
 };
 
 }

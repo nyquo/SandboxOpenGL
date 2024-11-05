@@ -12,7 +12,7 @@ MeshLoadingLayer::MeshLoadingLayer(float viewportWidth, float viewportHeight)
   , m_lastMouseX(m_viewportWidth / 2)
   , m_lastMouseY(m_viewportHeight / 2)
 {
-    m_scene.addModel(std::make_shared<renderer::Model>(
+    m_scene.addEntity(std::make_shared<renderer::Model>(
       std::filesystem::path(std::string(RESSOURCES_FOLDER) + "/assets/GravelyPlane/GravelyPlane.obj")));
 }
 
@@ -146,7 +146,7 @@ void MeshLoadingLayer::updateData()
     m_scene.clearPointLights();
     m_scene.setPointLightVec(m_guiData.m_pointLights);
 
-    auto sceneModels = m_scene.getModels();
+    auto sceneModels = m_scene.getEntities();
     for(int i = 1; i < sceneModels.size(); ++i)
     {
         if(m_guiData.m_models.size() > i - 1)
@@ -164,7 +164,7 @@ void MeshLoadingLayer::loadModel(fs::path path)
     core::Logger::logInfo("Loading model from path: ", path);
     if(model->getName() != "")
     {
-        m_scene.addModel(model);
+        m_scene.addEntity(model);
 
         ModelData mData;
         mData.m_name = model->getName();

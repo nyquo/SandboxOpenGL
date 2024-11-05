@@ -16,9 +16,9 @@ class RENDERER_API Scene
 
     Scene();
 
-    /*const*/ auto& getModels() const { return m_models; }
+    /*const*/ auto& getEntities() const { return m_entities; }
 
-    void addModel(std::shared_ptr<Model> model);
+    void addEntity(std::shared_ptr<Entity> entity);
     void clearScene();
 
     void setDirectionalLight(const DirectionalLight& light);
@@ -29,7 +29,7 @@ class RENDERER_API Scene
     const auto& getPointLights() const { return m_pointLights; }
 
   private:
-    std::vector<std::shared_ptr<Model>> m_models;
+    std::vector<std::shared_ptr<Entity>> m_entities;
 
     DirectionalLight m_directionalLight{};
     std::vector<PointLight> m_pointLights{};

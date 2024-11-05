@@ -42,10 +42,6 @@ class RENDERER_API Model : public Entity
     std::vector<Mesh> m_meshes;
     std::string m_directory{""};
     std::string m_modelName{""};
-
-    // temp
-  public:
-    bool outline{false};
 };
 
 }
