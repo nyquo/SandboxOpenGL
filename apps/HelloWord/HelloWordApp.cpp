@@ -1,5 +1,7 @@
 #include "HelloWordApp.hpp"
 
+#include <Input.hpp>
+
 #include <random>
 
 CustomLayer::CustomLayer(float viewportWidth, float viewportHeight)
@@ -123,19 +125,19 @@ void CustomLayer::processInputs()
 
     glm::vec3 positionOffset{0.0F, 0.0F, 0.0F};
 
-    if(isKeyPressed(GLFW_KEY_W))
+    if(core::Input::isKeyPressed(GLFW_KEY_W))
     {
         positionOffset.z += cameraSpeed;
     }
-    if(isKeyPressed(GLFW_KEY_S))
+    if(core::Input::isKeyPressed(GLFW_KEY_S))
     {
         positionOffset.z -= cameraSpeed;
     }
-    if(isKeyPressed(GLFW_KEY_A))
+    if(core::Input::isKeyPressed(GLFW_KEY_A))
     {
         positionOffset.x -= cameraSpeed;
     }
-    if(isKeyPressed(GLFW_KEY_D))
+    if(core::Input::isKeyPressed(GLFW_KEY_D))
     {
         positionOffset.x += cameraSpeed;
     }

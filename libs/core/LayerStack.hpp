@@ -9,8 +9,6 @@
 
 namespace core {
 
-class Window;
-
 class CORE_API LayerStack
 {
   public:

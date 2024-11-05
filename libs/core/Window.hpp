@@ -36,10 +36,6 @@ class CORE_API Window
     [[nodiscard]] unsigned int getWidth() const;
     [[nodiscard]] unsigned int getHeight() const;
 
-    [[nodiscard]] bool isKeyPressed(int key) const;
-    [[nodiscard]] bool isMouseButtonPressed(int button) const;
-    [[nodiscard]] glm::vec2 getMousePosition() const;
-
     void pushLayer(std::shared_ptr<Layer> layer);
     void pushOverlayLayer(std::shared_ptr<Layer> layer);
     void removeLayer(std::shared_ptr<Layer> layer);

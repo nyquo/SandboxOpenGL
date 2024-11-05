@@ -142,17 +142,6 @@ unsigned int Window::getWidth() const { return m_width; }
 
 unsigned int Window::getHeight() const { return m_height; }
 
-bool Window::isKeyPressed(int key) const { return glfwGetKey(m_window, key) == GLFW_PRESS; }
-
-bool Window::isMouseButtonPressed(int button) const { return glfwGetMouseButton(m_window, button) == GLFW_PRESS; }
-
-glm::vec2 Window::getMousePosition() const
-{
-    double x, y;
-    glfwGetCursorPos(m_window, &x, &y);
-    return {(float)x, (float)y};
-}
-
 void Window::pushLayer(std::shared_ptr<Layer> layer) { m_layerStack.pushLayer(layer); }
 
 void Window::pushOverlayLayer(std::shared_ptr<Layer> layer) { m_layerStack.pushOverlayLayer(layer); }

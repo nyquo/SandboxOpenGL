@@ -1,6 +1,7 @@
 #include "ViewportLayer.hpp"
 
 #include <Conversion.hpp>
+#include <Input.hpp>
 
 #include <random>
 
@@ -200,27 +201,27 @@ void ViewportLayer::processInputs()
         const float cameraSpeed = 10.0F * m_deltaTime;
         glm::vec3 positionOffset{0.0F, 0.0F, 0.0F};
 
-        if(isKeyPressed(GLFW_KEY_W))
+        if(core::Input::isKeyPressed(GLFW_KEY_W))
         {
             positionOffset.z += cameraSpeed;
         }
-        if(isKeyPressed(GLFW_KEY_S))
+        if(core::Input::isKeyPressed(GLFW_KEY_S))
         {
             positionOffset.z -= cameraSpeed;
         }
-        if(isKeyPressed(GLFW_KEY_A))
+        if(core::Input::isKeyPressed(GLFW_KEY_A))
         {
             positionOffset.x -= cameraSpeed;
         }
-        if(isKeyPressed(GLFW_KEY_D))
+        if(core::Input::isKeyPressed(GLFW_KEY_D))
         {
             positionOffset.x += cameraSpeed;
         }
-        if(isKeyPressed(GLFW_KEY_SPACE))
+        if(core::Input::isKeyPressed(GLFW_KEY_SPACE))
         {
             positionOffset.y += cameraSpeed;
         }
-        if(isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+        if(core::Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
         {
             positionOffset.y -= cameraSpeed;
         }

@@ -22,7 +22,6 @@ void LayerStack::pushLayer(const std::shared_ptr<Layer>& layer)
 {
     if(std::find(m_layers.begin(), m_layers.end(), layer) == m_layers.end())
     {
-        layer->setWindow(m_window);
         m_layers.push_back(layer);
     }
 }
@@ -31,7 +30,6 @@ void LayerStack::pushOverlayLayer(const std::shared_ptr<Layer>& layer)
 {
     if(std::find(m_uiLayers.begin(), m_uiLayers.end(), layer) == m_uiLayers.end())
     {
-        layer->setWindow(m_window);
         m_uiLayers.push_back(layer);
     }
 }

@@ -55,6 +55,7 @@ class MeshLoadingLayer : public core::Layer
     void setCameraMovement(bool cameraMovementEnabled);
     void setShowUi(bool showUi);
     void setDisplayOverlayChangedCallBack(std::function<void(bool)> callBack);
+    void setExitCallBack(std::function<void()> callBack);
 
   private:
     void processInputs();
@@ -64,6 +65,7 @@ class MeshLoadingLayer : public core::Layer
     bool onMouseMoved(core::MouseMovedEvent& e);
 
     std::function<void(bool)> m_onDisplayOverlayChanged;
+    std::function<void()> m_onExit;
 
   private:
     renderer::Scene m_scene;

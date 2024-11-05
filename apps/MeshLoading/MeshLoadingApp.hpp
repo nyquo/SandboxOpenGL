@@ -26,6 +26,7 @@ class MeshLoadingApp : public core::Application
 
         m_meshLoadingLayer->setDisplayOverlayChangedCallBack(
           [&](bool displayOverlay) { m_overlayInfo->setEnabled(displayOverlay); });
+        m_meshLoadingLayer->setExitCallBack([&]() { glfwSetWindowShouldClose(getWindow().getWindow(), GLFW_TRUE); });
     }
 
     void onEvent(core::Event& e) override
