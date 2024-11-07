@@ -60,7 +60,7 @@ void MeshLoadingLayer::onImGuiRender()
     }
 
     ImGui::Text("Directional light");
-    ImGui::DragFloat3("Direction", (float*)&m_guiData.m_directionalLight.m_direction);
+    ImGui::DragFloat3("Direction", (float*)&m_guiData.m_directionalLight.m_direction, .01);
     ImGui::ColorEdit3("D Ambient light color", (float*)&m_guiData.m_directionalLight.m_ambientColor);
     ImGui::ColorEdit3("D Diffuse light color", (float*)&m_guiData.m_directionalLight.m_diffuseColor);
     ImGui::ColorEdit3("D Specular light color", (float*)&m_guiData.m_directionalLight.m_specularColor);
