@@ -30,7 +30,6 @@ class CORE_API Application
 
   private: // Event callbacks
     bool onWindowClose(WindowCloseEvent& e);
-    bool onWindowResized(WindowResizeEvent& e);
     bool onKeyPressed(core::KeyPressedEvent& e);
 
   private:

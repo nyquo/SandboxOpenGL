@@ -9,6 +9,7 @@
 #include <Shader.hpp>
 #include <Texture.hpp>
 #include <glm/glm.hpp>
+#include <imgui.h>
 
 namespace fs = std::filesystem;
 
@@ -58,7 +59,7 @@ class MeshLoadingLayer : public core::Layer
     void loadModel(fs::path path);
     void loadSprite(fs::path path);
 
-    void setViewportSize(float viewportWidth, float viewportHeight);
+    void setLayerSize(float width, float height);
     void setCameraMovement(bool cameraMovementEnabled);
     void setShowUi(bool showUi);
     void setDisplayOverlayChangedCallBack(std::function<void(bool)> callBack);
@@ -85,10 +86,14 @@ class MeshLoadingLayer : public core::Layer
     float m_lightCubePositionOffset{0};
     GuiData m_guiData;
 
-    float m_viewportWidth;
-    float m_viewportHeight;
+    float m_layerWidth;
+    float m_layerHeight;
 
     bool m_cameraMovementEnabled{true};
+
+    // viewport
+    ImVec2 m_vMin{};
+    ImVec2 m_vMax{};
 
     // Camera var
     float m_zoomOffset{2.0};

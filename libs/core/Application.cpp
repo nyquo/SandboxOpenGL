@@ -22,7 +22,6 @@ void Application::onEvent(Event& e)
 {
     EventDispatcher dispatcher(e);
     dispatcher.dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::onWindowClose));
-    dispatcher.dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::onWindowResized));
     dispatcher.dispatch<core::KeyPressedEvent>(BIND_EVENT_FN(Application::onKeyPressed));
 
     m_mainWindow->onEvent(e);
@@ -31,12 +30,6 @@ void Application::onEvent(Event& e)
 bool Application::onWindowClose(WindowCloseEvent& e)
 {
     m_continueRunning = false;
-    return false;
-}
-
-bool Application::onWindowResized(WindowResizeEvent& e)
-{
-    glViewport(0, 0, e.getWidth(), e.getHeight());
     return false;
 }
 

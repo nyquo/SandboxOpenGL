@@ -7,11 +7,11 @@
 #include <Window.hpp>
 
 MeshLoadingLayer::MeshLoadingLayer(float viewportWidth, float viewportHeight)
-  : m_viewportWidth(viewportWidth)
-  , m_viewportHeight(viewportHeight)
+  : m_layerWidth(viewportWidth)
+  , m_layerHeight(viewportHeight)
   , m_camera(std::make_shared<renderer::PerspectiveCamera>(viewportWidth, viewportHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
-  , m_lastMouseX(m_viewportWidth / 2)
-  , m_lastMouseY(m_viewportHeight / 2)
+  , m_lastMouseX(m_layerWidth / 2)
+  , m_lastMouseY(m_layerHeight / 2)
 {
     m_scene.addEntity(std::make_shared<renderer::Model>(
       std::filesystem::path(std::string(RESSOURCES_FOLDER) + "/assets/GravelyPlane/GravelyPlane.obj")));
@@ -24,6 +24,7 @@ void MeshLoadingLayer::onUpdate()
     processInputs();
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     updateData();
+    m_renderer.setViewport(m_vMax.x - m_vMin.x, m_vMax.y - m_vMin.y, m_vMin.x, m_layerHeight - m_vMax.y);
     m_renderer.beginFrame();
     m_renderer.renderScene(m_scene, m_camera);
     m_renderer.endFrame();
@@ -111,14 +112,34 @@ void MeshLoadingLayer::onImGuiRender()
             m_onExit();
         }
     }
+
     ImGui::End();
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{1, 1});
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+    ImGui::Begin("Viewport"); //, nullptr, ImGuiWindowFlags_NoBackground);
+
+    m_vMin = ImGui::GetWindowContentRegionMin();
+    m_vMax = ImGui::GetWindowContentRegionMax();
+
+    m_vMin.x += ImGui::GetWindowPos().x;
+    m_vMin.y += ImGui::GetWindowPos().y;
+    m_vMax.x += ImGui::GetWindowPos().x;
+    m_vMax.y += ImGui::GetWindowPos().y;
+
+    // ImGui::Text(std::to_string(m_vMin.y).c_str());
+    // ImGui::Text(std::to_string(m_vMax.y).c_str());
+
+    ImGui::End();
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor();
 }
 
-void MeshLoadingLayer::setViewportSize(float viewportWidth, float viewportHeight)
+void MeshLoadingLayer::setLayerSize(float width, float height)
 {
-    m_viewportWidth = viewportWidth;
-    m_viewportHeight = viewportHeight;
-    m_camera->setViewPortSize(viewportWidth, viewportHeight);
+    m_layerWidth = width;
+    m_layerHeight = height;
+    m_camera->setViewPortSize(width, height);
 }
 
 void MeshLoadingLayer::setCameraMovement(bool cameraMovementEnabled)

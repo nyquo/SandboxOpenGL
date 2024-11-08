@@ -22,7 +22,7 @@ class MeshLoadingApp : public core::Application
         glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         getWindow().pushLayer(m_meshLoadingLayer);
-        getWindow().pushOverlayLayer(m_overlayInfo);
+        // getWindow().pushOverlayLayer(m_overlayInfo);
 
         m_meshLoadingLayer->setDisplayOverlayChangedCallBack(
           [&](bool displayOverlay) { m_overlayInfo->setEnabled(displayOverlay); });
@@ -42,7 +42,7 @@ class MeshLoadingApp : public core::Application
     {
         if(m_meshLoadingLayer)
         {
-            m_meshLoadingLayer->setViewportSize(e.getWidth(), e.getHeight());
+            m_meshLoadingLayer->setLayerSize(e.getWidth(), e.getHeight());
         }
         return false;
     }

@@ -127,6 +127,6 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
 
 void BasicRenderer::endFrame() {}
 
-void BasicRenderer::setViewport(int width, int height, int x, int y) {}
+void BasicRenderer::setViewport(int width, int height, int x, int y) { glViewport(x, y, width, height); }
 
 }
