@@ -6,10 +6,10 @@
 #include <Sprite.hpp>
 #include <Window.hpp>
 
-MeshLoadingLayer::MeshLoadingLayer(float viewportWidth, float viewportHeight)
-  : m_layerWidth(viewportWidth)
-  , m_layerHeight(viewportHeight)
-  , m_camera(std::make_shared<renderer::PerspectiveCamera>(viewportWidth, viewportHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
+MeshLoadingLayer::MeshLoadingLayer(float layerWidth, float layerHeight)
+  : m_layerWidth(layerWidth)
+  , m_layerHeight(layerHeight)
+  , m_camera(std::make_shared<renderer::PerspectiveCamera>(layerWidth, layerHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
   , m_lastMouseX(m_layerWidth / 2)
   , m_lastMouseY(m_layerHeight / 2)
 {
@@ -25,6 +25,7 @@ void MeshLoadingLayer::onUpdate()
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     updateData();
     m_renderer.setViewport(m_vMax.x - m_vMin.x, m_vMax.y - m_vMin.y, m_vMin.x, m_layerHeight - m_vMax.y);
+    m_camera->setViewPortSize(m_vMax.x - m_vMin.x, m_vMax.y - m_vMin.y);
     m_renderer.beginFrame();
     m_renderer.renderScene(m_scene, m_camera);
     m_renderer.endFrame();
@@ -139,7 +140,6 @@ void MeshLoadingLayer::setLayerSize(float width, float height)
 {
     m_layerWidth = width;
     m_layerHeight = height;
-    m_camera->setViewPortSize(width, height);
 }
 
 void MeshLoadingLayer::setCameraMovement(bool cameraMovementEnabled)

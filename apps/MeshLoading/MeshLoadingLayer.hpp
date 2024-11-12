@@ -48,7 +48,7 @@ struct GuiData
 class MeshLoadingLayer : public core::Layer
 {
   public:
-    MeshLoadingLayer(float viewportWidth = 0, float viewportHeight = 0);
+    MeshLoadingLayer(float layerWidth = 0, float layerHeight = 0);
     ~MeshLoadingLayer();
 
     void onUpdate() override;
