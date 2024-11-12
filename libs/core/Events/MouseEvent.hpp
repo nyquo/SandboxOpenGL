@@ -63,4 +63,59 @@ class CORE_API MouseScrolledEvent : public Event
     float m_xOffset, m_yOffset;
 };
 
+class CORE_API MouseButtonEvent : public Event
+{
+  public:
+    using ButtonCode = int;
+
+    ButtonCode getButtonCode() const { return m_buttonCode; }
+
+    EVENT_CLASS_CATEGORY(EventCategoryMouseEvent)
+
+  protected:
+    MouseButtonEvent(const ButtonCode buttonCode)
+      : m_buttonCode(buttonCode)
+    {}
+
+    ButtonCode m_buttonCode;
+};
+
+class CORE_API MouseButtonPressedEvent : public MouseButtonEvent
+{
+  public:
+    MouseButtonPressedEvent(const ButtonCode buttonCode)
+      : MouseButtonEvent(buttonCode)
+    {}
+
+    EVENT_CLASS_TYPE(MouseButtonPressedEvent)
+
+#ifndef NDEBUG
+    std::string toString() const override
+    {
+        std::stringstream ss;
+        ss << getEventName() << " Mouse Button Pressed: " << m_buttonCode;
+        return ss.str();
+    }
+#endif
+};
+
+class CORE_API MouseButtonReleasedEvent : public MouseButtonEvent
+{
+  public:
+    MouseButtonReleasedEvent(const ButtonCode buttonCode)
+      : MouseButtonEvent(buttonCode)
+    {}
+
+    EVENT_CLASS_TYPE(MouseButtonReleasedEvent)
+
+#ifndef NDEBUG
+    std::string toString() const override
+    {
+        std::stringstream ss;
+        ss << getEventName() << " Mouse Button Released: " << m_buttonCode;
+        return ss.str();
+    }
+#endif
+};
+
 }

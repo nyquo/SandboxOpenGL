@@ -105,6 +105,21 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
         eventCallBack(e);
     });
 
+    glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int modifiers) {
+        auto eventCallBack = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+        if(action == GLFW_PRESS)
+        {
+            MouseButtonPressedEvent e(button);
+            eventCallBack(e);
+        }
+
+        if(action == GLFW_RELEASE)
+        {
+            MouseButtonReleasedEvent e(button);
+            eventCallBack(e);
+        }
+    });
+
     IMGUI_CHECKVERSION();
 
     ImGui::CreateContext();

@@ -21,6 +21,8 @@ enum class EventType
     // Mouse events
     MouseMovedEvent,
     MouseScrolledEvent,
+    MouseButtonPressedEvent,
+    MouseButtonReleasedEvent,
 
     // Key events
     KeyPressedEvent,
