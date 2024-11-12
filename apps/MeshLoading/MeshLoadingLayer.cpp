@@ -118,7 +118,7 @@ void MeshLoadingLayer::onImGuiRender()
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{1, 1});
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-    ImGui::Begin("Viewport"); //, nullptr, ImGuiWindowFlags_NoBackground);
+    ImGui::Begin("Viewport");
 
     m_vMin = ImGui::GetWindowContentRegionMin();
     m_vMax = ImGui::GetWindowContentRegionMax();
