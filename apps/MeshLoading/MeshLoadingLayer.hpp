@@ -2,6 +2,7 @@
 
 #include <BasicRenderer.hpp>
 #include <Events/MouseEvent.hpp>
+#include <FpsCameraMover.hpp>
 #include <Layer.hpp>
 #include <Model.hpp>
 #include <PerspectiveCamera.hpp>
@@ -69,9 +70,6 @@ class MeshLoadingLayer : public core::Layer
     void processInputs();
 
   private:
-    bool onMouseScrolled(core::MouseScrolledEvent& e);
-    bool onMouseMoved(core::MouseMovedEvent& e);
-
     std::function<void(bool)> m_onDisplayOverlayChanged;
     std::function<void()> m_onExit;
 
@@ -79,6 +77,7 @@ class MeshLoadingLayer : public core::Layer
     renderer::Scene m_scene;
     renderer::BasicRenderer m_renderer;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
+    renderer::FpsCameraMover m_fpsCameraMover{m_camera};
 
     bool m_showUi{false};
 
@@ -94,14 +93,4 @@ class MeshLoadingLayer : public core::Layer
     // viewport
     ImVec2 m_vMin{};
     ImVec2 m_vMax{};
-
-    // Camera var
-    float m_zoomOffset{2.0};
-    float m_mouseSensitivity{0.1F};
-    bool m_firstMouse{true};
-    float m_lastMouseX;
-    float m_lastMouseY;
-    float m_movementSpeed = 10.0F;
-    float m_deltaTime{0.0};
-    float m_lastFrame{0.0};
 };

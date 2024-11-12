@@ -10,8 +10,6 @@ MeshLoadingLayer::MeshLoadingLayer(float layerWidth, float layerHeight)
   : m_layerWidth(layerWidth)
   , m_layerHeight(layerHeight)
   , m_camera(std::make_shared<renderer::PerspectiveCamera>(layerWidth, layerHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
-  , m_lastMouseX(m_layerWidth / 2)
-  , m_lastMouseY(m_layerHeight / 2)
 {
     m_scene.addEntity(std::make_shared<renderer::Model>(
       std::filesystem::path(std::string(RESSOURCES_FOLDER) + "/assets/GravelyPlane/GravelyPlane.obj")));
@@ -21,6 +19,7 @@ MeshLoadingLayer::~MeshLoadingLayer() {}
 
 void MeshLoadingLayer::onUpdate()
 {
+    m_fpsCameraMover.update();
     processInputs();
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     updateData();
@@ -31,12 +30,7 @@ void MeshLoadingLayer::onUpdate()
     m_renderer.endFrame();
 }
 
-void MeshLoadingLayer::onEvent(core::Event& e)
-{
-    core::EventDispatcher dispatcher(e);
-    dispatcher.dispatch<core::MouseScrolledEvent>(BIND_EVENT_FN(MeshLoadingLayer::onMouseScrolled));
-    dispatcher.dispatch<core::MouseMovedEvent>(BIND_EVENT_FN(MeshLoadingLayer::onMouseMoved));
-}
+void MeshLoadingLayer::onEvent(core::Event& e) { m_fpsCameraMover.onEvent(e); }
 
 void MeshLoadingLayer::onImGuiRender()
 {
@@ -144,6 +138,14 @@ void MeshLoadingLayer::setLayerSize(float width, float height)
 
 void MeshLoadingLayer::setCameraMovement(bool cameraMovementEnabled)
 {
+    if(cameraMovementEnabled)
+    {
+        m_fpsCameraMover.enable();
+    }
+    else
+    {
+        m_fpsCameraMover.disable();
+    }
     m_cameraMovementEnabled = cameraMovementEnabled;
 }
 
@@ -227,75 +229,7 @@ void MeshLoadingLayer::loadSprite(fs::path path)
 
 void MeshLoadingLayer::setShowUi(bool showUi) { m_showUi = showUi; }
 
-void MeshLoadingLayer::processInputs()
-{
-    float currentFrame = glfwGetTime();
-    m_deltaTime = currentFrame - m_lastFrame;
-    m_lastFrame = currentFrame;
-
-    if(m_cameraMovementEnabled)
-    {
-        const float cameraSpeed = 10.0F * m_deltaTime;
-        glm::vec3 positionOffset{0.0F, 0.0F, 0.0F};
-
-        if(core::Input::isKeyPressed(GLFW_KEY_W))
-        {
-            positionOffset.z += cameraSpeed;
-        }
-        if(core::Input::isKeyPressed(GLFW_KEY_S))
-        {
-            positionOffset.z -= cameraSpeed;
-        }
-        if(core::Input::isKeyPressed(GLFW_KEY_A))
-        {
-            positionOffset.x -= cameraSpeed;
-        }
-        if(core::Input::isKeyPressed(GLFW_KEY_D))
-        {
-            positionOffset.x += cameraSpeed;
-        }
-        if(core::Input::isKeyPressed(GLFW_KEY_SPACE))
-        {
-            positionOffset.y += cameraSpeed;
-        }
-        if(core::Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
-        {
-            positionOffset.y -= cameraSpeed;
-        }
-        m_camera->translateCameraRelative(positionOffset);
-    }
-}
-
-bool MeshLoadingLayer::onMouseScrolled(core::MouseScrolledEvent& e)
-{
-    if(m_cameraMovementEnabled)
-    {
-        m_camera->adustFov(-m_zoomOffset * e.getYOffset());
-    }
-    return true;
-}
-
-bool MeshLoadingLayer::onMouseMoved(core::MouseMovedEvent& e)
-{
-    if(m_firstMouse)
-    {
-        m_lastMouseX = e.getX();
-        m_lastMouseY = e.getY();
-        m_firstMouse = false;
-    }
-    float xOffset = e.getX() - m_lastMouseX;
-    float yOffset = m_lastMouseY - e.getY();
-    m_lastMouseX = e.getX();
-    m_lastMouseY = e.getY();
-    xOffset *= m_mouseSensitivity;
-    yOffset *= m_mouseSensitivity;
-    if(m_cameraMovementEnabled)
-    {
-        m_camera->rotateCamera(xOffset, yOffset);
-    }
-
-    return true;
-}
+void MeshLoadingLayer::processInputs() {}
 
 void MeshLoadingLayer::setDisplayOverlayChangedCallBack(std::function<void(bool)> callBack)
 {

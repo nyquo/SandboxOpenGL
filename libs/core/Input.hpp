@@ -1,3 +1,5 @@
+#pragma once
+
 #include "CoreExport.hpp"
 #include "gl.h"
 
