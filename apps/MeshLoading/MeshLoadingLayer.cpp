@@ -237,8 +237,8 @@ bool MeshLoadingLayer::onMouseButtonPressed(core::MouseButtonPressedEvent& e)
 {
     // If click is in viewport
     auto mousePos = core::Input::getMousePosition();
-    if(mousePos.x >= m_vMin.x && mousePos.x <= m_vMax.x && mousePos.y >= m_layerHeight - m_vMax.y &&
-       mousePos.y <= m_layerHeight - m_vMin.y)
+    if(mousePos.x > m_vMin.x && mousePos.x < m_vMax.x && mousePos.y > m_layerHeight - m_vMax.y &&
+       mousePos.y < m_layerHeight - m_vMin.y)
     {
         auto* currentWindow = glfwGetCurrentContext();
         glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
