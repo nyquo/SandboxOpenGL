@@ -1,6 +1,7 @@
 #pragma once
 
 #include <BasicRenderer.hpp>
+#include <Events/KeyEvent.hpp>
 #include <Events/MouseEvent.hpp>
 #include <FpsCameraMover.hpp>
 #include <Layer.hpp>
@@ -61,8 +62,6 @@ class MeshLoadingLayer : public core::Layer
     void loadSprite(fs::path path);
 
     void setLayerSize(float width, float height);
-    void setCameraMovement(bool cameraMovementEnabled);
-    void setShowUi(bool showUi);
     void setDisplayOverlayChangedCallBack(std::function<void(bool)> callBack);
     void setExitCallBack(std::function<void()> callBack);
 
@@ -70,6 +69,9 @@ class MeshLoadingLayer : public core::Layer
     void processInputs();
 
   private:
+    bool onKeyPressed(core::KeyPressedEvent& e);
+    bool onMouseButtonPressed(core::MouseButtonPressedEvent& e);
+
     std::function<void(bool)> m_onDisplayOverlayChanged;
     std::function<void()> m_onExit;
 
@@ -79,7 +81,7 @@ class MeshLoadingLayer : public core::Layer
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
     renderer::FpsCameraMover m_fpsCameraMover{m_camera};
 
-    bool m_showUi{false};
+    bool m_showUi{true};
 
     double m_glfwTimeCount{0};
     float m_lightCubePositionOffset{0};

@@ -13,3 +13,4 @@ This might need to bump up to opengl 4.1
 - add fbo abstractions
 - Optimize copys between scene and layers/renderer
 - Change PerspectiveCamera of FpsCameraMover by general Camera or Entity
+- Move differents ui panels to different files/classes

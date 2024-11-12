@@ -5,7 +5,6 @@
 #include "imgui.h"
 
 #include <Application.hpp>
-#include <Events/KeyEvent.hpp>
 #include <Logger.hpp>
 
 class MeshLoadingApp : public core::Application
@@ -18,8 +17,6 @@ class MeshLoadingApp : public core::Application
     {
         ImGuiIO& io = ImGui::GetIO();
         // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
-        glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         getWindow().pushLayer(m_meshLoadingLayer);
         // getWindow().pushOverlayLayer(m_overlayInfo);
@@ -35,7 +32,6 @@ class MeshLoadingApp : public core::Application
 
         core::EventDispatcher dispatcher(e);
         dispatcher.dispatch<core::WindowResizeEvent>(BIND_EVENT_FN(MeshLoadingApp::onWindowResized));
-        dispatcher.dispatch<core::KeyPressedEvent>(BIND_EVENT_FN(MeshLoadingApp::onKeyPressed));
     }
 
     bool onWindowResized(core::WindowResizeEvent& e)
@@ -43,28 +39,6 @@ class MeshLoadingApp : public core::Application
         if(m_meshLoadingLayer)
         {
             m_meshLoadingLayer->setLayerSize(e.getWidth(), e.getHeight());
-        }
-        return false;
-    }
-
-    bool onKeyPressed(core::KeyPressedEvent& e)
-    {
-        if(e.getKeyCode() == GLFW_KEY_ESCAPE)
-        {
-            auto cursorMode = glfwGetInputMode(getWindow().getWindow(), GLFW_CURSOR);
-            if(cursorMode == GLFW_CURSOR_DISABLED)
-            {
-                cursorMode = GLFW_CURSOR_NORMAL;
-            }
-            else
-            {
-                cursorMode = GLFW_CURSOR_DISABLED;
-            }
-            glfwSetInputMode(getWindow().getWindow(), GLFW_CURSOR, cursorMode);
-            m_showUi = !m_showUi;
-            m_meshLoadingLayer->setShowUi(m_showUi);
-            m_cameraMovementEnabled = !m_cameraMovementEnabled;
-            m_meshLoadingLayer->setCameraMovement(m_cameraMovementEnabled);
         }
         return false;
     }

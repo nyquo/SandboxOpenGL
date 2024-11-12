@@ -30,7 +30,13 @@ void MeshLoadingLayer::onUpdate()
     m_renderer.endFrame();
 }
 
-void MeshLoadingLayer::onEvent(core::Event& e) { m_fpsCameraMover.onEvent(e); }
+void MeshLoadingLayer::onEvent(core::Event& e)
+{
+    m_fpsCameraMover.onEvent(e);
+    core::EventDispatcher dispatcher(e);
+    dispatcher.dispatch<core::KeyPressedEvent>(BIND_EVENT_FN(MeshLoadingLayer::onKeyPressed));
+    dispatcher.dispatch<core::MouseButtonPressedEvent>(BIND_EVENT_FN(MeshLoadingLayer::onMouseButtonPressed));
+}
 
 void MeshLoadingLayer::onImGuiRender()
 {
@@ -136,19 +142,6 @@ void MeshLoadingLayer::setLayerSize(float width, float height)
     m_layerHeight = height;
 }
 
-void MeshLoadingLayer::setCameraMovement(bool cameraMovementEnabled)
-{
-    if(cameraMovementEnabled)
-    {
-        m_fpsCameraMover.enable();
-    }
-    else
-    {
-        m_fpsCameraMover.disable();
-    }
-    m_cameraMovementEnabled = cameraMovementEnabled;
-}
-
 void MeshLoadingLayer::updateData()
 {
     if(m_guiData.m_enableMSAA != m_guiData.m_oldEnablerMSAA)
@@ -227,9 +220,33 @@ void MeshLoadingLayer::loadSprite(fs::path path)
     m_guiData.m_models.push_back(mData);
 }
 
-void MeshLoadingLayer::setShowUi(bool showUi) { m_showUi = showUi; }
-
 void MeshLoadingLayer::processInputs() {}
+
+bool MeshLoadingLayer::onKeyPressed(core::KeyPressedEvent& e)
+{
+    if(e.getKeyCode() == GLFW_KEY_ESCAPE)
+    {
+        m_fpsCameraMover.disable();
+        auto* currentWindow = glfwGetCurrentContext();
+        glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    return false;
+}
+
+bool MeshLoadingLayer::onMouseButtonPressed(core::MouseButtonPressedEvent& e)
+{
+    // If click is in viewport
+    auto mousePos = core::Input::getMousePosition();
+    if(mousePos.x >= m_vMin.x && mousePos.x <= m_vMax.x && mousePos.y >= m_layerHeight - m_vMax.y &&
+       mousePos.y <= m_layerHeight - m_vMin.y)
+    {
+        auto* currentWindow = glfwGetCurrentContext();
+        glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        m_fpsCameraMover.enable();
+    }
+
+    return false;
+}
 
 void MeshLoadingLayer::setDisplayOverlayChangedCallBack(std::function<void(bool)> callBack)
 {
