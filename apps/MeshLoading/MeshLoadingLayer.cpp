@@ -19,12 +19,12 @@ MeshLoadingLayer::~MeshLoadingLayer() {}
 
 void MeshLoadingLayer::onUpdate()
 {
-    m_fpsCameraMover.update();
     processInputs();
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     updateData();
     m_renderer.setViewport(m_vMax.x - m_vMin.x, m_vMax.y - m_vMin.y, m_vMin.x, m_layerHeight - m_vMax.y);
     m_camera->setViewPortSize(m_vMax.x - m_vMin.x, m_vMax.y - m_vMin.y);
+    m_fpsCameraMover.update();
     m_renderer.beginFrame();
     m_renderer.renderScene(m_scene, m_camera);
     m_renderer.endFrame();
@@ -127,9 +127,6 @@ void MeshLoadingLayer::onImGuiRender()
     m_vMin.y += ImGui::GetWindowPos().y;
     m_vMax.x += ImGui::GetWindowPos().x;
     m_vMax.y += ImGui::GetWindowPos().y;
-
-    // ImGui::Text(std::to_string(m_vMin.y).c_str());
-    // ImGui::Text(std::to_string(m_vMax.y).c_str());
 
     ImGui::End();
     ImGui::PopStyleVar();
