@@ -24,10 +24,8 @@ struct ModelData
 
 struct GuiData
 {
-    char m_modelPath[128] = "/home/nicolas/Downloads/backpack/backpack.obj";
-
-    char m_spritePath[128] = "/home/nicolas/Perso/SandboxOpenGL/apps/MeshLoading/assets/grass.png";
-    // "/home/nicolas/Perso/SandboxOpenGL/apps/MeshLoading/assets/blending_transparent_window.png"
+    char m_modelPath[128] = "";
+    char m_spritePath[128] = "";
 
     renderer::DirectionalLight m_directionalLight{glm::vec3(-0.2f, -1.0f, -0.3f),
                                                   glm::vec3(0.2f, 0.2f, 0.2f),

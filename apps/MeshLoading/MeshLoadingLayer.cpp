@@ -12,7 +12,7 @@ MeshLoadingLayer::MeshLoadingLayer(float layerWidth, float layerHeight)
   , m_camera(std::make_shared<renderer::PerspectiveCamera>(layerWidth, layerHeight, glm::vec3(0.0F, 0.0F, 10.0F)))
 {
     m_scene.addEntity(std::make_shared<renderer::Model>(
-      std::filesystem::path(std::string(RESSOURCES_FOLDER) + "/assets/GravelyPlane/GravelyPlane.obj")));
+      std::filesystem::path(std::string(RESSOURCES_FOLDER) + "/assets/Models/GravelyPlane/GravelyPlane.obj")));
 }
 
 MeshLoadingLayer::~MeshLoadingLayer() {}

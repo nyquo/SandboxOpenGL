@@ -3,7 +3,7 @@
 namespace core {
 
 Application::Application(std::string mainWindowName)
-  : m_mainWindow(std::make_unique<Window>(mainWindowName, 800, 600))
+  : m_mainWindow(std::make_unique<Window>(mainWindowName, 1800, 1000))
 {
     m_mainWindow->setEventCallBack(BIND_EVENT_FN(Application::onEvent));
 }
