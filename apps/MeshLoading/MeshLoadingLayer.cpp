@@ -47,18 +47,53 @@ void MeshLoadingLayer::onImGuiRender()
 
     ImGui::Begin("Options Window");
 
-    ImGui::InputText("Model path", m_guiData.m_modelPath, IM_ARRAYSIZE(m_guiData.m_modelPath));
+    fs::path modelsFolder = std::string(RESSOURCES_FOLDER) + "/assets/Models";
+    fs::path spritesFolder = std::string(RESSOURCES_FOLDER) + "/assets/Sprites";
 
+    std::vector<std::string> folderNames;
+    for(const auto& entry : fs::directory_iterator(modelsFolder))
+    {
+        if(entry.is_directory())
+        {
+            folderNames.push_back(entry.path().filename().string());
+        }
+    }
+    std::vector<const char*> folderNamesCstr;
+    for(const auto& name : folderNames)
+    {
+        folderNamesCstr.push_back(name.c_str());
+    }
+    static int currentItemModels = 0;
+    ImGui::Combo("Models", &currentItemModels, folderNamesCstr.data(), folderNamesCstr.size());
+    ImGui::SameLine();
     if(ImGui::Button("Load model"))
     {
-        loadModel(fs::path(m_guiData.m_modelPath));
+        fs::path path = std::string(RESSOURCES_FOLDER);
+        loadModel((path / "assets" / "Models" / folderNames.at(currentItemModels) / folderNames.at(currentItemModels))
+                    .string() +
+                  ".obj");
     }
 
-    ImGui::InputText("Sprite path", m_guiData.m_spritePath, IM_ARRAYSIZE(m_guiData.m_spritePath));
-
-    if(ImGui::Button("Load sprite"))
+    std::vector<std::string> spriteNames;
+    for(const auto& entry : fs::directory_iterator(spritesFolder))
     {
-        loadSprite(fs::path(m_guiData.m_spritePath));
+        if(entry.path().extension() == ".png")
+        {
+            spriteNames.push_back(entry.path().filename().string());
+        }
+    }
+    std::vector<const char*> spriteNamesCstr;
+    for(const auto& name : spriteNames)
+    {
+        spriteNamesCstr.push_back(name.c_str());
+    }
+    static int currentItemSprites = 0;
+    ImGui::Combo("Sprites", &currentItemSprites, spriteNamesCstr.data(), spriteNamesCstr.size());
+    ImGui::SameLine();
+    if(ImGui::Button("Load Sprite"))
+    {
+        fs::path path = std::string(RESSOURCES_FOLDER);
+        loadSprite(path / "assets" / "Sprites" / spriteNames.at(currentItemSprites));
     }
 
     ImGui::Text("Directional light");
