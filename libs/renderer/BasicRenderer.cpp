@@ -1,6 +1,7 @@
 #include "BasicRenderer.hpp"
 
 #include <Logger.hpp>
+#include <glm/gtx/norm.hpp>
 
 namespace renderer {
 
@@ -106,7 +107,7 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
         }
         else
         {
-            float distance = glm::length(camera->getPosition() - glm::vec3(model->getModelMat()[0]));
+            float distance = glm::length2(camera->getPosition() - glm::vec3(model->getModelMat()[0]));
             transparentSorted[distance] = model;
         }
     }
