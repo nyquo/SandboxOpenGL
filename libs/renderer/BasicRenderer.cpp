@@ -85,6 +85,7 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
     m_modelShader->setVec3("viewPos", camera->getPosition());
 
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    std::map<float, std::shared_ptr<renderer::Entity>> transparentSorted;
     for(const auto& model : scene.getEntities())
     {
         if(model->outline)
@@ -95,8 +96,22 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
         {
             glStencilMask(0x00);
         }
-        m_modelShader->setMat4("model", model->getModelMat());
-        model->draw(*m_modelShader);
+        if(!model->hasTransparentColor())
+        {
+            m_modelShader->setMat4("model", model->getModelMat());
+            model->draw(*m_modelShader);
+        }
+        else
+        {
+            float distance = glm::length(camera->getPosition() - glm::vec3(model->getModelMat()[0]));
+            transparentSorted[distance] = model;
+        }
+    }
+
+    for(auto it = transparentSorted.rbegin(); it != transparentSorted.rend(); ++it)
+    {
+        m_modelShader->setMat4("model", it->second->getModelMat());
+        it->second->draw(*m_modelShader);
     }
 
     // Draw Outline

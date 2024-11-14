@@ -25,6 +25,7 @@ class RENDERER_API Texture
 
     [[nodiscard]] std::string getType() const;
     [[nodiscard]] unsigned int getId() const;
+    [[nodiscard]] GLenum getFormat() const;
 
   private:
     struct TextureData
@@ -37,6 +38,7 @@ class RENDERER_API Texture
 
     TextureData m_textureData;
     fs::path m_path;
+    GLenum m_format{GL_RGB};
 
     static std::map<fs::path, std::pair<unsigned int, TextureData>> m_loadedCount;
 };

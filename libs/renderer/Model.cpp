@@ -110,6 +110,13 @@ void Model::loadMaterialTexures(aiMaterial* mat,
         std::string separator(1, fs::path::preferred_separator);
         fs::path texturePath = m_directory + separator + std::string(str.C_Str());
         vectorToFill.emplace_back(texturePath.string(), typeName);
+        if(!vectorToFill.empty())
+        {
+            if(vectorToFill.back().getFormat() == GL_RGBA)
+            {
+                m_hasTransparentColor = true;
+            }
+        }
     }
 }
 
