@@ -25,12 +25,11 @@ class RENDERER_API Sprite : public Entity
 
     std::string getName() const;
 
-  public:
+  private:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
 
-  private:
     unsigned int m_vao{0}, m_vbo{0}, m_ebo{0};
     void setupMesh();
     std::string m_textureName;

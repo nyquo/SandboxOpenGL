@@ -21,9 +21,11 @@ class RENDERER_API Entity
 
     glm::mat4 getModelMat() const { return m_modelMat; };
     void setModelMat(const glm::mat4& modelMat) { m_modelMat = modelMat; }
+    bool hasTransparentColor() const { return m_hasTransparentColor; }
 
   protected:
     glm::mat4 m_modelMat{1.0f};
+    bool m_hasTransparentColor{false};
 
     // temp
   public:

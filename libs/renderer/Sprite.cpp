@@ -19,6 +19,7 @@ Sprite::Sprite(const fs::path& path)
     indices.insert(indices.end(), {0, 1, 2, 1, 3, 2});
 
     textures.emplace_back(path.string().c_str(), "texture_diffuse1");
+    textures.emplace_back(fs::path(RESSOURCES_FOLDER) / "assets" / "DarkGrey.png", "texture_specular1");
 
     setupMesh();
 

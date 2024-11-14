@@ -69,6 +69,12 @@ if(IS_MULTI_CONFIG)
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${RESSOURCES_FOLDER}/shaders
         COMMENT "Copying ${LibName} shaders in the output directory"
     )
+    add_custom_target(copy_assets${LibName} ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${RESSOURCES_FOLDER}/assets
+        COMMENT "Copying ${LibName} assets in the output directory"
+    )
 else()
     add_custom_target(copy_shaders${LibName} ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -76,5 +82,12 @@ else()
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${RESSOURCES_FOLDER}/shaders
         COMMENT "Copying ${LibName} shaders in the output directory"
     )
+    add_custom_target(copy_assets${LibName} ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${RESSOURCES_FOLDER}/assets
+        COMMENT "Copying ${LibName} assets in the output directory"
+    )
 endif()
 add_dependencies(${LibName} copy_shaders${LibName})
+add_dependencies(${LibName} copy_assets${LibName})

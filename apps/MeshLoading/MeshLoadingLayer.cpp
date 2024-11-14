@@ -47,8 +47,8 @@ void MeshLoadingLayer::onImGuiRender()
 
     ImGui::Begin("Options Window");
 
-    fs::path modelsFolder = std::string(RESSOURCES_FOLDER) + "/assets/Models";
-    fs::path spritesFolder = std::string(RESSOURCES_FOLDER) + "/assets/Sprites";
+    fs::path modelsFolder = fs::path(RESSOURCES_FOLDER) / "assets" / "Models";
+    fs::path spritesFolder = fs::path(RESSOURCES_FOLDER) / "assets" / "Sprites";
 
     std::vector<std::string> folderNames;
     for(const auto& entry : fs::directory_iterator(modelsFolder))
