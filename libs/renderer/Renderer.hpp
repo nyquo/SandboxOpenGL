@@ -19,7 +19,7 @@ class CORE_API Renderer
     virtual ~Renderer() = default;
 
     virtual void beginFrame() = 0;
-    virtual void renderScene(const Scene& scene, std::shared_ptr<Camera> camera) const = 0;
+    virtual void renderScene(const Scene& scene, std::shared_ptr<Camera> camera) = 0;
     virtual void endFrame() = 0;
     virtual void setViewport(int width, int height, int x = 0, int y = 0) = 0;
 

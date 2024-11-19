@@ -21,7 +21,31 @@ BasicRenderer::BasicRenderer()
 
 void BasicRenderer::beginFrame() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); }
 
-void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> camera) const
+void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> camera)
+{
+    if(m_offscreen)
+    {
+        if(m_frameBuffer == 0)
+        {
+            initOffscreenRendering(); // move this to the function that will enable/disable offscreen
+        }
+        renderSceneOffscren(scene, camera);
+    }
+    else
+    {
+        if(m_frameBuffer != 0)
+        {
+            deinitOffscreenRendering();
+        }
+        renderSceneOnscreen(scene, camera);
+    }
+}
+
+void BasicRenderer::endFrame() {}
+
+void BasicRenderer::setViewport(int width, int height, int x, int y) { glViewport(x, y, width, height); }
+
+void BasicRenderer::renderSceneOnscreen(const Scene& scene, const std::shared_ptr<Camera> camera)
 {
     if(m_wireFrame)
     {
@@ -144,8 +168,10 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
     glEnable(GL_DEPTH_TEST);
 }
 
-void BasicRenderer::endFrame() {}
+void BasicRenderer::renderSceneOffscren(const Scene& scene, const std::shared_ptr<Camera> camera) {}
 
-void BasicRenderer::setViewport(int width, int height, int x, int y) { glViewport(x, y, width, height); }
+void BasicRenderer::initOffscreenRendering() {}
+
+void BasicRenderer::deinitOffscreenRendering() {}
 
 }
