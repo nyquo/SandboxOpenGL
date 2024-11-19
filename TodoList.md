@@ -8,10 +8,10 @@ This might need to bump up to opengl 4.1
 - drag and drop using https://www.glfw.org/docs/3.3/input_guide.html#path_drop
 - consider replacing the m_visible in the onUpdate of layers by a mecanism to remove layer from the window vector
 - Add onAttach and onDetach to Layer (and init values in here in apps)
-- add docking in the whole window
 - fix camera movement on top and bottom edge
 - add fbo abstractions
 - Optimize copys between scene and layers/renderer
 - Change PerspectiveCamera of FpsCameraMover by general Camera or Entity
 - Move differents ui panels to different files/classes
 - remove old assets from bin when needed (cmake)
+- improve docking
