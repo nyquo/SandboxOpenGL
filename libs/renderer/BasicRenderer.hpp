@@ -14,7 +14,7 @@ class RENDERER_API BasicRenderer : public Renderer
     BasicRenderer(BasicRenderer&&) = delete;
     BasicRenderer& operator=(const BasicRenderer&) = delete;
     BasicRenderer& operator=(BasicRenderer&&) = delete;
-    ~BasicRenderer() = default;
+    ~BasicRenderer();
 
     void beginFrame() override;
     void renderScene(const Scene& scene, std::shared_ptr<Camera> camera) override;
@@ -32,14 +32,20 @@ class RENDERER_API BasicRenderer : public Renderer
   private:
     std::unique_ptr<Shader> m_modelShader;
     std::unique_ptr<Shader> m_outlineShader;
+    std::unique_ptr<Shader> m_quadShader;
 
     // temp TO DELETE
     mutable BasicCube m_cube;
 
     bool m_wireFrame{false};
-    bool m_offscreen{false};
+    bool m_offscreen{true};
 
     unsigned int m_frameBuffer{0};
+    unsigned int m_textureColorBuffer{0};
+    unsigned int m_rbo{0};
+    unsigned int m_offscreenVAO{0};
+    unsigned int m_offscreenVBO{0};
+    unsigned int m_offscreenEBO{0};
 };
 
 }

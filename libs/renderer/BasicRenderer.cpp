@@ -1,6 +1,7 @@
 #include "BasicRenderer.hpp"
 
 #include <Logger.hpp>
+#include <Vertex.hpp>
 #include <glm/gtx/norm.hpp>
 
 namespace renderer {
@@ -11,12 +12,22 @@ BasicRenderer::BasicRenderer()
                                              std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.frag");
     m_outlineShader = std::make_unique<Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/modelOutline.vert",
                                                std::string(RESSOURCES_FOLDER) + "/shaders/modelOutline.frag");
+    m_quadShader = std::make_unique<Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/quadShader.vert",
+                                            std::string(RESSOURCES_FOLDER) + "/shaders/quadShader.frag");
     glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
+}
+
+BasicRenderer::~BasicRenderer()
+{
+    if(m_offscreen)
+    {
+        deinitOffscreenRendering();
+    }
 }
 
 void BasicRenderer::beginFrame() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); }
@@ -168,10 +179,106 @@ void BasicRenderer::renderSceneOnscreen(const Scene& scene, const std::shared_pt
     glEnable(GL_DEPTH_TEST);
 }
 
-void BasicRenderer::renderSceneOffscren(const Scene& scene, const std::shared_ptr<Camera> camera) {}
+void BasicRenderer::renderSceneOffscren(const Scene& scene, const std::shared_ptr<Camera> camera)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
 
-void BasicRenderer::initOffscreenRendering() {}
+    renderSceneOnscreen(scene, camera);
 
-void BasicRenderer::deinitOffscreenRendering() {}
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    m_quadShader->bind();
+    glBindVertexArray(m_offscreenVAO);
+    glDisable(GL_DEPTH_TEST);
+    glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+void BasicRenderer::initOffscreenRendering()
+{
+    glGenBuffers(1, &m_frameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+
+    glGenTextures(1, &m_textureColorBuffer);
+    glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
+    // Todo set proper size corresponding to screen
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureColorBuffer, 0);
+
+    glGenBuffers(1, &m_rbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        core::Logger::logError("Frame buffer is not complete!");
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    std::vector<float> verticesAndTexCoords{-0.5, 0.5,  0.0, 0, 1, 0.5, 0.5,  0.0, 1, 1,
+                                            -0.5, -0.5, 0.0, 0, 0, 0.5, -0.5, 0.0, 1, 0};
+    std::vector<unsigned int> indices{0, 1, 2, 1, 3, 2};
+
+    glGenVertexArrays(1, &m_offscreenVAO);
+    glGenBuffers(1, &m_offscreenVBO);
+    glGenBuffers(1, &m_offscreenEBO);
+
+    glBindVertexArray(m_offscreenVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_offscreenVBO);
+
+    glBufferData(
+      GL_ARRAY_BUFFER, verticesAndTexCoords.size() * sizeof(float), &verticesAndTexCoords[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_offscreenEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(3 * sizeof(float)));
+    glBindVertexArray(0);
+}
+
+void BasicRenderer::deinitOffscreenRendering()
+{
+    if(m_frameBuffer != 0)
+    {
+        glDeleteBuffers(1, &m_frameBuffer);
+    }
+    if(m_textureColorBuffer != 0)
+    {
+        glDeleteTextures(1, &m_textureColorBuffer);
+    }
+    if(m_rbo != 0)
+    {
+        glDeleteRenderbuffers(1, &m_rbo);
+    }
+    if(m_offscreenEBO != 0)
+    {
+        glDeleteBuffers(1, &m_offscreenEBO);
+    }
+    if(m_offscreenVBO != 0)
+    {
+        glDeleteBuffers(1, &m_offscreenVBO);
+    }
+    if(m_offscreenVAO != 0)
+    {
+        glDeleteVertexArrays(1, &m_offscreenVAO);
+    }
+}
 
 }
