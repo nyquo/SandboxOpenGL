@@ -25,6 +25,7 @@ class RENDERER_API BasicRenderer : public Renderer
   private:
     void renderSceneOnscreen(const Scene& scene, const std::shared_ptr<Camera> camera);
     void renderSceneOffscren(const Scene& scene, const std::shared_ptr<Camera> camera);
+    void renderSceneImpl(const Scene& scene, const std::shared_ptr<Camera> camera);
 
     void initOffscreenRendering();
     void deinitOffscreenRendering();
@@ -33,6 +34,11 @@ class RENDERER_API BasicRenderer : public Renderer
     std::unique_ptr<Shader> m_modelShader;
     std::unique_ptr<Shader> m_outlineShader;
     std::unique_ptr<Shader> m_screenShader;
+
+    int m_viewportX{0};
+    int m_viewportY{0};
+    int m_viewportWidth{200};
+    int m_viewportHeight{200};
 
     // temp TO DELETE
     mutable BasicCube m_cube;
@@ -45,6 +51,8 @@ class RENDERER_API BasicRenderer : public Renderer
     unsigned int m_rbo{0};
     unsigned int m_offscreenVAO{0};
     unsigned int m_offscreenVBO{0};
+    unsigned int m_offscreenTextureWidth{1920};
+    unsigned int m_offscreenTextureHeight{1080};
 };
 
 }

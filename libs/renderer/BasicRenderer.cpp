@@ -33,6 +33,7 @@ BasicRenderer::~BasicRenderer()
 void BasicRenderer::beginFrame()
 {
     glEnable(GL_SCISSOR_TEST);
+    glScissor(m_viewportX, m_viewportY, m_viewportWidth, m_viewportHeight);
     glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glDisable(GL_SCISSOR_TEST);
@@ -62,11 +63,39 @@ void BasicRenderer::endFrame() {}
 
 void BasicRenderer::setViewport(int width, int height, int x, int y)
 {
-    glViewport(x, y, width, height);
-    glScissor(x, y, width, height);
+    m_viewportHeight = height;
+    m_viewportWidth = width;
+    m_viewportX = x;
+    m_viewportY = y;
 }
 
 void BasicRenderer::renderSceneOnscreen(const Scene& scene, const std::shared_ptr<Camera> camera)
+{
+    glViewport(m_viewportX, m_viewportY, m_viewportWidth, m_viewportHeight);
+    renderSceneImpl(scene, camera);
+}
+
+void BasicRenderer::renderSceneOffscren(const Scene& scene, const std::shared_ptr<Camera> camera)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glViewport(0, 0, m_offscreenTextureWidth, m_offscreenTextureHeight);
+    renderSceneImpl(scene, camera);
+    glViewport(m_viewportX, m_viewportY, m_viewportWidth, m_viewportHeight);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_DEPTH_TEST);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    m_screenShader->bind();
+    glBindVertexArray(m_offscreenVAO);
+    glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+}
+
+void BasicRenderer::renderSceneImpl(const Scene& scene, const std::shared_ptr<Camera> camera)
 {
     if(m_wireFrame)
     {
@@ -189,25 +218,6 @@ void BasicRenderer::renderSceneOnscreen(const Scene& scene, const std::shared_pt
     glEnable(GL_DEPTH_TEST);
 }
 
-void BasicRenderer::renderSceneOffscren(const Scene& scene, const std::shared_ptr<Camera> camera)
-{
-    glBindFramebuffer(GL_FRAMEBUFFER, m_frameBuffer);
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-
-    renderSceneOnscreen(scene, camera);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDisable(GL_DEPTH_TEST);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    m_screenShader->bind();
-    glBindVertexArray(m_offscreenVAO);
-    glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    glBindVertexArray(0);
-}
-
 void BasicRenderer::initOffscreenRendering()
 {
     glGenFramebuffers(1, &m_frameBuffer);
@@ -216,7 +226,8 @@ void BasicRenderer::initOffscreenRendering()
     glGenTextures(1, &m_textureColorBuffer);
     glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
     // Todo set proper size corresponding to screen
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(
+      GL_TEXTURE_2D, 0, GL_RGB, m_offscreenTextureWidth, m_offscreenTextureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -225,7 +236,7 @@ void BasicRenderer::initOffscreenRendering()
 
     glGenRenderbuffers(1, &m_rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, m_rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_offscreenTextureWidth, m_offscreenTextureHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_rbo);
