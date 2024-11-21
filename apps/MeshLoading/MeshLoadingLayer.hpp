@@ -91,6 +91,6 @@ class MeshLoadingLayer : public core::Layer
     bool m_cameraMovementEnabled{true};
 
     // viewport
-    ImVec2 m_vMin{};
-    ImVec2 m_vMax{};
+    ImVec2 m_vMin{0.0f, 0.0f};
+    ImVec2 m_vMax{800.0f, 600.0f};
 };

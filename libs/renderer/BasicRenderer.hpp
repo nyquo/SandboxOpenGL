@@ -32,7 +32,7 @@ class RENDERER_API BasicRenderer : public Renderer
   private:
     std::unique_ptr<Shader> m_modelShader;
     std::unique_ptr<Shader> m_outlineShader;
-    std::unique_ptr<Shader> m_quadShader;
+    std::unique_ptr<Shader> m_screenShader;
 
     // temp TO DELETE
     mutable BasicCube m_cube;
@@ -45,7 +45,6 @@ class RENDERER_API BasicRenderer : public Renderer
     unsigned int m_rbo{0};
     unsigned int m_offscreenVAO{0};
     unsigned int m_offscreenVBO{0};
-    unsigned int m_offscreenEBO{0};
 };
 
 }
