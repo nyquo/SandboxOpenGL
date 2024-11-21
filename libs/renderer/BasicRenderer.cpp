@@ -30,7 +30,13 @@ BasicRenderer::~BasicRenderer()
     }
 }
 
-void BasicRenderer::beginFrame() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); }
+void BasicRenderer::beginFrame()
+{
+    glEnable(GL_SCISSOR_TEST);
+    glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glDisable(GL_SCISSOR_TEST);
+}
 
 void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> camera)
 {
@@ -54,7 +60,11 @@ void BasicRenderer::renderScene(const Scene& scene, std::shared_ptr<Camera> came
 
 void BasicRenderer::endFrame() {}
 
-void BasicRenderer::setViewport(int width, int height, int x, int y) { glViewport(x, y, width, height); }
+void BasicRenderer::setViewport(int width, int height, int x, int y)
+{
+    glViewport(x, y, width, height);
+    glScissor(x, y, width, height);
+}
 
 void BasicRenderer::renderSceneOnscreen(const Scene& scene, const std::shared_ptr<Camera> camera)
 {

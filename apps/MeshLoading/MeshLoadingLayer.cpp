@@ -19,8 +19,9 @@ MeshLoadingLayer::~MeshLoadingLayer() {}
 
 void MeshLoadingLayer::onUpdate()
 {
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
     processInputs();
-    glClearColor(0.008f, 0.082f, 0.149f, 1.0f);
     updateData();
     m_renderer.setViewport(m_vMax.x - m_vMin.x, m_vMax.y - m_vMin.y, m_vMin.x, m_layerHeight - m_vMax.y);
     m_camera->setViewPortSize(m_vMax.x - m_vMin.x, m_vMax.y - m_vMin.y);
