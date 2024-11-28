@@ -31,7 +31,8 @@ class RENDERER_API Mesh
 
   private:
     VertexBuffer m_vertexBuffer;
-    unsigned int m_vao{0}, m_ebo{0};
+    IndexBuffer m_indexBuffer;
+    unsigned int m_vao{0};
 };
 
 }

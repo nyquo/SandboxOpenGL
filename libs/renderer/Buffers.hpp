@@ -21,4 +21,21 @@ class VertexBuffer
     unsigned int m_id{0};
 };
 
+class IndexBuffer
+{
+  public:
+    IndexBuffer(size_t size, void* data);
+    IndexBuffer(const IndexBuffer& other) = delete;
+    IndexBuffer(IndexBuffer&& other) noexcept;
+    IndexBuffer& operator=(const IndexBuffer& other) = delete;
+    IndexBuffer& operator=(IndexBuffer&& other) noexcept;
+    ~IndexBuffer();
+
+    void bind() const;
+    void unbind() const;
+
+  private:
+    unsigned int m_id{0};
+};
+
 }
