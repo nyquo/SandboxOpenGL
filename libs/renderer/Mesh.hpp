@@ -2,6 +2,7 @@
 
 #include "Vertex.hpp"
 
+#include <Buffers.hpp>
 #include <RendererExport.hpp>
 #include <Shader.hpp>
 #include <Texture.hpp>
@@ -29,8 +30,8 @@ class RENDERER_API Mesh
     std::vector<Texture> textures;
 
   private:
-    unsigned int m_vao{0}, m_vbo{0}, m_ebo{0};
-    void setupMesh();
+    VertexBuffer m_vertexBuffer;
+    unsigned int m_vao{0}, m_ebo{0};
 };
 
 }
