@@ -123,7 +123,9 @@ void BasicRenderer::renderSceneImpl(const Scene& scene, const std::shared_ptr<Ca
         m_cube.m_shader->setMat4("projection", camera->getProjection());
         m_cube.m_shader->setMat4("model", m_cube.m_modelMatrix);
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(m_cube.m_vao);
+        m_cube.m_indexBuffer.bind();
+        glDrawElements(GL_TRIANGLES, m_cube.getIndicesCount(), GL_UNSIGNED_INT, 0);
     }
 
     // END TEMP

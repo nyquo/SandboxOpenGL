@@ -12,7 +12,6 @@ Mesh::Mesh(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, 
   , m_indexBuffer(this->indices.size() * sizeof(unsigned int), this->indices.data())
 {
     glGenVertexArrays(1, &m_vao);
-
     glBindVertexArray(m_vao);
 
     glEnableVertexAttribArray(0);
