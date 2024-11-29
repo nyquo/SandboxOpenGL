@@ -5,6 +5,7 @@
 #include "Shader.hpp"
 #include "Vertex.hpp"
 
+#include <Buffers.hpp>
 #include <Texture.hpp>
 
 #include <vector>
@@ -26,12 +27,14 @@ class RENDERER_API Sprite : public Entity
     std::string getName() const;
 
   private:
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<Vertex> m_vertices;
+    std::vector<unsigned int> m_indices;
+    std::vector<Texture> m_textures;
 
-    unsigned int m_vao{0}, m_vbo{0}, m_ebo{0};
-    void setupMesh();
+    VertexBuffer m_vertexBuffer;
+    IndexBuffer m_indexBuffer;
+
+    unsigned int m_vao{0};
     std::string m_textureName;
 };
 
