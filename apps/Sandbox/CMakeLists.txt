@@ -1,4 +1,4 @@
-set(AppName MeshLoading)
+set(AppName Sandbox)
 
 file(GLOB_RECURSE Headers
         ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
