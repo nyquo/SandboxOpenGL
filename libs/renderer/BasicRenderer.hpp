@@ -49,8 +49,10 @@ class RENDERER_API BasicRenderer : public Renderer
     unsigned int m_frameBuffer{0};
     unsigned int m_textureColorBuffer{0};
     unsigned int m_rbo{0};
-    unsigned int m_offscreenVAO{0};
-    unsigned int m_offscreenVBO{0};
+
+    std::unique_ptr<VertexBuffer> m_offscreenQuadVB;
+    std::unique_ptr<IndexBuffer> m_offscreenQuadIB;
+    std::unique_ptr<VertexArray> m_offscreenQuadVA;
     unsigned int m_offscreenTextureWidth{1920};
     unsigned int m_offscreenTextureHeight{1080};
 };

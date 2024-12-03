@@ -89,9 +89,9 @@ void BasicRenderer::renderSceneOffscren(const Scene& scene, const std::shared_pt
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     m_screenShader->bind();
-    glBindVertexArray(m_offscreenVAO);
+    m_offscreenQuadVA->bind();
     glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
@@ -256,18 +256,17 @@ void BasicRenderer::initOffscreenRendering()
                                             0.0f,  1.0f, 1.0f,  1.0f, 1.0f
 
     };
+    std::vector<unsigned int> indexes{0, 1, 2, 3, 4, 5};
 
-    glGenVertexArrays(1, &m_offscreenVAO);
-    glGenBuffers(1, &m_offscreenVBO);
-    glBindVertexArray(m_offscreenVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, m_offscreenVBO);
-    glBufferData(
-      GL_ARRAY_BUFFER, sizeof(float) * verticesAndTexCoords.size(), &verticesAndTexCoords[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-    glBindVertexArray(0);
+    m_offscreenQuadVB.reset(new VertexBuffer(verticesAndTexCoords.size() * sizeof(float), verticesAndTexCoords.data()));
+    m_offscreenQuadIB.reset(new IndexBuffer(indexes.size() * sizeof(unsigned int), indexes.data()));
+    std::vector<VBLayoutElement> layout;
+    layout.emplace_back(GL_FLOAT, 2, false);
+    layout.emplace_back(GL_FLOAT, 2, false);
+    m_offscreenQuadVA.reset(new VertexArray());
+    m_offscreenQuadVB->setLayout(std::move(layout));
+    m_offscreenQuadVA->setVertexBuffer(m_offscreenQuadVB.get());
+    m_offscreenQuadVA->setIndexBuffer(m_offscreenQuadIB.get());
     m_screenShader->bind();
     m_screenShader->setInt("screenTexture", 0);
 }
@@ -285,15 +284,6 @@ void BasicRenderer::deinitOffscreenRendering()
     if(m_rbo != 0)
     {
         glDeleteRenderbuffers(1, &m_rbo);
-    }
-
-    if(m_offscreenVBO != 0)
-    {
-        glDeleteBuffers(1, &m_offscreenVBO);
-    }
-    if(m_offscreenVAO != 0)
-    {
-        glDeleteVertexArrays(1, &m_offscreenVAO);
     }
 }
 
