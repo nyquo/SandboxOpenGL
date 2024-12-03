@@ -44,7 +44,7 @@ class RENDERER_API BasicRenderer : public Renderer
     mutable BasicCube m_cube;
 
     bool m_wireFrame{false};
-    bool m_offscreen{true};
+    bool m_offscreen{false};
 
     unsigned int m_frameBuffer{0};
     unsigned int m_textureColorBuffer{0};
