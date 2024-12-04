@@ -9,8 +9,8 @@ set(Sources
     Sandbox.cpp
 )
 
-set(Shaders
-)
+# Ressources folder in the sources
+set(RessourcesSources ressources)
 
 set(Links
     Core
@@ -21,6 +21,7 @@ set(Links
     Utils
 )
 
+# Ressources folder for the executable
 set(RESSOURCES_FOLDER ${AppName}Ressources)
 
 set(Definitions
@@ -32,43 +33,30 @@ target_link_libraries(${AppName} PRIVATE ${Links})
 target_include_directories(${AppName} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(${AppName} PRIVATE ${Definitions})
 
-# #TODO Use symlink to avoid copy?
-# #TODO YT comment found on a cmake video: Use a custom target and custom command to run the copying/symlink operation only when necessary.
-# #To achieve this, add a custom target that DEPENDS on the desired file/directory in the build directory. Then add a custom command that OUTPUTs the previously set dependency on the custom target.
-# # Set the COMMAND you want, and finally, make sure this custom command DEPENDS on the source file you want to copy/symlink. In summary, the custom target depends on the build directory version of our file.
-# #How do we satisfy this dependency? With the custom command that outputs that file. When should that custom command run? When its output file does not exist yet, or when the file it depends on (the original resource file) changes.
-
-# # TODO replace by copy_directory_if_different with cmake 3.26
-
-# get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-# if(IS_MULTI_CONFIG)
-#     add_custom_target(copy_shaders${AppName} ALL
-#         COMMAND ${CMAKE_COMMAND} -E copy_directory
-#         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
-#         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${RESSOURCES_FOLDER}/shaders
-#         COMMENT "Copying ${AppName} shaders in the output directory"
-#     )
-#     add_custom_target(copy_assets${AppName} ALL
-#         COMMAND ${CMAKE_COMMAND} -E copy_directory
-#         ${CMAKE_CURRENT_SOURCE_DIR}/assets
-#         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${RESSOURCES_FOLDER}/assets
-#         COMMENT "Copying ${AppName} assets in the output directory"
-#     )
-# else()
-#     add_custom_target(copy_shaders${AppName} ALL
-#         COMMAND ${CMAKE_COMMAND} -E copy_directory
-#         ${CMAKE_CURRENT_SOURCE_DIR}/shaders
-#         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${RESSOURCES_FOLDER}/shaders
-#         COMMENT "Copying ${AppName} shaders in the output directory"
-#     )
-#     add_custom_target(copy_assets${AppName} ALL
-#         COMMAND ${CMAKE_COMMAND} -E copy_directory
-#         ${CMAKE_CURRENT_SOURCE_DIR}/assets
-#         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${RESSOURCES_FOLDER}/assets
-#         COMMENT "Copying ${AppName} assets in the output directory"
-#     )
-# endif()
-# add_dependencies(${AppName} copy_shaders${AppName})
-# add_dependencies(${AppName} copy_assets${AppName})
-
 set_target_properties(${AppName} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
+
+# Copy ressources next to executable
+get_property(GENERATOR_IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
+
+set(TO_COPY "${CMAKE_CURRENT_SOURCE_DIR}/${RessourcesSources}")
+set(COPY_TO "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}$<$<BOOL:${GENERATOR_IS_MULTI_CONFIG}>:/$<CONFIG>>/${RESSOURCES_FOLDER}")
+
+set(OUTPUT_AND_DEPENDS "${COPY_TO}/$<JOIN:${Ressources},;${COPY_TO}/>")
+add_custom_command(
+  OUTPUT "${OUTPUT_AND_DEPENDS}"
+  COMMAND ${CMAKE_COMMAND}
+    ARGS
+      -E copy_directory_if_different
+      "${TO_COPY}"
+      "${COPY_TO}"
+  COMMENT "Copying ressources for ${AppName}"
+  COMMAND_EXPAND_LISTS
+  DEPENDS ${Ressources}
+)
+add_custom_target(${AppName}-ressources
+  DEPENDS "${OUTPUT_AND_DEPENDS}"
+)
+add_dependencies(${AppName}
+  ${AppName}-ressources
+)
