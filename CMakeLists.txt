@@ -5,6 +5,7 @@ project(SandboxOpenGL LANGUAGES C CXX VERSION 0.1)
 include(GNUInstallDirs)
 include(ExternalProject)
 include(FetchContent)
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/helper.cmake")
 
 set(default_build_type "Release")
 
