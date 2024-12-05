@@ -109,7 +109,7 @@ function(sogl_add_library LibraryName)
 
     if(NOT PARAM_SOURCES)
         add_library(${LibraryName} INTERFACE ${PARAM_SOURCES} ${PARAM_HEADERS} ${PARAM_RESSOURCES})
-        target_link_libraries(${LibraryName} PUBLIC ${PARAM_PUBLIC_LINKS} PRIVATE ${PARAM_PRIVATE_LINKS})
+        target_link_libraries(${LibraryName} INTERFACE ${PARAM_PUBLIC_LINKS} ${PARAM_PRIVATE_LINKS})
         target_include_directories(${LibraryName} INTERFACE ${PARAM_PUBLIC_INCLUDES} ${PARAM_PRIVATE_LINKS})
     else()
         add_library(${LibraryName} ${PARAM_SOURCES} ${PARAM_HEADERS} ${PARAM_RESSOURCES})
