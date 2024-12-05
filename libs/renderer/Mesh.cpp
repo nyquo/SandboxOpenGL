@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 
-#include <gl.h>
+#include <core/gl.h>
 
 namespace renderer {
 

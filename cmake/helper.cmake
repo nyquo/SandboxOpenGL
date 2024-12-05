@@ -1,12 +1,12 @@
-# Create a new executable the SandboxOpenGL project (let's call it sogl)
+# Create a new executable for the SandboxOpenGL project (let's call it sogl)
 #
 # Usage:
-#   sogl_add_executable(exe_name
-#                SOURCES [item1...]
-#                [INCLUDES [item1...] ]
-#                [LINKS [item1...] ]
-#                [DEFINITIONS [item1 ...]]
-#                [RESSOURCES [item1 ...]]
+#   sogl_add_executable(AppName
+#       SOURCES [item1...]
+#       [INCLUDES [item1...] ]
+#       [LINKS [item1...] ]
+#       [DEFINITIONS [item1 ...]]
+#       [RESSOURCES [item1 ...]])
 #
 # SOURCES are the sources of the executable
 # INCLUDES an optional list of include directories that are dependencies
@@ -33,10 +33,7 @@ function(sogl_add_executable AppName)
 
     target_link_libraries(${AppName} PRIVATE ${PARAM_LINKS})
     target_include_directories(${AppName} PRIVATE ${PARAM_INCLUDES})
-
-    if(PARAM_DEFINITIONS)
-        target_compile_definitions(${AppName} PRIVATE ${PARAM_DEFINITIONS})
-    endif()
+    target_compile_definitions(${AppName} PRIVATE ${PARAM_DEFINITIONS})
 
     set_target_properties(${AppName} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
 
@@ -67,5 +64,53 @@ function(sogl_add_executable AppName)
         )
         add_dependencies(${AppName} ${AppName}-ressources)
     endif()
+
+endfunction()
+
+
+# Create a new library for the SandboxOpenGL project
+#
+# Usage:
+#   sogl_add_executable(LibraryName
+#       SOURCES [item1...]
+#       HEADERS [item1...]
+#       [PUBLIC_INCLUDES [item1...]]
+#       [PRIVATE_INCLUDES [item1...]]
+#       [PUBLIC_LINKS [item1...]]
+#       [PRIVATE_LINKS [item1...]]
+#       [PUBLIC_DEFINITIONS [item1...]]
+#       [PRIVATE_DEFINITIONS [item1...]]
+#       [RESSOURCES [item1 ...]])
+#
+# SOURCES are the sources of the library
+# HEADERS are the headers files associated to the library
+# PUBLIC_INCLUDES an optional list of include directories that are public dependencies
+# PRIVATE_INCLUDES an optional list of include directories that are private dependencies
+# PUBLIC_LINKS an optional list of targets/libraries to link with as public dependencies
+# PRIVATE_LINKS an optional list of targets/libraries to link with as private dependencies
+# PUBLIC_DEFINITIONS an optional list of public definitions to add to the target
+# PRIVATE_DEFINITIONS an optional list of private definitions to add to the target
+# RESSOURCES an optinal list of ressources to copy next to the executable
+#
+function(sogl_add_library LibraryName)
+    set(_options "")
+    set(_singleValues)
+    set(_multipleValues SOURCES HEADERS PUBLIC_INCLUDES PRIVATE_INCLUDES PUBLIC_LINKS PRIVATE_LINKS PUBLIC_DEFINITIONS PRIVATE_DEFINITIONS RESSOURCES)
+
+    cmake_parse_arguments(PARAM "${_options}" "${_singleValues}" "${_multipleValues}" ${ARGN})
+
+    if(NOT LibraryName)
+        message(FATAL_ERROR "You must provide the library name in 'sogl_add_library'")
+    endif()
+
+    if(NOT PARAM_SOURCES AND NOT PARAM_HEADERS)
+        message(FATAL_ERROR "You must provide the library SOURCES and/or HEADERS in 'sogl_add_librar'")
+    endif()
+
+    add_library(${LibraryName} ${PARAM_SOURCES} ${PARAM_HEADERS} ${PARAM_RESSOURCES})
+
+    target_link_libraries(${LibraryName} PUBLIC ${PARAM_PUBLIC_LINKS} PRIVATE ${PARAM_PRIVATE_LINKS})
+    target_include_directories(${LibraryName} PUBLIC ${PARAM_PUBLIC_INCLUDES} PRIVATE ${PARAM_PRIVATE_LINKS})
+    target_compile_definitions(${LibraryName} PUBLIC ${PARAM_PUBLIC_DEFINITIONS} PRIVATE ${PARAM_PRIVATE_DEFINITIONS})
 
 endfunction()

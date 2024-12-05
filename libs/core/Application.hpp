@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoreExport.hpp"
+#include "core/CoreExport.hpp"
 #include "Events/Event.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Window.hpp"

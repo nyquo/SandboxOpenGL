@@ -25,6 +25,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 
 set(BUILD_SHARED_LIBS ON)
+# For some reason building libs shared produced runtime error with glad on windows
+# As fighting we cmake and windows is not the purpose of this repo, the libs will be build
+# statically on windows for now
+if(WIN32)
+    set(BUILD_SHARED_LIBS OFF)
+endif()
 
 add_subdirectory(extern)
 add_subdirectory(libs)

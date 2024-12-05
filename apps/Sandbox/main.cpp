@@ -1,6 +1,6 @@
 #include "MeshLoadingApp.hpp"
 
-#include <Logger.hpp>
+#include <core/Logger.hpp>
 
 int main(int argc, char** argv)
 {

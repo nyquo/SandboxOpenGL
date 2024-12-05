@@ -1,6 +1,6 @@
 #include "Texture.hpp"
 
-#include "Logger.hpp"
+#include "core/Logger.hpp"
 
 namespace renderer {
 

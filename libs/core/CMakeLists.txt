@@ -1,51 +1,49 @@
-set(LibName Core)
-
-file(GLOB_RECURSE Headers
-	${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/*.h
+set(HEADERS
+    Events/Event.hpp
+    Events/KeyEvent.hpp
+    Events/MouseEvent.hpp
+    Events/WindowEvent.hpp
+    Application.hpp
+    CoreExport.hpp
+    gl.h
+    Input.hpp
+    Layer.hpp
+    LayerStack.hpp
+    Logger.hpp
+    Window.hpp
 )
 
-file(GLOB_RECURSE Sources
-	${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/*.c
+set(SOURCES
+    Application.cpp
+    LayerStack.cpp
+    Logger.cpp
+    Window.cpp
 )
 
-set(PrivateLinks
+set(PRIVATE_LINKS
     Glad
 )
 
-set(PublicLinks
+set(PUBLIC_LINKS
     glm::glm
     imgui
 )
 
-set(RESSOURCES_FOLDER ${LibName}Ressources)
-
-set(Definitions
-    RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
+sogl_add_library(Core
+    SOURCES
+        ${SOURCES}
+    HEADERS
+        ${HEADERS}
+    PUBLIC_INCLUDES
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libs>
+        $<INSTALL_INTERFACE:include/>
+    PRIVATE_INCLUDES
+    PUBLIC_LINKS
+        ${PUBLIC_LINKS}
+    PRIVATE_LINKS
+        ${PRIVATE_LINKS}
+    PUBLIC_DEFINITIONS
+    PRIVATE_DEFINITIONS
+    RESSOURCES
 )
 
-# For some reason building core shared produced runtime error with glad on windows
-# As fighting we cmake and windows is not the purpose of this repo, this will be build 
-# statically on windows for now
-if(WIN32)
-	add_library(${LibName} STATIC
-		${Headers}
-		${Sources}
-	)
-
-#	if(BUILD_SHARED_LIBS)
-#		target_compile_definitions(${LibName} PRIVATE CORE_API_EXPORT)
-#	endif()
-else()
-        add_library(${LibName}
-		${Headers}
-		${Sources}
-	)
-endif()
-
-
-
-target_link_libraries(${LibName} PRIVATE ${PrivateLinks})
-target_link_libraries(${LibName} PUBLIC ${PublicLinks} )
-target_include_directories(${LibName} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

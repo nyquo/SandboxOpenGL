@@ -3,9 +3,9 @@
 #include "PerspectiveCamera.hpp"
 #include "RendererExport.hpp"
 
-#include <Events/Event.hpp>
-#include <Events/MouseEvent.hpp>
-#include <Input.hpp>
+#include <core/Events/Event.hpp>
+#include <core/Events/MouseEvent.hpp>
+#include <core/Input.hpp>
 #include <glm/glm.hpp>
 
 #include <memory>

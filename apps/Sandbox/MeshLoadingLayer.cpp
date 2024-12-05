@@ -1,10 +1,10 @@
 #include "MeshLoadingLayer.hpp"
 
 #include <Conversion.hpp>
-#include <Input.hpp>
-#include <Logger.hpp>
 #include <Sprite.hpp>
-#include <Window.hpp>
+#include <core/Input.hpp>
+#include <core/Logger.hpp>
+#include <core/Window.hpp>
 
 MeshLoadingLayer::MeshLoadingLayer(float layerWidth, float layerHeight)
   : m_layerWidth(layerWidth)

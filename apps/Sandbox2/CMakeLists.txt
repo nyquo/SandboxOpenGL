@@ -1,5 +1,3 @@
-set(AppName Sandbox2)
-
 set(HEADERS
     Sandbox.hpp
 )

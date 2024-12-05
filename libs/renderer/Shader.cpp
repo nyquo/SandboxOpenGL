@@ -1,7 +1,7 @@
 #include "Shader.hpp"
 
-#include "Logger.hpp"
-#include "gl.h"
+#include "core/Logger.hpp"
+#include "core/gl.h"
 
 #include <glm/gtc/type_ptr.hpp>
 

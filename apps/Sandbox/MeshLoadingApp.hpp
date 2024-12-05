@@ -4,8 +4,8 @@
 #include "OverlayInfoLayer.hpp"
 #include "imgui.h"
 
-#include <Application.hpp>
-#include <Logger.hpp>
+#include <core/Application.hpp>
+#include <core/Logger.hpp>
 
 class MeshLoadingApp : public core::Application
 {

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "CoreExport.hpp"
+#include "core/CoreExport.hpp"
 #include "Events/Event.hpp"
 #include "Events/KeyEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Layer.hpp"
 #include "LayerStack.hpp"
-#include "gl.h"
+#include "core/gl.h"
 
 #include <glm/glm.hpp>
 

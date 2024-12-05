@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Application.hpp>
 #include <Shader.hpp>
+#include <core/Application.hpp>
 
 namespace fs = std::filesystem;
 

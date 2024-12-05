@@ -1,6 +1,6 @@
 #include "BasicRenderer.hpp"
 
-#include <Logger.hpp>
+#include <core/Logger.hpp>
 #include <Vertex.hpp>
 #include <glm/gtx/norm.hpp>
 

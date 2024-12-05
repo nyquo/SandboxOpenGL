@@ -2,7 +2,7 @@
 
 #include "RendererExport.hpp"
 
-#include <gl.h>
+#include <core/gl.h>
 #include <stb_image.h>
 
 #include <filesystem>

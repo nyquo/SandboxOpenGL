@@ -1,15 +1,15 @@
 #pragma once
 
 #include <BasicRenderer.hpp>
-#include <Events/KeyEvent.hpp>
-#include <Events/MouseEvent.hpp>
 #include <FpsCameraMover.hpp>
-#include <Layer.hpp>
 #include <Model.hpp>
 #include <PerspectiveCamera.hpp>
 #include <Scene.hpp>
 #include <Shader.hpp>
 #include <Texture.hpp>
+#include <core/Events/KeyEvent.hpp>
+#include <core/Events/MouseEvent.hpp>
+#include <core/Layer.hpp>
 #include <glm/glm.hpp>
 #include <imgui.h>
 
