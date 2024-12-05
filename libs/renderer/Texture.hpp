@@ -3,7 +3,7 @@
 #include "RendererExport.hpp"
 
 #include <core/gl.h>
-#include <stb_image.h>
+#include <io/stb_image.h>
 
 #include <filesystem>
 #include <map>
