@@ -1,17 +1,17 @@
 #pragma once
 
-#include <BasicRenderer.hpp>
-#include <FpsCameraMover.hpp>
-#include <Model.hpp>
-#include <PerspectiveCamera.hpp>
-#include <Scene.hpp>
-#include <Shader.hpp>
-#include <Texture.hpp>
 #include <core/Events/KeyEvent.hpp>
 #include <core/Events/MouseEvent.hpp>
 #include <core/Layer.hpp>
 #include <glm/glm.hpp>
 #include <imgui.h>
+#include <renderer/BasicRenderer.hpp>
+#include <renderer/FpsCameraMover.hpp>
+#include <renderer/Model.hpp>
+#include <renderer/PerspectiveCamera.hpp>
+#include <renderer/Scene.hpp>
+#include <renderer/Shader.hpp>
+#include <renderer/Texture.hpp>
 
 namespace fs = std::filesystem;
 

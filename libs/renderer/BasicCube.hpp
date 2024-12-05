@@ -2,7 +2,7 @@
 
 #include "Buffers.hpp"
 
-#include <Shader.hpp>
+#include <renderer/Shader.hpp>
 #include <core/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

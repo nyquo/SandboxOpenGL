@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Entity.hpp"
-#include "RendererExport.hpp"
-#include "Shader.hpp"
-#include "Vertex.hpp"
-
-#include <Buffers.hpp>
-#include <Texture.hpp>
+#include "renderer/Buffers.hpp"
+#include "renderer/Entity.hpp"
+#include "renderer/RendererExport.hpp"
+#include "renderer/Shader.hpp"
+#include "renderer/Texture.hpp"
+#include "renderer/Vertex.hpp"
 
 #include <vector>
 

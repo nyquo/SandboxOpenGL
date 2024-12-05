@@ -1,7 +1,8 @@
 #include "BasicRenderer.hpp"
 
+#include "renderer/Vertex.hpp"
+
 #include <core/Logger.hpp>
-#include <Vertex.hpp>
 #include <glm/gtx/norm.hpp>
 
 namespace renderer {

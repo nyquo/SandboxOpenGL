@@ -118,4 +118,31 @@ function(sogl_add_library LibraryName)
         target_compile_definitions(${LibraryName} PUBLIC ${PARAM_PUBLIC_DEFINITIONS} PRIVATE ${PARAM_PRIVATE_DEFINITIONS})
     endif()
 
+    # Copy ressources next to executable
+    if(PARAM_RESSOURCES)
+        get_property(GENERATOR_IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
+        set(RESSOURCES_FOLDER ${LibraryName}Ressources)
+        target_compile_definitions(${LibraryName} PRIVATE RESSOURCES_FOLDER="${RESSOURCES_FOLDER}")
+        set(COPY_TO "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}$<$<BOOL:${GENERATOR_IS_MULTI_CONFIG}>:/$<CONFIG>>/${RESSOURCES_FOLDER}")
+
+        foreach(RESSOURCE ${PARAM_RESSOURCES})
+            set(DEST_FILE "${COPY_TO}/${RESSOURCE}")
+
+            add_custom_command(
+                OUTPUT "${DEST_FILE}"
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                        "${CMAKE_CURRENT_SOURCE_DIR}/${RESSOURCE}" "${DEST_FILE}"
+                COMMENT "Copying resource: ${RESSOURCE} for ${LibraryName}"
+                DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${RESSOURCE}"
+            )
+            list(APPEND RESOURCE_OUTPUTS "${DEST_FILE}")
+        endforeach()
+
+        add_custom_target(${LibraryName}-ressources
+            DEPENDS ${RESOURCE_OUTPUTS}
+        )
+        add_dependencies(${LibraryName} ${LibraryName}-ressources)
+    endif()
+
 endfunction()
