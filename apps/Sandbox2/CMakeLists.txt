@@ -1,15 +1,18 @@
 set(HEADERS
+    EditorLayer.hpp
     Sandbox.hpp
+    SimulatedEntity.hpp
 )
 
 set(SOURCES
     main.cpp
+    EditorLayer.cpp
     Sandbox.cpp
 )
 
 set(RESSOURCES
-    shaders/LightCubeShader.frag
-    shaders/LightCubeShader.vert
+    shaders/squareShader.frag
+    shaders/squareShader.vert
 )
 
 set(LINKS

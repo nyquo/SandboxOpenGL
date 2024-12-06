@@ -13,6 +13,7 @@ set(HEADERS
     RendererExport.hpp
     Scene.hpp
     Shader.hpp
+    Shapes/Square.hpp
     Sprite.hpp
     Texture.hpp
     Vertex.hpp
@@ -27,6 +28,7 @@ set(SOURCES
     PerspectiveCamera.cpp
     Scene.cpp
     Shader.cpp
+    Shapes/Square.cpp
     Sprite.cpp
     stb_image.cpp
     Texture.cpp
