@@ -1,5 +1,6 @@
 #include "EditorLayer.hpp"
 
+#include <core/Logger.hpp>
 #include <core/gl.h>
 
 EditorLayer::EditorLayer(float width, float height)
@@ -12,8 +13,8 @@ EditorLayer::EditorLayer(float width, float height)
     {
         m_simulatedEntites.emplace_back();
     }
-    m_squareShader = std::make_unique<renderer::Shader>(fs::path(RESSOURCES_FOLDER) / "shaders",
-                                                        fs::path(RESSOURCES_FOLDER) / "shaders");
+    m_squareShader = std::make_unique<renderer::Shader>(fs::path(RESSOURCES_FOLDER) / "shaders" / "squareShader.vert",
+                                                        fs::path(RESSOURCES_FOLDER) / "shaders" / "squareShader.frag");
 }
 
 EditorLayer::~EditorLayer() {}
@@ -22,7 +23,7 @@ void EditorLayer::onUpdate()
 {
     updateSimulatedEntitiesPositions();
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     drawSimulatedEntites();
 }
 
@@ -41,6 +42,7 @@ void EditorLayer::updateSimulatedEntitiesPositions()
 
 void EditorLayer::drawSimulatedEntites()
 {
+    core::Logger::logInfo("Entites simulated: ", m_simulatedEntites.size());
     m_squareShader->bind();
     m_square.getIndexBuffer().bind();
     m_square.getVertexArray().bind();

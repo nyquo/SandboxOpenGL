@@ -7,7 +7,7 @@ Square::Square()
   , m_indexBuffer(sizeof(unsigned int) * m_indices.size(), m_indices.data())
 {
     std::vector<VBLayoutElement> layout;
-    layout.emplace_back(GL_FLOAT, 3, false);
+    layout.emplace_back(GL_FLOAT, 2, false);
     m_vertexBuffer.setLayout(std::move(layout));
     m_vertexArray.setVertexBuffer(&m_vertexBuffer);
     m_vertexArray.setIndexBuffer(&m_indexBuffer);

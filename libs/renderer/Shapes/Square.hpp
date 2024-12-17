@@ -20,8 +20,21 @@ class Square
     size_t getIndicesCount() const;
 
   private:
-    std::vector<float> m_vertices{-1.0, -1.0, 0.0, 1.0, -1.0, 0.0, 1.0f, 1.0f, 0.0f, -1.0f, 1.0f, 0.0f};
-    std::vector<unsigned int> m_indices{0, 2, 1, 0, 3, 2};
+    std::vector<float> m_vertices{
+      -0.5f,
+      0.5f,
+      -0.5f,
+      -0.5f,
+      0.5f,
+      -0.5f,
+      -0.5f,
+      0.5f,
+      0.5f,
+      -0.5f,
+      0.5f,
+      0.5f,
+    };
+    std::vector<unsigned int> m_indices{0, 1, 2, 3, 4, 5};
 
     renderer::VertexBuffer m_vertexBuffer;
     renderer::IndexBuffer m_indexBuffer;
