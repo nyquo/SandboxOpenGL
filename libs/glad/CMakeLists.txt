@@ -11,19 +11,9 @@ sogl_add_library(${LibName}
         $<INSTALL_INTERFACE:include/>
     PRIVATE_INCLUDES
     PUBLIC_LINKS
+        glfw
     PRIVATE_LINKS
     PUBLIC_DEFINITIONS
     PRIVATE_DEFINITIONS
     RESSOURCES
 )
-
-
-# Ensure that glad is compiled with -fPIC
-# set_target_properties(${LibName} PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
-if(NOT glfw3_FOUND)
-	target_link_libraries(${LibName} PUBLIC glfw3)
-	add_dependencies(Glad glfw3_project)
-else()
-        target_link_libraries(${LibName} PUBLIC glfw)
-endif()
