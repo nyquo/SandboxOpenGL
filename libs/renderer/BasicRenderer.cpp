@@ -109,7 +109,7 @@ void BasicRenderer::renderSceneImpl(const Scene& scene, const std::shared_ptr<Ca
     // TEMP draw point lights as cube
     glStencilMask(0x00);
     m_cube.m_shader->bind();
-    glBindVertexArray(m_cube.m_vao);
+    m_cube.m_vertexArray.bind();
     for(const auto& pointLight : scene.getPointLights())
     {
         m_cube.m_position = pointLight.m_position;
@@ -124,8 +124,6 @@ void BasicRenderer::renderSceneImpl(const Scene& scene, const std::shared_ptr<Ca
         m_cube.m_shader->setMat4("projection", camera->getProjection());
         m_cube.m_shader->setMat4("model", m_cube.m_modelMatrix);
 
-        glBindVertexArray(m_cube.m_vao);
-        m_cube.m_indexBuffer.bind();
         glDrawElements(GL_TRIANGLES, m_cube.getIndicesCount(), GL_UNSIGNED_INT, 0);
     }
 
@@ -260,14 +258,13 @@ void BasicRenderer::initOffscreenRendering()
     std::vector<unsigned int> indexes{0, 1, 2, 3, 4, 5};
 
     m_offscreenQuadVB.reset(new VertexBuffer(verticesAndTexCoords.size() * sizeof(float), verticesAndTexCoords.data()));
-    m_offscreenQuadIB.reset(new IndexBuffer(indexes.size() * sizeof(unsigned int), indexes.data()));
-    std::vector<VBLayoutElement> layout;
-    layout.emplace_back(GL_FLOAT, 2, false);
-    layout.emplace_back(GL_FLOAT, 2, false);
+    m_offscreenQuadIB.reset(new IndexBuffer(indexes.size(), indexes.data()));
+    BufferLayout layout{BufferElement(GL_FLOAT, 2, false, sizeof(float)),
+                        BufferElement(GL_FLOAT, 2, false, sizeof(float))};
     m_offscreenQuadVA.reset(new VertexArray());
     m_offscreenQuadVB->setLayout(std::move(layout));
-    m_offscreenQuadVA->setVertexBuffer(m_offscreenQuadVB.get());
-    m_offscreenQuadVA->setIndexBuffer(m_offscreenQuadIB.get());
+    m_offscreenQuadVA->addVertexBuffer(*m_offscreenQuadVB);
+    m_offscreenQuadVA->setIndexBuffer(*m_offscreenQuadIB);
     m_screenShader->bind();
     m_screenShader->setInt("screenTexture", 0);
 }

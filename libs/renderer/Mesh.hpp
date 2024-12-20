@@ -30,9 +30,9 @@ class RENDERER_API Mesh
     std::vector<Texture> textures;
 
   private:
+    VertexArray m_vertexArray;
     VertexBuffer m_vertexBuffer;
     IndexBuffer m_indexBuffer;
-    VertexArray m_vertexArray;
 };
 
 }

@@ -9,15 +9,14 @@ Mesh::Mesh(std::vector<Vertex>&& vertices, std::vector<unsigned int>&& indices, 
   , indices(std::move(indices))
   , textures(std::move(textures))
   , m_vertexBuffer(this->vertices.size() * sizeof(Vertex), this->vertices.data())
-  , m_indexBuffer(this->indices.size() * sizeof(unsigned int), this->indices.data())
+  , m_indexBuffer(this->indices.size(), this->indices.data())
 {
-    std::vector<VBLayoutElement> layout;
-    layout.emplace_back(GL_FLOAT, 3, false);
-    layout.emplace_back(GL_FLOAT, 3, false);
-    layout.emplace_back(GL_FLOAT, 2, false);
+    BufferLayout layout{BufferElement(GL_FLOAT, 3, false, sizeof(float)),
+                        BufferElement(GL_FLOAT, 3, false, sizeof(float)),
+                        BufferElement(GL_FLOAT, 2, false, sizeof(float))};
     m_vertexBuffer.setLayout(std::move(layout));
-    m_vertexArray.setVertexBuffer(&m_vertexBuffer);
-    m_vertexArray.setIndexBuffer(&m_indexBuffer);
+    m_vertexArray.addVertexBuffer(m_vertexBuffer);
+    m_vertexArray.setIndexBuffer(m_indexBuffer);
 }
 
 Mesh::Mesh(Mesh&& other) noexcept
@@ -67,7 +66,7 @@ void Mesh::draw(Shader& shader) const
     glActiveTexture(GL_TEXTURE0);
 
     m_vertexArray.bind();
-    m_indexBuffer.bind();
+    // m_indexBuffer.bind(); // TODO remove?
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

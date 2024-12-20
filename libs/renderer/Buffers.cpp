@@ -1,6 +1,21 @@
 #include "Buffers.hpp"
 
+#include <cassert>
+
 namespace renderer {
+
+BufferLayout::BufferLayout(std::initializer_list<BufferElement> elements)
+  : m_elements(elements)
+{
+    size_t offset = 0;
+    m_stride = 0;
+    for(auto& element : m_elements)
+    {
+        element.m_offset = offset;
+        offset += element.m_count * element.m_size;
+        m_stride += element.m_count * element.m_size;
+    }
+}
 
 VertexBuffer::VertexBuffer(size_t size, void* data)
 {
@@ -37,13 +52,18 @@ void VertexBuffer::bind() const { glBindBuffer(GL_ARRAY_BUFFER, m_id); }
 
 void VertexBuffer::unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
-void VertexBuffer::setLayout(std::vector<VBLayoutElement>&& layout) { m_layout = std::move(layout); }
+void VertexBuffer::setLayout(BufferLayout&& layout) { m_layout = std::move(layout); }
 
-IndexBuffer::IndexBuffer(size_t size, void* data)
+IndexBuffer::IndexBuffer(size_t count, unsigned int* indices)
+  : m_count(count)
 {
     glGenBuffers(1, &m_id);
-    bind();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+
+    // Idea taken from: https://github.com/TheCherno/Hazel/blob/master/Hazel/src/Platform/OpenGL/OpenGLBuffer.cpp
+    // GL_ELEMENT_ARRAY_BUFFER is not valid without an actively bound VAO
+    // Binding with GL_ARRAY_BUFFER allows the data to be loaded regardless of VAO state.
+    glBindBuffer(GL_ARRAY_BUFFER, m_id);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 }
 
 IndexBuffer::IndexBuffer(IndexBuffer&& other) noexcept
@@ -96,37 +116,33 @@ VertexArray::~VertexArray()
     }
 }
 
-void VertexArray::setVertexBuffer(VertexBuffer* vertexBuffer)
+void VertexArray::addVertexBuffer(VertexBuffer& vertexBuffer)
 {
-    m_vertexBuffer = vertexBuffer;
+    assert(vertexBuffer.getLayout().getElements().size() > 0);
+
     bind();
-    if(m_vertexBuffer != nullptr)
+    vertexBuffer.bind();
+
+    unsigned int index = 0;
+    size_t stride = vertexBuffer.getLayout().getStride();
+    for(const auto& element : vertexBuffer.getLayout().getElements())
     {
-        size_t index = 0;
-        size_t stride = 0;
-        size_t offset = 0;
-        for(const auto& element : m_vertexBuffer->getLayout())
-        {
-            stride += sizeof(element.dataType) * element.size;
-        }
-        for(const auto& element : m_vertexBuffer->getLayout())
+        // We consider GL_NONE to be an additional offset for unused data
+        if(element.m_dataType != GL_NONE)
         {
             glEnableVertexAttribArray(index);
-            glVertexAttribPointer(index, element.size, element.dataType, element.normalize, stride, (void*)offset);
-            ++index;
-            offset += sizeof(element.dataType) * element.size;
+            glVertexAttribPointer(
+              index, element.m_count, element.m_dataType, element.m_normalize, stride, (void*)element.m_offset);
+
+            index++;
         }
     }
 }
 
-void VertexArray::setIndexBuffer(IndexBuffer* indexBuffer)
+void VertexArray::setIndexBuffer(IndexBuffer& indexBuffer)
 {
     bind();
-    m_indexBuffer = indexBuffer;
-    if(m_indexBuffer != nullptr)
-    {
-        indexBuffer->bind();
-    }
+    indexBuffer.bind();
 }
 
 void VertexArray::bind() const { glBindVertexArray(m_id); }

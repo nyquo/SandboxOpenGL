@@ -30,10 +30,10 @@ class RENDERER_API Sprite : public Entity
     std::vector<unsigned int> m_indices;
     std::vector<Texture> m_textures;
 
+    VertexArray m_vertexArray;
     VertexBuffer m_vertexBuffer;
     IndexBuffer m_indexBuffer;
 
-    unsigned int m_vao{0};
     std::string m_textureName;
 };
 

@@ -12,7 +12,7 @@ Sprite::Sprite(const fs::path& path)
   , m_indices({0, 1, 2, 1, 3, 2})
   , m_textures()
   , m_vertexBuffer(m_vertices.size() * sizeof(Vertex), m_vertices.data())
-  , m_indexBuffer(m_indices.size() * sizeof(unsigned int), m_indices.data())
+  , m_indexBuffer(m_indices.size(), m_indices.data())
 {
     m_textures.emplace_back(path.string().c_str(), "texture_diffuse1");
     // If texture could be loaded
@@ -25,16 +25,12 @@ Sprite::Sprite(const fs::path& path)
     }
     m_textures.emplace_back(fs::path(RESSOURCES_FOLDER) / "assets" / "DarkGrey.png", "texture_specular1");
 
-    glGenVertexArrays(1, &m_vao);
-    glBindVertexArray(m_vao);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
-    glBindVertexArray(0);
+    BufferLayout layout{BufferElement(GL_FLOAT, 3, false, sizeof(float)),
+                        BufferElement(GL_FLOAT, 3, false, sizeof(float)),
+                        BufferElement(GL_FLOAT, 2, false, sizeof(float))};
+    m_vertexBuffer.setLayout(std::move(layout));
+    m_vertexArray.addVertexBuffer(m_vertexBuffer);
+    m_vertexArray.setIndexBuffer(m_indexBuffer);
 
     m_textureName = path.filename().stem().string();
 };
@@ -45,10 +41,9 @@ Sprite::Sprite(Sprite&& other) noexcept
   , m_textures(std::move(other.m_textures))
   , m_vertexBuffer(std::move(other.m_vertexBuffer))
   , m_indexBuffer(std::move(other.m_indexBuffer))
-  , m_vao(other.m_vao)
+  , m_vertexArray(std::move(other.m_vertexArray))
 
 {
-    other.m_vao = 0;
 }
 
 Sprite& Sprite::operator=(Sprite&& other) noexcept
@@ -58,18 +53,13 @@ Sprite& Sprite::operator=(Sprite&& other) noexcept
     m_textures = std::move(other.m_textures);
     m_vertexBuffer = std::move(other.m_vertexBuffer);
     m_indexBuffer = std::move(other.m_indexBuffer);
-    m_vao = other.m_vao;
-    other.m_vao = 0;
+    m_vertexArray = std::move(other.m_vertexArray);
 
     return *this;
 }
 
 Sprite::~Sprite()
 {
-    if(m_vao != 0)
-    {
-        glDeleteVertexArrays(1, &m_vao);
-    }
 }
 
 void Sprite::draw(Shader& shader) const
@@ -95,7 +85,7 @@ void Sprite::draw(Shader& shader) const
     shader.setFloat("material.shininess", 16);
     glActiveTexture(GL_TEXTURE0);
 
-    glBindVertexArray(m_vao);
+    m_vertexArray.bind();
     m_indexBuffer.bind();
     glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

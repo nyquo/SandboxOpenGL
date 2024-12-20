@@ -6,16 +6,34 @@
 
 namespace renderer {
 
-struct VBLayoutElement
+struct BufferElement
 {
-    VBLayoutElement(unsigned int _dataType, size_t _size, bool _normalize)
-      : dataType(_dataType)
-      , size(_size)
-      , normalize(_normalize)
+    BufferElement(unsigned int dataType, size_t count, bool normalize, size_t size)
+      : m_dataType(dataType)
+      , m_count(count)
+      , m_normalize(normalize)
+      , m_size(size)
+      , m_offset(0)
     {}
-    unsigned int dataType;
-    size_t size;
-    bool normalize;
+    unsigned int m_dataType;
+    size_t m_count;
+    bool m_normalize;
+    size_t m_size;
+    size_t m_offset;
+};
+
+class BufferLayout
+{
+  public:
+    BufferLayout() = default;
+    BufferLayout(std::initializer_list<BufferElement> elements);
+
+    const std::vector<BufferElement>& getElements() const { return m_elements; }
+    size_t getStride() const { return m_stride; }
+
+  private:
+    std::vector<BufferElement> m_elements;
+    size_t m_stride{0};
 };
 
 class VertexBuffer
@@ -31,18 +49,18 @@ class VertexBuffer
     void bind() const;
     void unbind() const;
 
-    const std::vector<VBLayoutElement>& getLayout() const { return m_layout; }
-    void setLayout(std::vector<VBLayoutElement>&& layout);
+    const BufferLayout& getLayout() const { return m_layout; }
+    void setLayout(BufferLayout&& layout);
 
   private:
     unsigned int m_id{0};
-    std::vector<VBLayoutElement> m_layout;
+    BufferLayout m_layout;
 };
 
 class IndexBuffer
 {
   public:
-    IndexBuffer(size_t size, void* data);
+    IndexBuffer(size_t count, unsigned int* indices);
     IndexBuffer(const IndexBuffer& other) = delete;
     IndexBuffer(IndexBuffer&& other) noexcept;
     IndexBuffer& operator=(const IndexBuffer& other) = delete;
@@ -52,11 +70,13 @@ class IndexBuffer
     void bind() const;
     void unbind() const;
 
+    size_t getCount() const { return m_count; }
+
   private:
     unsigned int m_id{0};
+    size_t m_count;
 };
 
-// TODO Remove raw pointers
 class VertexArray
 {
   public:
@@ -67,16 +87,14 @@ class VertexArray
     VertexArray& operator=(VertexArray&& other) noexcept;
     ~VertexArray();
 
-    void setVertexBuffer(VertexBuffer* vertexBuffer);
-    void setIndexBuffer(IndexBuffer* indexBuffer);
+    void addVertexBuffer(VertexBuffer& vertexBuffer);
+    void setIndexBuffer(IndexBuffer& indexBuffer);
 
     void bind() const;
     void unbind() const;
 
   private:
     unsigned int m_id{0};
-    VertexBuffer* m_vertexBuffer{nullptr};
-    IndexBuffer* m_indexBuffer{nullptr};
 };
 
 }
