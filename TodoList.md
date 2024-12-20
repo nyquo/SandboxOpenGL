@@ -17,3 +17,4 @@ This might need to bump up to opengl 4.1
 - improve docking
 - Fix outline
 - disable face culling for sprites
+- see in buffers if it is needed to unbind after initalization (probably safer but slower)
