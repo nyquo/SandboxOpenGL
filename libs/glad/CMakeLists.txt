@@ -7,7 +7,7 @@ sogl_add_library(${LibName}
         include/glad/glad.h
         include/KHR/khrplatform.h
     PUBLIC_INCLUDES
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libs>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libs/glad/include>
         $<INSTALL_INTERFACE:include/>
     PRIVATE_INCLUDES
     PUBLIC_LINKS
