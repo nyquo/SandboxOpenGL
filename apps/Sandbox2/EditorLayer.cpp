@@ -27,6 +27,31 @@ void EditorLayer::onUpdate()
     drawSimulatedEntites();
 }
 
+void EditorLayer::onImGuiRender()
+{
+    float fps = ImGui::GetIO().Framerate;
+    ImGui::Begin("Option Window");
+    ImGui::Text("FPS: %.1f", fps);
+    ImGui::Text("Simualted entites: %i", m_simulatedEntites.size());
+    ImGui::End();
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{1, 1});
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+    ImGui::Begin("Viewport");
+
+    m_vMin = ImGui::GetWindowContentRegionMin();
+    m_vMax = ImGui::GetWindowContentRegionMax();
+
+    m_vMin.x += ImGui::GetWindowPos().x;
+    m_vMin.y += ImGui::GetWindowPos().y;
+    m_vMax.x += ImGui::GetWindowPos().x;
+    m_vMax.y += ImGui::GetWindowPos().y;
+
+    ImGui::End();
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor();
+}
+
 void EditorLayer::onEvent(core::Event& e) { core::EventDispatcher dispatcher(e); }
 
 void EditorLayer::setLayerSize(float width, float height)
@@ -42,7 +67,6 @@ void EditorLayer::updateSimulatedEntitiesPositions()
 
 void EditorLayer::drawSimulatedEntites()
 {
-    core::Logger::logInfo("Entites simulated: ", m_simulatedEntites.size());
     m_squareShader->bind();
     m_square.getIndexBuffer().bind();
     m_square.getVertexArray().bind();

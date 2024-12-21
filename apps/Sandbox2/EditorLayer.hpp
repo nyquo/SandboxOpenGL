@@ -2,11 +2,11 @@
 
 #include <SimulatedEntity.hpp>
 #include <core/Layer.hpp>
+#include <filesystem>
+#include <imgui.h>
+#include <memory>
 #include <renderer/Shader.hpp>
 #include <renderer/Shapes/Square.hpp>
-
-#include <filesystem>
-#include <memory>
 
 namespace fs = std::filesystem;
 
@@ -17,6 +17,7 @@ class EditorLayer : public core::Layer
     ~EditorLayer();
 
     void onUpdate() override;
+    void onImGuiRender() override;
     void onEvent(core::Event& e) override;
 
     void setLayerSize(float width, float height);
@@ -31,4 +32,8 @@ class EditorLayer : public core::Layer
     std::vector<SimulatedEntity> m_simulatedEntites;
     renderer::Square m_square;
     std::unique_ptr<renderer::Shader> m_squareShader;
+
+    // Viewport
+    ImVec2 m_vMin{0.0f, 0.0f};
+    ImVec2 m_vMax{800.0f, 600.0f};
 };
