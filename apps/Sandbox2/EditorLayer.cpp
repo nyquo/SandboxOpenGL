@@ -21,9 +21,16 @@ EditorLayer::~EditorLayer() {}
 
 void EditorLayer::onUpdate()
 {
-    updateSimulatedEntitiesPositions();
+    glViewport(0,0, m_layerWidth, m_layerHeight);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_SCISSOR_TEST);
+    glViewport(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
+    glScissor(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
+    glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_SCISSOR_TEST);
+    updateSimulatedEntitiesPositions();
     drawSimulatedEntites();
 }
 
@@ -32,20 +39,28 @@ void EditorLayer::onImGuiRender()
     float fps = ImGui::GetIO().Framerate;
     ImGui::Begin("Option Window");
     ImGui::Text("FPS: %.1f", fps);
-    ImGui::Text("Simualted entites: %i", m_simulatedEntites.size());
+    ImGui::Text("Simualted entites: %li", m_simulatedEntites.size());
     ImGui::End();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{1, 1});
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
     ImGui::Begin("Viewport");
 
-    m_vMin = ImGui::GetWindowContentRegionMin();
-    m_vMax = ImGui::GetWindowContentRegionMax();
+    auto& vMin = m_viewportData.m_vMin;
+    auto& vMax = m_viewportData.m_vMax;
 
-    m_vMin.x += ImGui::GetWindowPos().x;
-    m_vMin.y += ImGui::GetWindowPos().y;
-    m_vMax.x += ImGui::GetWindowPos().x;
-    m_vMax.y += ImGui::GetWindowPos().y;
+    vMin = ImGui::GetWindowContentRegionMin();
+    vMax = ImGui::GetWindowContentRegionMax();
+
+    vMin.x += ImGui::GetWindowPos().x;
+    vMin.y += ImGui::GetWindowPos().y;
+    vMax.x += ImGui::GetWindowPos().x;
+    vMax.y += ImGui::GetWindowPos().y;
+
+    m_viewportData.x = vMin.x;
+    m_viewportData.y = m_layerHeight - vMax.y;
+    m_viewportData.width = vMax.x - vMin.x;
+    m_viewportData.height = vMax.y - vMin.y;
 
     ImGui::End();
     ImGui::PopStyleVar();

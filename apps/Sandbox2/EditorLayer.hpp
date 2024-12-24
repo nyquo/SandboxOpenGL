@@ -10,6 +10,14 @@
 
 namespace fs = std::filesystem;
 
+struct ViewportData {
+    ImVec2 m_vMin{0.0f, 0.0f};
+    ImVec2 m_vMax{800.0f, 600.0f};
+
+    float x{0}, y{0};
+    float width{800}, height{600};
+};
+
 class EditorLayer : public core::Layer
 {
   public:
@@ -33,7 +41,5 @@ class EditorLayer : public core::Layer
     renderer::Square m_square;
     std::unique_ptr<renderer::Shader> m_squareShader;
 
-    // Viewport
-    ImVec2 m_vMin{0.0f, 0.0f};
-    ImVec2 m_vMax{800.0f, 600.0f};
+    ViewportData m_viewportData;
 };
