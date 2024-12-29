@@ -3,6 +3,8 @@
 #include <core/Layer.hpp>
 #include <imgui.h>
 #include <memory>
+#include <random>
+#include <renderer/PerspectiveCamera.hpp>
 #include <renderer/RendererV2.hpp>
 #include <renderer/SceneV2.hpp>
 #include <renderer/Shader.hpp>
@@ -39,6 +41,11 @@ class EditorLayer : public core::Layer
 
     renderer::SceneV2 m_scene;
     renderer::RendererV2 m_renderer;
+    std::shared_ptr<renderer::PerspectiveCamera> m_camera;
 
     ViewportData m_viewportData;
+
+    std::mt19937 m_gen;
+    double m_deltaTime{0.0};
+    double m_lastFrame{0.0};
 };

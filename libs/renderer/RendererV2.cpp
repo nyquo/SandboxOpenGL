@@ -2,6 +2,8 @@
 
 #include <core/Logger.hpp>
 #include <core/gl.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace renderer {
 
@@ -30,9 +32,13 @@ void RendererV2::beginFrame()
 void RendererV2::renderScene(SceneV2& scene)
 {
     m_simulatedEntityShader->bind();
+    m_simulatedEntityShader->setMat4("view", scene.getActiveCamera()->getView());
+    m_simulatedEntityShader->setMat4("projection", scene.getActiveCamera()->getProjection());
     m_square.getVertexArray().bind();
     for(auto& entity : scene.getEntites())
     {
+        glm::mat4 model = glm::translate(glm::mat4(1.0F), entity.m_position);
+        m_simulatedEntityShader->setMat4("model", model);
         m_simulatedEntityShader->setVec3("squareColor", entity.m_color);
         glDrawElements(GL_TRIANGLES, m_square.getIndicesCount(), GL_UNSIGNED_INT, 0);
     }

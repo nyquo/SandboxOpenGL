@@ -1,13 +1,20 @@
 #include "EditorLayer.hpp"
 
+#include <algorithm>
 #include <core/Logger.hpp>
 #include <core/gl.h>
 
 EditorLayer::EditorLayer(float width, float height)
   : m_layerWidth(width)
   , m_layerHeight(height)
+  , m_camera(std::make_shared<renderer::PerspectiveCamera>(m_layerWidth, m_layerHeight, glm::vec3(0.0F, 0.0F, 50.0F)))
 {
-    constexpr size_t nbEntities = 1;
+    std::random_device rd;
+    m_gen = std::mt19937(rd());
+
+    m_scene.setActiveCamera(m_camera);
+
+    constexpr size_t nbEntities = 100000;
     auto& entites = m_scene.getEntites();
     entites.reserve(nbEntities);
     for(int i = 0; i < nbEntities; ++i)
@@ -20,10 +27,14 @@ EditorLayer::~EditorLayer() {}
 
 void EditorLayer::onUpdate()
 {
+    double currentFrame = glfwGetTime();
+    m_deltaTime = currentFrame - m_lastFrame;
+    m_lastFrame = currentFrame;
     glViewport(0,0, m_layerWidth, m_layerHeight);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     m_renderer.setViewport(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
+    m_camera->setViewPortSize(m_viewportData.width, m_viewportData.height);
     m_renderer.beginFrame();
     updateSimulatedEntitiesPositions();
     drawSimulatedEntites();
@@ -73,7 +84,25 @@ void EditorLayer::setLayerSize(float width, float height)
 
 void EditorLayer::updateSimulatedEntitiesPositions()
 {
-    // for(auto& entity : m_simulatedEntites) {}
+    const float incColor = 5.0F * m_deltaTime;
+    std::uniform_real_distribution<float> distColor(-incColor, incColor);
+    const float incPos = 20.0F * m_deltaTime;
+    std::uniform_real_distribution<float> distPos(-incPos, incPos);
+    for(auto& entity : m_scene.getEntites())
+    {
+        float r = distColor(m_gen);
+        float g = distColor(m_gen);
+        float b = distColor(m_gen);
+        entity.m_color.r = std::clamp(entity.m_color.r + r, 0.0F, 1.0F);
+        entity.m_color.g = std::clamp(entity.m_color.g + g, 0.0F, 1.0F);
+        entity.m_color.b = std::clamp(entity.m_color.b + b, 0.0F, 1.0F);
+
+        float x = distPos(m_gen);
+        float y = distPos(m_gen);
+        constexpr float bounds = 50.0F;
+        entity.m_position.x = std::clamp(entity.m_position.x + x, -bounds, bounds);
+        entity.m_position.y = std::clamp(entity.m_position.y + y, -bounds, bounds);
+    }
 }
 
 void EditorLayer::drawSimulatedEntites() { m_renderer.renderScene(m_scene); }
