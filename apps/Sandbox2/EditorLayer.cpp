@@ -14,10 +14,9 @@ EditorLayer::EditorLayer(float width, float height)
 
     m_scene.setActiveCamera(m_camera);
 
-    constexpr size_t nbEntities = 100000;
     auto& entites = m_scene.getEntites();
-    entites.reserve(nbEntities);
-    for(int i = 0; i < nbEntities; ++i)
+    entites.reserve(m_maxEntityCount);
+    for(int i = 0; i < m_entityCount; ++i)
     {
         entites.emplace_back();
     }
@@ -46,6 +45,7 @@ void EditorLayer::onImGuiRender()
     float fps = ImGui::GetIO().Framerate;
     ImGui::Begin("Option Window");
     ImGui::Text("FPS: %.1f", fps);
+    ImGui::DragInt("Simualted entites", &m_entityCount, 100, 0, m_maxEntityCount);
     ImGui::Text("Simualted entites: %li", m_scene.getEntites().size());
     ImGui::End();
 
@@ -82,13 +82,23 @@ void EditorLayer::setLayerSize(float width, float height)
     m_layerHeight = height;
 }
 
-void EditorLayer::updateSimulatedEntitiesPositions()
+void EditorLayer::updateSimulatedEntitiesPositions() // todo rename
 {
+    auto& entities = m_scene.getEntites();
+    if(m_entityCount > entities.size())
+    {
+        std::fill_n(std::back_inserter(entities), m_entityCount - entities.size(), SimulatedEntity{});
+    }
+    if(m_entityCount < entities.size())
+    {
+        entities.erase(entities.end() - (entities.size() - m_entityCount), entities.end());
+    }
+
     const float incColor = 5.0F * m_deltaTime;
     std::uniform_real_distribution<float> distColor(-incColor, incColor);
     const float incPos = 20.0F * m_deltaTime;
     std::uniform_real_distribution<float> distPos(-incPos, incPos);
-    for(auto& entity : m_scene.getEntites())
+    for(auto& entity : entities)
     {
         float r = distColor(m_gen);
         float g = distColor(m_gen);
@@ -99,7 +109,7 @@ void EditorLayer::updateSimulatedEntitiesPositions()
 
         float x = distPos(m_gen);
         float y = distPos(m_gen);
-        constexpr float bounds = 50.0F;
+        constexpr float bounds = 40.0F;
         entity.m_position.x = std::clamp(entity.m_position.x + x, -bounds, bounds);
         entity.m_position.y = std::clamp(entity.m_position.y + y, -bounds, bounds);
     }

@@ -42,6 +42,8 @@ class EditorLayer : public core::Layer
     renderer::SceneV2 m_scene;
     renderer::RendererV2 m_renderer;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
+    int m_entityCount{1000};
+    int m_maxEntityCount{1000000};
 
     ViewportData m_viewportData;
 
