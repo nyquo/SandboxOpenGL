@@ -8,13 +8,12 @@ EditorLayer::EditorLayer(float width, float height)
   , m_layerHeight(height)
 {
     constexpr size_t nbEntities = 1;
-    m_simulatedEntites.reserve(nbEntities);
+    auto& entites = m_scene.getEntites();
+    entites.reserve(nbEntities);
     for(int i = 0; i < nbEntities; ++i)
     {
-        m_simulatedEntites.emplace_back();
+        entites.emplace_back();
     }
-    m_squareShader = std::make_unique<renderer::Shader>(fs::path(RESSOURCES_FOLDER) / "shaders" / "squareShader.vert",
-                                                        fs::path(RESSOURCES_FOLDER) / "shaders" / "squareShader.frag");
 }
 
 EditorLayer::~EditorLayer() {}
@@ -24,14 +23,11 @@ void EditorLayer::onUpdate()
     glViewport(0,0, m_layerWidth, m_layerHeight);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_SCISSOR_TEST);
-    glViewport(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
-    glScissor(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
-    glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDisable(GL_SCISSOR_TEST);
+    m_renderer.setViewport(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
+    m_renderer.beginFrame();
     updateSimulatedEntitiesPositions();
     drawSimulatedEntites();
+    m_renderer.endFrame();
 }
 
 void EditorLayer::onImGuiRender()
@@ -39,7 +35,7 @@ void EditorLayer::onImGuiRender()
     float fps = ImGui::GetIO().Framerate;
     ImGui::Begin("Option Window");
     ImGui::Text("FPS: %.1f", fps);
-    ImGui::Text("Simualted entites: %li", m_simulatedEntites.size());
+    ImGui::Text("Simualted entites: %li", m_scene.getEntites().size());
     ImGui::End();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{1, 1});
@@ -77,18 +73,7 @@ void EditorLayer::setLayerSize(float width, float height)
 
 void EditorLayer::updateSimulatedEntitiesPositions()
 {
-    for(auto& entity : m_simulatedEntites) {}
+    // for(auto& entity : m_simulatedEntites) {}
 }
 
-void EditorLayer::drawSimulatedEntites()
-{
-    m_squareShader->bind();
-    m_square.getIndexBuffer().bind();
-    m_square.getVertexArray().bind();
-    for(auto& entity : m_simulatedEntites)
-    {
-        m_squareShader->setVec3("squareColor", entity.m_color);
-        glDrawElements(GL_TRIANGLES, m_square.getIndicesCount(), GL_UNSIGNED_INT, 0);
-    }
-    glBindVertexArray(0);
-}
+void EditorLayer::drawSimulatedEntites() { m_renderer.renderScene(m_scene); }

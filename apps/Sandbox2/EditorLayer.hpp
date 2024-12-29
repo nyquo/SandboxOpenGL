@@ -1,10 +1,10 @@
 #pragma once
 
-#include <SimulatedEntity.hpp>
 #include <core/Layer.hpp>
-#include <filesystem>
 #include <imgui.h>
 #include <memory>
+#include <renderer/RendererV2.hpp>
+#include <renderer/SceneV2.hpp>
 #include <renderer/Shader.hpp>
 #include <renderer/Shapes/Square.hpp>
 
@@ -37,9 +37,8 @@ class EditorLayer : public core::Layer
     float m_layerWidth;
     float m_layerHeight;
 
-    std::vector<SimulatedEntity> m_simulatedEntites;
-    renderer::Square m_square;
-    std::unique_ptr<renderer::Shader> m_squareShader;
+    renderer::SceneV2 m_scene;
+    renderer::RendererV2 m_renderer;
 
     ViewportData m_viewportData;
 };

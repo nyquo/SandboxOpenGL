@@ -1,7 +1,6 @@
 set(HEADERS
     EditorLayer.hpp
     Sandbox.hpp
-    SimulatedEntity.hpp
 )
 
 set(SOURCES

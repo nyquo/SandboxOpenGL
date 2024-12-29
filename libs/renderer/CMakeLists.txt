@@ -11,7 +11,10 @@ set(HEADERS
     PerspectiveCamera.hpp
     Renderer.hpp
     RendererExport.hpp
+    RendererV2.hpp
     Scene.hpp
+    SceneV2.hpp
+    SimulatedEntity.hpp
     Shader.hpp
     Shapes/Square.hpp
     Sprite.hpp
@@ -26,7 +29,9 @@ set(SOURCES
     Mesh.cpp
     Model.cpp
     PerspectiveCamera.cpp
+    RendererV2.cpp
     Scene.cpp
+    SceneV2.cpp
     Shader.cpp
     Shapes/Square.cpp
     Sprite.cpp
@@ -62,6 +67,8 @@ set(RESSOURCES
     shaders/modelShader.vert
     shaders/screenShader.frag
     shaders/screenShader.vert
+    shaders/SimulatedEntity.frag
+    shaders/SimulatedEntity.vert
 
 )
 
