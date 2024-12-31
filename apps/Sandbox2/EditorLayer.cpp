@@ -45,7 +45,7 @@ void EditorLayer::onImGuiRender()
     float fps = ImGui::GetIO().Framerate;
     ImGui::Begin("Option Window");
     ImGui::Text("FPS: %.1f", fps);
-    ImGui::DragInt("Simualted entites", &m_entityCount, 100, 0, m_maxEntityCount);
+    ImGui::DragInt("simulated entities", &m_entityCount, 100, 0, m_maxEntityCount);
     ImGui::Text("Simualted entites: %li", m_scene.getEntites().size());
     ImGui::End();
 
