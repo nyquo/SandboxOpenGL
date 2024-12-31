@@ -66,7 +66,6 @@ void Mesh::draw(Shader& shader) const
     glActiveTexture(GL_TEXTURE0);
 
     m_vertexArray.bind();
-    // m_indexBuffer.bind(); // TODO remove?
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
