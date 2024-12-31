@@ -87,7 +87,11 @@ void EditorLayer::updateSimulatedEntitiesPositions() // todo rename
     auto& entities = m_scene.getEntites();
     if(m_entityCount > entities.size())
     {
-        std::fill_n(std::back_inserter(entities), m_entityCount - entities.size(), SimulatedEntity{});
+        const size_t addCount = m_entityCount - entities.size();
+        for(int i = 0; i < addCount; ++i)
+        {
+            entities.emplace_back();
+        }
     }
     if(m_entityCount < entities.size())
     {
