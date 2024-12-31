@@ -100,7 +100,7 @@ void EditorLayer::updateSimulatedEntitiesPositions() // todo rename
 
     const float incColor = 5.0F * m_deltaTime;
     std::uniform_real_distribution<float> distColor(-incColor, incColor);
-    const float incPos = 20.0F * m_deltaTime;
+    const float incPos = 5.0F * m_deltaTime;
     std::uniform_real_distribution<float> distPos(-incPos, incPos);
     for(auto& entity : entities)
     {
