@@ -1,0 +1,19 @@
+sogl_add_executable(SandboxNavigationAndBackground
+    SOURCES
+        main.cpp
+        EditorLayer.cpp
+        EditorLayer.hpp
+        Sandbox.cpp
+        Sandbox.hpp
+    INCLUDES
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include/>
+    LINKS
+        Core
+        Glad
+        Renderer
+        glm::glm
+        imgui
+        Utils
+    RESSOURCES
+)
