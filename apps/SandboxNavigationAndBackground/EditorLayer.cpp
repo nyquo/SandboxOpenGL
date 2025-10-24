@@ -60,8 +60,9 @@ void EditorLayer::displayOptionWindow()
 
 bool EditorLayer::isCoordInViewport(glm::vec2 coord)
 {
-    return (coord.x > m_viewportData.m_vMin.x && coord.x < m_viewportData.m_vMax.x &&
-            coord.y > m_layerHeight - m_viewportData.m_vMax.y && coord.y < m_layerHeight - m_viewportData.m_vMin.y);
+    coord.y = m_layerHeight - coord.y;
+    return (coord.x > m_viewportData.x && coord.x < m_viewportData.x + m_viewportData.width &&
+            coord.y > m_viewportData.y && coord.y < m_viewportData.y + m_viewportData.height);
 }
 
 bool EditorLayer::onFileDropped(core::FileDropEvent& event)
