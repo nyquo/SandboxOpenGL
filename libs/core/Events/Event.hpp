@@ -17,6 +17,7 @@ enum class EventType
     // Window events
     WindowCloseEvent,
     WindowResizeEvent,
+    FileDropEvent,
 
     // Mouse events
     MouseMovedEvent,
