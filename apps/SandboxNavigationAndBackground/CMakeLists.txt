@@ -3,6 +3,8 @@ sogl_add_executable(SandboxNavigationAndBackground
         main.cpp
         EditorLayer.cpp
         EditorLayer.hpp
+        MeshLoadingScene.hpp
+        MeshLoadingScene.cpp
         Sandbox.cpp
         Sandbox.hpp
     INCLUDES

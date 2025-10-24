@@ -1,14 +1,15 @@
 #pragma once
 
+#include "MeshLoadingScene.hpp"
+
 #include <core/Layer.hpp>
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <memory>
 #include <renderer/PerspectiveCamera.hpp>
-#include <renderer/RendererV2.hpp>
-#include <renderer/SceneV2.hpp>
 
-struct ViewportData {
+struct ViewportData
+{
     ImVec2 m_vMin{0.0f, 0.0f};
     ImVec2 m_vMax{800.0f, 600.0f};
 
@@ -36,10 +37,8 @@ class EditorLayer : public core::Layer
     float m_layerWidth;
     float m_layerHeight;
 
-    renderer::SceneV2 m_scene;
-    renderer::RendererV2 m_renderer;
+    MeshLoadingScene m_meshLoadingScene;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
-
 
     ViewportData m_viewportData;
     glm::vec3 m_windowBackgroundColor{0.1f, 0.1f, 0.1f};

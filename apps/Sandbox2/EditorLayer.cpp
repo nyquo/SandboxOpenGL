@@ -29,7 +29,7 @@ void EditorLayer::onUpdate()
     double currentFrame = glfwGetTime();
     m_deltaTime = currentFrame - m_lastFrame;
     m_lastFrame = currentFrame;
-    glViewport(0,0, m_layerWidth, m_layerHeight);
+    glViewport(0, 0, m_layerWidth, m_layerHeight);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     m_renderer.setViewport(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
@@ -49,7 +49,7 @@ void EditorLayer::onImGuiRender()
     ImGui::Text("Simualted entites: %li", m_scene.getEntites().size());
     ImGui::End();
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{1, 1});
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{1, 1});
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
     ImGui::Begin("Viewport");
 
