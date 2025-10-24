@@ -4,6 +4,7 @@
 #include <core/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <renderer/Model.hpp>
 
 MeshLoadingScene::~MeshLoadingScene()
 {
@@ -40,4 +41,17 @@ void MeshLoadingScene::setViewport(int x, int y, int width, int height)
     m_height = height;
 }
 
-void MeshLoadingScene::loadMeshFromFile(fs::path path) { core::Logger::logInfo("Loading mesh from path: ", path); }
+void MeshLoadingScene::loadMeshFromFile(fs::path path)
+{
+    m_model = nullptr;
+    if(path.empty())
+    {
+        core::Logger::logWarning("Removing previous mesh (no path provided).");
+        return;
+    }
+    else
+    {
+        core::Logger::logInfo("Loading mesh from path: ", path);
+        m_model = std::make_shared<renderer::Model>(path);
+    }
+}

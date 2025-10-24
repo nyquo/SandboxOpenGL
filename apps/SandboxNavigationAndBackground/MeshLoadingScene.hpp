@@ -2,6 +2,8 @@
 
 #include <filesystem>
 #include <glm/glm.hpp>
+#include <memory>
+#include <renderer/Model.hpp>
 
 namespace fs = std::filesystem;
 
@@ -35,6 +37,8 @@ class MeshLoadingScene
     int m_y{0};
     int m_width{800};
     int m_height{600};
+
+    std::shared_ptr<renderer::Model> m_model;
 
     MeshLoadingSceneOptions m_options;
 };
