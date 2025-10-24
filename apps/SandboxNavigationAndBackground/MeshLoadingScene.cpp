@@ -1,5 +1,6 @@
 #include "MeshLoadingScene.hpp"
 
+#include <core/Logger.hpp>
 #include <core/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -16,9 +17,6 @@ MeshLoadingScene::MeshLoadingScene() {}
 void MeshLoadingScene::renderScene()
 {
     beginFrame();
-
-    // Rendering code would go here
-
     endFrame();
 }
 
@@ -41,3 +39,5 @@ void MeshLoadingScene::setViewport(int x, int y, int width, int height)
     m_width = width;
     m_height = height;
 }
+
+void MeshLoadingScene::loadMeshFromFile(fs::path path) { core::Logger::logInfo("Loading mesh from path: ", path); }

@@ -18,4 +18,6 @@ sogl_add_executable(SandboxNavigationAndBackground
         imgui
         Utils
     RESSOURCES
+    DEFINITIONS
+
 )

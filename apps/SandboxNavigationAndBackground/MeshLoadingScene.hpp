@@ -1,10 +1,14 @@
 #pragma once
 
+#include <filesystem>
 #include <glm/glm.hpp>
+
+namespace fs = std::filesystem;
 
 struct MeshLoadingSceneOptions
 {
     glm::vec3 backgroundColor{0.0f, 0.1f, 0.1f};
+    char meshPath[256] = "";
 };
 
 class MeshLoadingScene
@@ -20,6 +24,7 @@ class MeshLoadingScene
     void renderScene();
     void setViewport(int x, int y, int width, int height);
     MeshLoadingSceneOptions& getOptions() { return m_options; }
+    void loadMeshFromFile(fs::path path);
 
   private:
     void beginFrame();

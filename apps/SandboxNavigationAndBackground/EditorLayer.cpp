@@ -1,6 +1,7 @@
 #include "EditorLayer.hpp"
 
 #include <algorithm>
+#include <core/Input.hpp>
 #include <core/Logger.hpp>
 #include <core/gl.h>
 
@@ -28,7 +29,11 @@ void EditorLayer::onImGuiRender()
     displayViewportWindow();
 }
 
-void EditorLayer::onEvent(core::Event& e) { core::EventDispatcher dispatcher(e); }
+void EditorLayer::onEvent(core::Event& e)
+{
+    core::EventDispatcher dispatcher(e);
+    dispatcher.dispatch<core::FileDropEvent>(BIND_EVENT_FN(EditorLayer::onFileDropped));
+}
 
 void EditorLayer::setLayerSize(float width, float height)
 {
@@ -43,7 +48,41 @@ void EditorLayer::displayOptionWindow()
     ImGui::Begin("Option Window");
     ImGui::Text("FPS: %.1f", fps);
     ImGui::ColorEdit3("Background Color", (float*)&m_meshLoadingScene.getOptions().backgroundColor);
+    ImGui::InputText(
+      "Mesh Path", m_meshLoadingScene.getOptions().meshPath, IM_ARRAYSIZE(m_meshLoadingScene.getOptions().meshPath));
+    ImGui::SameLine();
+    if(ImGui::Button("Load Mesh"))
+    {
+        m_meshLoadingScene.loadMeshFromFile(m_meshLoadingScene.getOptions().meshPath);
+    }
     ImGui::End();
+}
+
+bool EditorLayer::isCoordInViewport(glm::vec2 coord)
+{
+    return (coord.x > m_viewportData.m_vMin.x && coord.x < m_viewportData.m_vMax.x &&
+            coord.y > m_layerHeight - m_viewportData.m_vMax.y && coord.y < m_layerHeight - m_viewportData.m_vMin.y);
+}
+
+bool EditorLayer::onFileDropped(core::FileDropEvent& event)
+{
+    if(event.getPaths().empty())
+    {
+        core::Logger::logWarning("No file dropped.");
+        return true;
+    }
+
+    auto mousePos = core::Input::getMousePosition();
+    if(isCoordInViewport(mousePos))
+    {
+        if(event.getPaths().size() > 1)
+        {
+            core::Logger::logWarning("Multiple files dropped. Only the first one will be loaded.");
+        }
+        m_meshLoadingScene.loadMeshFromFile(event.getPaths().front());
+        return true;
+    }
+    return false;
 }
 
 void EditorLayer::displayViewportWindow()

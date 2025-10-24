@@ -2,6 +2,7 @@
 
 #include "MeshLoadingScene.hpp"
 
+#include <core/Events/WindowEvent.hpp>
 #include <core/Layer.hpp>
 #include <glm/glm.hpp>
 #include <imgui.h>
@@ -32,6 +33,10 @@ class EditorLayer : public core::Layer
   private:
     void displayViewportWindow();
     void displayOptionWindow();
+
+    bool isCoordInViewport(glm::vec2 coord);
+
+    bool onFileDropped(core::FileDropEvent& event);
 
   private:
     float m_layerWidth;
