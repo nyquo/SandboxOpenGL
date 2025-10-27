@@ -56,6 +56,7 @@ void MeshLoadingScene::setViewport(int x, int y, int width, int height)
     m_y = y;
     m_width = width;
     m_height = height;
+    m_camera->setViewPortSize(width, height);
 }
 
 void MeshLoadingScene::loadMeshFromFile(fs::path path)
