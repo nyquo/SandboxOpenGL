@@ -31,6 +31,9 @@ FetchContent_MakeAvailable(glm)
 # Assimp #
 ##########
 
+# Disable treating warnings as errors in Assimp
+set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
     assimp
     GIT_REPOSITORY https://github.com/assimp/assimp.git
