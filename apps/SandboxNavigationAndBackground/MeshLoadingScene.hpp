@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <renderer/Model.hpp>
+#include <renderer/PerspectiveCamera.hpp>
+#include <renderer/Shader.hpp>
 
 namespace fs = std::filesystem;
 
@@ -39,6 +41,8 @@ class MeshLoadingScene
     int m_height{600};
 
     std::shared_ptr<renderer::Model> m_model;
+    std::shared_ptr<renderer::Camera> m_camera;
+    std::shared_ptr<renderer::Shader> m_basicModelShader;
 
     MeshLoadingSceneOptions m_options;
 };

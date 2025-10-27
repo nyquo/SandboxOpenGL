@@ -1,3 +1,5 @@
+set(RESSOURCES_FOLDER ${AppName}Ressources)
+
 sogl_add_executable(SandboxNavigationAndBackground
     SOURCES
         main.cpp
@@ -18,6 +20,8 @@ sogl_add_executable(SandboxNavigationAndBackground
         imgui
         Utils
     RESSOURCES
+        shaders/BasicModelShader.frag
+        shaders/BasicModelShader.vert
     DEFINITIONS
-
+        RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
 )
