@@ -20,6 +20,8 @@ sogl_add_executable(SandboxNavigationAndBackground
         imgui
         Utils
     RESSOURCES
+        shaders/BackgroundVignette.frag
+        shaders/BackgroundVignette.vert
         shaders/BasicModelShader.frag
         shaders/BasicModelShader.vert
     DEFINITIONS

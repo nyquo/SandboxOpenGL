@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <glm/glm.hpp>
 #include <memory>
+#include <renderer/Buffers.hpp>
 #include <renderer/Model.hpp>
 #include <renderer/PerspectiveCamera.hpp>
 #include <renderer/Shader.hpp>
@@ -11,7 +12,23 @@ namespace fs = std::filesystem;
 
 struct MeshLoadingSceneOptions
 {
+    enum class BackgroundMode
+    {
+        SingleColor = 0,
+        Vignette = 1
+    };
+
+    BackgroundMode backgroundMode{BackgroundMode::SingleColor};
+
+    // Single color settings
     glm::vec3 backgroundColor{0.0f, 0.1f, 0.1f};
+
+    // Vignette settings
+    glm::vec3 backgroundColorVignetteInner{0.0f, 0.1f, 0.1f};
+    glm::vec3 backgroundColorVignetteOuter{0.0f, 0.0f, 0.0f};
+    float vignetteRadius{0.75f};
+    float vignetteSoftness{0.25f};
+
     char meshPath[256] = "";
 };
 
@@ -31,6 +48,8 @@ class MeshLoadingScene
     void loadMeshFromFile(fs::path path);
 
   private:
+    void renderBackground();
+    void renderModel();
     void beginFrame();
     void endFrame();
 
@@ -42,7 +61,14 @@ class MeshLoadingScene
 
     std::shared_ptr<renderer::Model> m_model;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
+
     std::shared_ptr<renderer::Shader> m_basicModelShader;
+    std::shared_ptr<renderer::Shader> m_backgroundVignetteShader;
+
+    std::unique_ptr<renderer::VertexBuffer> m_quadVBO;
+    std::unique_ptr<renderer::VertexArray> m_quadVAO;
+    std::unique_ptr<renderer::IndexBuffer> m_quadIBO;
+    std::shared_ptr<renderer::Shader> m_currentBackgroundShader;
 
     MeshLoadingSceneOptions m_options;
 };

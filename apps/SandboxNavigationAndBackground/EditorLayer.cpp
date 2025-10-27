@@ -46,8 +46,11 @@ void EditorLayer::displayOptionWindow()
     float fps = ImGui::GetIO().Framerate;
     ImGui::SetNextWindowSizeConstraints(ImVec2(150.0f, 150.0f), ImVec2(FLT_MAX, FLT_MAX));
     ImGui::Begin("Option Window");
+
+    // FPS Display
     ImGui::Text("FPS: %.1f", fps);
-    ImGui::ColorEdit3("Background Color", (float*)&m_meshLoadingScene.getOptions().backgroundColor);
+
+    // Mesh loading controls
     ImGui::InputText(
       "Mesh Path", m_meshLoadingScene.getOptions().meshPath, IM_ARRAYSIZE(m_meshLoadingScene.getOptions().meshPath));
     ImGui::SameLine();
@@ -55,7 +58,44 @@ void EditorLayer::displayOptionWindow()
     {
         m_meshLoadingScene.loadMeshFromFile(m_meshLoadingScene.getOptions().meshPath);
     }
+
+    // Background modes
+    std::vector<const char*> backgroundModes = {"Single Color", "Vignette"};
+    static int currentBackgroundMode = 0;
+    ImGui::Combo(
+      "Background Mode", &currentBackgroundMode, backgroundModes.data(), static_cast<int>(backgroundModes.size()));
+    float indent = 20.0f;
+    ImGui::Indent(indent);
+    switch(currentBackgroundMode)
+    {
+        case 0: {
+            m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::SingleColor;
+            optionSingleColorBackground();
+            break;
+        }
+        case 1: {
+            m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::Vignette;
+            optionVignetteBackground();
+            break;
+        }
+        default: break;
+    }
+    ImGui::Unindent(indent);
+
     ImGui::End();
+}
+
+void EditorLayer::optionSingleColorBackground()
+{
+    ImGui::ColorEdit3("Background Color", (float*)&m_meshLoadingScene.getOptions().backgroundColor);
+}
+
+void EditorLayer::optionVignetteBackground()
+{
+    ImGui::ColorEdit3("Inner Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorVignetteInner);
+    ImGui::ColorEdit3("Outer Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorVignetteOuter);
+    ImGui::DragFloat("Vignette Radius", &m_meshLoadingScene.getOptions().vignetteRadius, 0.01f, 0.0f, 1.0f);
+    ImGui::DragFloat("Vignette Softness", &m_meshLoadingScene.getOptions().vignetteSoftness, 0.01f, 0.0f, 1.0f);
 }
 
 bool EditorLayer::isCoordInViewport(glm::vec2 coord)

@@ -33,6 +33,8 @@ class EditorLayer : public core::Layer
   private:
     void displayViewportWindow();
     void displayOptionWindow();
+    void optionSingleColorBackground();
+    void optionVignetteBackground();
 
     bool isCoordInViewport(glm::vec2 coord);
 
