@@ -35,34 +35,34 @@ MeshLoadingScene::~MeshLoadingScene() {}
 
 void MeshLoadingScene::renderScene()
 {
-    if(m_options.backgroundMode == MeshLoadingSceneOptions::BackgroundMode::SingleColor)
-    {
-        m_currentBackgroundShader = nullptr;
-    }
-    else if(m_options.backgroundMode == MeshLoadingSceneOptions::BackgroundMode::Vignette)
-    {
-        m_currentBackgroundShader = m_backgroundVignetteShader;
-        // m_currentBackgroundShader->bind();
-        // m_currentBackgroundShader->setVec3(
-        //   "innerColor", m_options.backgroundColorVignetteInner.r, m_options.backgroundColorVignetteInner.g,
-        //   m_options.backgroundColorVignetteInner.b);
-        // m_currentBackgroundShader->setVec3(
-        //   "outerColor", m_options.backgroundColorVignetteOuter.r, m_options.backgroundColorVignetteOuter.g,
-        //   m_options.backgroundColorVignetteOuter.b);
-        // m_currentBackgroundShader->setFloat("radius", m_options.vignetteRadius);
-        // m_currentBackgroundShader->setFloat("softness", m_options.vignetteSoftness);
-    }
     beginFrame();
+    glDisable(GL_DEPTH_TEST);
     renderBackground();
+    glEnable(GL_DEPTH_TEST);
     renderModel(); // TODO render background afterwards? May need to tweek zindex handeling
     endFrame();
 }
 
 void MeshLoadingScene::renderBackground()
 {
+    switch(m_options.backgroundMode)
+    {
+        case MeshLoadingSceneOptions::BackgroundMode::SingleColor: {
+            m_currentBackgroundShader = nullptr;
+            break;
+        }
+        case MeshLoadingSceneOptions::BackgroundMode::Vignette: {
+            m_currentBackgroundShader = m_backgroundVignetteShader;
+            m_currentBackgroundShader->bind();
+            m_currentBackgroundShader->setVec3("innerColor", m_options.backgroundColorVignetteInner);
+            m_currentBackgroundShader->setVec3("outerColor", m_options.backgroundColorVignetteOuter);
+            m_currentBackgroundShader->setFloat("radius", m_options.vignetteRadius);
+            m_currentBackgroundShader->setFloat("softness", m_options.vignetteSoftness);
+        }
+    }
+
     if(m_currentBackgroundShader)
     {
-        m_currentBackgroundShader->bind();
         m_quadVAO->bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     }

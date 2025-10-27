@@ -94,8 +94,8 @@ void EditorLayer::optionVignetteBackground()
 {
     ImGui::ColorEdit3("Inner Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorVignetteInner);
     ImGui::ColorEdit3("Outer Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorVignetteOuter);
-    ImGui::DragFloat("Vignette Radius", &m_meshLoadingScene.getOptions().vignetteRadius, 0.01f, 0.0f, 1.0f);
-    ImGui::DragFloat("Vignette Softness", &m_meshLoadingScene.getOptions().vignetteSoftness, 0.01f, 0.0f, 1.0f);
+    ImGui::SliderFloat("Vignette Radius", &m_meshLoadingScene.getOptions().vignetteRadius, 0.0f, 1.0f);
+    ImGui::SliderFloat("Vignette Softness", &m_meshLoadingScene.getOptions().vignetteSoftness, 0.0f, 1.0f);
 }
 
 bool EditorLayer::isCoordInViewport(glm::vec2 coord)

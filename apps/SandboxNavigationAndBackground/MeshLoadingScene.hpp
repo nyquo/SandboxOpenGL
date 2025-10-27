@@ -21,13 +21,13 @@ struct MeshLoadingSceneOptions
     BackgroundMode backgroundMode{BackgroundMode::SingleColor};
 
     // Single color settings
-    glm::vec3 backgroundColor{0.0f, 0.1f, 0.1f};
+    glm::vec3 backgroundColor{0.15f, 0.15f, 0.15f};
 
     // Vignette settings
-    glm::vec3 backgroundColorVignetteInner{0.0f, 0.1f, 0.1f};
-    glm::vec3 backgroundColorVignetteOuter{0.0f, 0.0f, 0.0f};
-    float vignetteRadius{0.75f};
-    float vignetteSoftness{0.25f};
+    glm::vec3 backgroundColorVignetteInner{0.56f, 0.56f, 0.56f};
+    glm::vec3 backgroundColorVignetteOuter{0.31f, 0.31f, 0.31f};
+    float vignetteRadius{1.0f};
+    float vignetteSoftness{0.9f};
 
     char meshPath[256] = "";
 };
