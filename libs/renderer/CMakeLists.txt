@@ -52,7 +52,6 @@ set(PUBLIC_LINKS
 
 set(RESSOURCES
     assets/DarkGrey.png
-    assets/skybox
     assets/skybox/back.jpg
     assets/skybox/bottom.jpg
     assets/skybox/front.jpg
