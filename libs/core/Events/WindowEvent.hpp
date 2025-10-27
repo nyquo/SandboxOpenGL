@@ -76,7 +76,10 @@ class CORE_API FileDropEvent : public Event
     std::string toString() const override
     {
         std::stringstream ss;
-        ss for(const auto& path : m_filePaths) { ss << path.string() << "\n"; }
+        for(const auto& path : m_filePaths)
+        {
+            ss << path.string() << "\n";
+        }
         return ss.str();
     }
 #endif
