@@ -8,7 +8,6 @@
 EditorLayer::EditorLayer(float width, float height)
   : m_layerWidth(width)
   , m_layerHeight(height)
-  , m_camera(std::make_shared<renderer::PerspectiveCamera>(m_layerWidth, m_layerHeight, glm::vec3(0.0F, 0.0F, 50.0F)))
 {}
 
 EditorLayer::~EditorLayer() {}
@@ -19,7 +18,6 @@ void EditorLayer::onUpdate()
     glClearColor(m_windowBackgroundColor.r, m_windowBackgroundColor.g, m_windowBackgroundColor.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     m_meshLoadingScene.setViewport(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
-    m_camera->setViewPortSize(m_viewportData.width, m_viewportData.height);
     m_meshLoadingScene.update();
 }
 
@@ -87,6 +85,25 @@ void EditorLayer::displayOptionWindow()
         case 3: {
             m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::InfiniteGrid;
             optionInfiniteGridBackground();
+            break;
+        }
+        default: break;
+    }
+    ImGui::Unindent(indent);
+
+    // Camera modes
+    std::vector<const char*> cameraModes = {"Fixed", "Cylinder"};
+    static int currentCameraMode = 0;
+    ImGui::Combo("Camera Mode", &currentCameraMode, cameraModes.data(), static_cast<int>(cameraModes.size()));
+    ImGui::Indent(indent);
+    switch(currentCameraMode)
+    {
+        case 0: {
+            m_meshLoadingScene.getOptions().cameraMode = MeshLoadingSceneOptions::CameraMode::Fixed;
+            break;
+        }
+        case 1: {
+            m_meshLoadingScene.getOptions().cameraMode = MeshLoadingSceneOptions::CameraMode::Cylinder;
             break;
         }
         default: break;

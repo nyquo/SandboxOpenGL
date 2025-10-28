@@ -1,6 +1,7 @@
 #pragma once
 
 #include <CameraMover.hpp>
+#include <CylinderCameraMover.hpp>
 #include <filesystem>
 #include <glm/glm.hpp>
 #include <memory>
@@ -21,8 +22,16 @@ struct MeshLoadingSceneOptions
         InfiniteGrid
     };
 
+    enum class CameraMode
+    {
+        Fixed,
+        Cylinder
+    };
+
     char meshPath[256] = "";
     BackgroundMode backgroundMode{BackgroundMode::SingleColor};
+    CameraMode oldCameraMode{CameraMode::Fixed};
+    CameraMode cameraMode{CameraMode::Fixed};
 
     // Single color settings
     glm::vec3 backgroundColor{0.15f, 0.15f, 0.15f};
@@ -78,7 +87,7 @@ class MeshLoadingScene
 
     std::shared_ptr<renderer::Model> m_model;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
-    CameraMover m_cameraMover;
+    std::shared_ptr<CameraMover> m_cameraMover;
 
     std::shared_ptr<renderer::Shader> m_basicModelShader;
     std::shared_ptr<renderer::Shader> m_backgroundVignetteShader;

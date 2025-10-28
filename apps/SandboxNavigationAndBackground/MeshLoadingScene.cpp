@@ -36,17 +36,38 @@ MeshLoadingScene::MeshLoadingScene()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
-
-    m_cameraMover.setCamera(m_camera);
-    m_cameraMover.enable();
-    m_cameraMover.moveCamera(0.0, -15.0);
 }
 
-void MeshLoadingScene::onEvent(core::Event& event) { m_cameraMover.onEvent(event); }
+void MeshLoadingScene::onEvent(core::Event& event)
+{
+    if(m_cameraMover)
+    {
+        m_cameraMover->onEvent(event);
+    }
+}
 
 void MeshLoadingScene::update()
 {
-    m_cameraMover.update();
+    if(m_options.cameraMode != m_options.oldCameraMode)
+    {
+        switch(m_options.cameraMode)
+        {
+            case MeshLoadingSceneOptions::CameraMode::Fixed: {
+                m_cameraMover = nullptr;
+                break;
+            }
+            case MeshLoadingSceneOptions::CameraMode::Cylinder: {
+                m_cameraMover = std::make_shared<CylinderCameraMover>(m_camera);
+                m_cameraMover->init();
+                break;
+            }
+        }
+        m_options.oldCameraMode = m_options.cameraMode;
+    }
+    if(m_cameraMover)
+    {
+        m_cameraMover->update();
+    }
     renderScene();
 }
 

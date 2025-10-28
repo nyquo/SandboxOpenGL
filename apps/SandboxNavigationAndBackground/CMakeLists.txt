@@ -4,11 +4,12 @@ sogl_add_executable(SandboxNavigationAndBackground
     SOURCES
         main.cpp
         CameraMover.hpp
-        CameraMover.cpp
+        CylinderCameraMover.cpp
+        CylinderCameraMover.hpp
         EditorLayer.cpp
         EditorLayer.hpp
-        MeshLoadingScene.hpp
         MeshLoadingScene.cpp
+        MeshLoadingScene.hpp
         Sandbox.cpp
         Sandbox.hpp
     INCLUDES

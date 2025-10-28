@@ -47,7 +47,6 @@ class EditorLayer : public core::Layer
     float m_layerHeight;
 
     MeshLoadingScene m_meshLoadingScene;
-    std::shared_ptr<renderer::PerspectiveCamera> m_camera;
 
     ViewportData m_viewportData;
     glm::vec3 m_windowBackgroundColor{0.1f, 0.1f, 0.1f};
