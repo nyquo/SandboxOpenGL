@@ -60,7 +60,7 @@ void EditorLayer::displayOptionWindow()
     }
 
     // Background modes
-    std::vector<const char*> backgroundModes = {"Single Color", "Vignette", "Gradient"};
+    std::vector<const char*> backgroundModes = {"Single Color", "Vignette", "Gradient", "Infinite Grid"};
     static int currentBackgroundMode = 0;
     ImGui::Combo(
       "Background Mode", &currentBackgroundMode, backgroundModes.data(), static_cast<int>(backgroundModes.size()));
@@ -81,6 +81,11 @@ void EditorLayer::displayOptionWindow()
         case 2: {
             m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::Gradient;
             optionGradientBackground();
+            break;
+        }
+        case 3: {
+            m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::InfiniteGrid;
+            optionInfiniteGridBackground();
             break;
         }
         default: break;
@@ -110,6 +115,8 @@ void EditorLayer::optionGradientBackground()
     ImGui::ColorEdit3("Bottom Left Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorBottomLeft);
     ImGui::ColorEdit3("Bottom Right Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorBottomRight);
 }
+
+void EditorLayer::optionInfiniteGridBackground() {}
 
 bool EditorLayer::isCoordInViewport(glm::vec2 coord)
 {

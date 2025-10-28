@@ -17,6 +17,9 @@ MeshLoadingScene::MeshLoadingScene()
     m_backgroundGradientShader =
       std::make_shared<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundGradient.vert",
                                          std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundGradient.frag");
+    m_backgroundInfiniteGridShader =
+      std::make_shared<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundInfiniteGrid.vert",
+                                         std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundInfiniteGrid.frag");
 
     m_camera = std::make_shared<renderer::PerspectiveCamera>(m_width, m_height, glm::vec3(0.0F, 0.0F, 10.0F));
 
@@ -61,6 +64,10 @@ void MeshLoadingScene::renderBackground()
         }
         case MeshLoadingSceneOptions::BackgroundMode::Gradient: {
             setupGradientBackground();
+            break;
+        }
+        case MeshLoadingSceneOptions::BackgroundMode::InfiniteGrid: {
+            setupInfiniteGridBackground();
             break;
         }
     }
@@ -123,6 +130,12 @@ void MeshLoadingScene::setupGradientBackground()
     m_currentBackgroundShader->setVec3("topRightColor", m_options.backgroundColorTopRight);
     m_currentBackgroundShader->setVec3("bottomLeftColor", m_options.backgroundColorBottomLeft);
     m_currentBackgroundShader->setVec3("bottomRightColor", m_options.backgroundColorBottomRight);
+}
+
+void MeshLoadingScene::setupInfiniteGridBackground()
+{
+    m_currentBackgroundShader = m_backgroundInfiniteGridShader;
+    m_currentBackgroundShader->bind();
 }
 
 void MeshLoadingScene::setViewport(int x, int y, int width, int height)

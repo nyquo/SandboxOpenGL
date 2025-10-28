@@ -16,7 +16,8 @@ struct MeshLoadingSceneOptions
     {
         SingleColor,
         Vignette,
-        Gradient
+        Gradient,
+        InfiniteGrid
     };
 
     char meshPath[256] = "";
@@ -36,6 +37,8 @@ struct MeshLoadingSceneOptions
     glm::vec3 backgroundColorTopRight{1.0f, 1.0f, 1.0f};
     glm::vec3 backgroundColorBottomLeft{0.180392f, 0.329411f, 0.803921f};
     glm::vec3 backgroundColorBottomRight{0.180392f, 0.329411f, 0.803921f};
+
+    // Infinite Grid settings
 };
 
 class MeshLoadingScene
@@ -61,6 +64,7 @@ class MeshLoadingScene
     void setupSingleColorBackground();
     void setupVignetteBackground();
     void setupGradientBackground();
+    void setupInfiniteGridBackground();
 
   private:
     int m_x{0};
@@ -74,6 +78,7 @@ class MeshLoadingScene
     std::shared_ptr<renderer::Shader> m_basicModelShader;
     std::shared_ptr<renderer::Shader> m_backgroundVignetteShader;
     std::shared_ptr<renderer::Shader> m_backgroundGradientShader;
+    std::shared_ptr<renderer::Shader> m_backgroundInfiniteGridShader;
 
     std::unique_ptr<renderer::VertexBuffer> m_quadVBO;
     std::unique_ptr<renderer::VertexArray> m_quadVAO;

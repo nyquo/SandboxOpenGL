@@ -22,6 +22,8 @@ sogl_add_executable(SandboxNavigationAndBackground
     RESSOURCES
         shaders/BackgroundGradient.frag
         shaders/BackgroundGradient.vert
+        shaders/BackgroundInfiniteGrid.frag
+        shaders/BackgroundInfiniteGrid.vert
         shaders/BackgroundVignette.frag
         shaders/BackgroundVignette.vert
         shaders/BasicModelShader.frag

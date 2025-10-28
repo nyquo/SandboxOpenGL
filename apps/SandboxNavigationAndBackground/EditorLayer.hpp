@@ -36,6 +36,7 @@ class EditorLayer : public core::Layer
     void optionSingleColorBackground();
     void optionVignetteBackground();
     void optionGradientBackground();
+    void optionInfiniteGridBackground();
 
     bool isCoordInViewport(glm::vec2 coord);
 
