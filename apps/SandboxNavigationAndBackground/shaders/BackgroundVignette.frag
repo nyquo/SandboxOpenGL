@@ -18,5 +18,5 @@ void main() {
     float smoothMax = smoothMin + softness;
     float smoothDist = smoothstep(smoothMin, smoothMax, dist);
     vec3 color = mix(innerColor, outerColor, smoothDist);
-    FragColor = vec4(color, 1.0); // Red color for now
+    FragColor = vec4(color, 1.0);
 }

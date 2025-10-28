@@ -14,6 +14,10 @@ MeshLoadingScene::MeshLoadingScene()
     m_backgroundVignetteShader =
       std::make_shared<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundVignette.vert",
                                          std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundVignette.frag");
+    m_backgroundGradientShader =
+      std::make_shared<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundGradient.vert",
+                                         std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundGradient.frag");
+
     m_camera = std::make_shared<renderer::PerspectiveCamera>(m_width, m_height, glm::vec3(0.0F, 0.0F, 10.0F));
 
     float quadBackground[] = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f};
@@ -48,16 +52,16 @@ void MeshLoadingScene::renderBackground()
     switch(m_options.backgroundMode)
     {
         case MeshLoadingSceneOptions::BackgroundMode::SingleColor: {
-            m_currentBackgroundShader = nullptr;
+            setupSingleColorBackground();
             break;
         }
         case MeshLoadingSceneOptions::BackgroundMode::Vignette: {
-            m_currentBackgroundShader = m_backgroundVignetteShader;
-            m_currentBackgroundShader->bind();
-            m_currentBackgroundShader->setVec3("innerColor", m_options.backgroundColorVignetteInner);
-            m_currentBackgroundShader->setVec3("outerColor", m_options.backgroundColorVignetteOuter);
-            m_currentBackgroundShader->setFloat("radius", m_options.vignetteRadius);
-            m_currentBackgroundShader->setFloat("softness", m_options.vignetteSoftness);
+            setupVignetteBackground();
+            break;
+        }
+        case MeshLoadingSceneOptions::BackgroundMode::Gradient: {
+            setupGradientBackground();
+            break;
         }
     }
 
@@ -98,6 +102,28 @@ void MeshLoadingScene::beginFrame()
 }
 
 void MeshLoadingScene::endFrame() { glDisable(GL_SCISSOR_TEST); }
+
+void MeshLoadingScene::setupSingleColorBackground() { m_currentBackgroundShader = nullptr; }
+
+void MeshLoadingScene::setupVignetteBackground()
+{
+    m_currentBackgroundShader = m_backgroundVignetteShader;
+    m_currentBackgroundShader->bind();
+    m_currentBackgroundShader->setVec3("innerColor", m_options.backgroundColorVignetteInner);
+    m_currentBackgroundShader->setVec3("outerColor", m_options.backgroundColorVignetteOuter);
+    m_currentBackgroundShader->setFloat("radius", m_options.vignetteRadius);
+    m_currentBackgroundShader->setFloat("softness", m_options.vignetteSoftness);
+}
+
+void MeshLoadingScene::setupGradientBackground()
+{
+    m_currentBackgroundShader = m_backgroundGradientShader;
+    m_currentBackgroundShader->bind();
+    m_currentBackgroundShader->setVec3("topLeftColor", m_options.backgroundColorTopLeft);
+    m_currentBackgroundShader->setVec3("topRightColor", m_options.backgroundColorTopRight);
+    m_currentBackgroundShader->setVec3("bottomLeftColor", m_options.backgroundColorBottomLeft);
+    m_currentBackgroundShader->setVec3("bottomRightColor", m_options.backgroundColorBottomRight);
+}
 
 void MeshLoadingScene::setViewport(int x, int y, int width, int height)
 {

@@ -60,7 +60,7 @@ void EditorLayer::displayOptionWindow()
     }
 
     // Background modes
-    std::vector<const char*> backgroundModes = {"Single Color", "Vignette"};
+    std::vector<const char*> backgroundModes = {"Single Color", "Vignette", "Gradient"};
     static int currentBackgroundMode = 0;
     ImGui::Combo(
       "Background Mode", &currentBackgroundMode, backgroundModes.data(), static_cast<int>(backgroundModes.size()));
@@ -76,6 +76,11 @@ void EditorLayer::displayOptionWindow()
         case 1: {
             m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::Vignette;
             optionVignetteBackground();
+            break;
+        }
+        case 2: {
+            m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::Gradient;
+            optionGradientBackground();
             break;
         }
         default: break;
@@ -96,6 +101,14 @@ void EditorLayer::optionVignetteBackground()
     ImGui::ColorEdit3("Outer Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorVignetteOuter);
     ImGui::SliderFloat("Vignette Radius", &m_meshLoadingScene.getOptions().vignetteRadius, 0.0f, 1.0f);
     ImGui::SliderFloat("Vignette Softness", &m_meshLoadingScene.getOptions().vignetteSoftness, 0.0f, 1.0f);
+}
+
+void EditorLayer::optionGradientBackground()
+{
+    ImGui::ColorEdit3("Top Left Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorTopLeft);
+    ImGui::ColorEdit3("Top Right Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorTopRight);
+    ImGui::ColorEdit3("Bottom Left Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorBottomLeft);
+    ImGui::ColorEdit3("Bottom Right Color", (float*)&m_meshLoadingScene.getOptions().backgroundColorBottomRight);
 }
 
 bool EditorLayer::isCoordInViewport(glm::vec2 coord)
