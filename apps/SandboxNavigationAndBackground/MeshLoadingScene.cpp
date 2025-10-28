@@ -36,6 +36,18 @@ MeshLoadingScene::MeshLoadingScene()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
+
+    m_cameraMover.setCamera(m_camera);
+    m_cameraMover.enable();
+    m_cameraMover.moveCamera(0.0, -15.0);
+}
+
+void MeshLoadingScene::onEvent(core::Event& event) { m_cameraMover.onEvent(event); }
+
+void MeshLoadingScene::update()
+{
+    m_cameraMover.update();
+    renderScene();
 }
 
 MeshLoadingScene::~MeshLoadingScene() {}

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <CameraMover.hpp>
 #include <filesystem>
 #include <glm/glm.hpp>
 #include <memory>
@@ -51,12 +52,15 @@ class MeshLoadingScene
     MeshLoadingScene& operator=(MeshLoadingScene&& other) = delete;
     MeshLoadingScene();
 
-    void renderScene();
+    void onEvent(core::Event& event);
+    void update();
+
     void setViewport(int x, int y, int width, int height);
     MeshLoadingSceneOptions& getOptions() { return m_options; }
     void loadMeshFromFile(fs::path path);
 
   private:
+    void renderScene();
     void renderBackground();
     void renderModel();
     void beginFrame();
@@ -74,6 +78,7 @@ class MeshLoadingScene
 
     std::shared_ptr<renderer::Model> m_model;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
+    CameraMover m_cameraMover;
 
     std::shared_ptr<renderer::Shader> m_basicModelShader;
     std::shared_ptr<renderer::Shader> m_backgroundVignetteShader;

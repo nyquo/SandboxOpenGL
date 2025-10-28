@@ -20,7 +20,7 @@ void EditorLayer::onUpdate()
     glClear(GL_COLOR_BUFFER_BIT);
     m_meshLoadingScene.setViewport(m_viewportData.x, m_viewportData.y, m_viewportData.width, m_viewportData.height);
     m_camera->setViewPortSize(m_viewportData.width, m_viewportData.height);
-    m_meshLoadingScene.renderScene();
+    m_meshLoadingScene.update();
 }
 
 void EditorLayer::onImGuiRender()
@@ -31,6 +31,7 @@ void EditorLayer::onImGuiRender()
 
 void EditorLayer::onEvent(core::Event& e)
 {
+    m_meshLoadingScene.onEvent(e);
     core::EventDispatcher dispatcher(e);
     dispatcher.dispatch<core::FileDropEvent>(BIND_EVENT_FN(EditorLayer::onFileDropped));
 }

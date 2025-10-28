@@ -3,6 +3,8 @@ set(RESSOURCES_FOLDER ${AppName}Ressources)
 sogl_add_executable(SandboxNavigationAndBackground
     SOURCES
         main.cpp
+        CameraMover.hpp
+        CameraMover.cpp
         EditorLayer.cpp
         EditorLayer.hpp
         MeshLoadingScene.hpp
