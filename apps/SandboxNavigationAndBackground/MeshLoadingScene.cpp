@@ -21,7 +21,8 @@ MeshLoadingScene::MeshLoadingScene()
       std::make_shared<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundInfiniteGrid.vert",
                                          std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundInfiniteGrid.frag");
 
-    m_camera = std::make_shared<renderer::PerspectiveCamera>(m_width, m_height, glm::vec3(0.0F, 0.0F, 10.0F));
+    m_camera = std::make_shared<renderer::PerspectiveCamera>(m_width, m_height, glm::vec3(0.0F, 3.0F, 10.0F));
+    m_camera->lookAt(glm::vec3(0.0F, 0.0F, 0.0F));
 
     float quadBackground[] = {-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f};
     unsigned int quadIndices[] = {0, 2, 1, 2, 0, 3};
