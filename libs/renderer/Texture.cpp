@@ -106,6 +106,7 @@ Texture::~Texture()
         m_loadedCount[m_path].first--;
         if(m_loadedCount[m_path].first == 0)
         {
+            m_loadedCount.erase(m_path);
             glDeleteTextures(1, &m_textureData.textureId);
         }
     }
