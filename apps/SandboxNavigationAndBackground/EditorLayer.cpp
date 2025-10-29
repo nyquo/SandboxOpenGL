@@ -59,7 +59,7 @@ void EditorLayer::displayOptionWindow()
     }
 
     // Background modes
-    std::vector<const char*> backgroundModes = {"Single Color", "Vignette", "Gradient", "Infinite Grid"};
+    std::vector<const char*> backgroundModes = {"Single Color", "Vignette", "Gradient"};
     static int currentBackgroundMode = 0;
     ImGui::Combo(
       "Background Mode", &currentBackgroundMode, backgroundModes.data(), static_cast<int>(backgroundModes.size()));
@@ -80,11 +80,6 @@ void EditorLayer::displayOptionWindow()
         case 2: {
             m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::Gradient;
             optionGradientBackground();
-            break;
-        }
-        case 3: {
-            m_meshLoadingScene.getOptions().backgroundMode = MeshLoadingSceneOptions::BackgroundMode::InfiniteGrid;
-            optionInfiniteGridBackground();
             break;
         }
         default: break;
@@ -108,6 +103,12 @@ void EditorLayer::displayOptionWindow()
         }
         default: break;
     }
+    ImGui::Unindent(indent);
+
+    // Infinite grid display toggle
+    ImGui::Checkbox("Display Infinite Grid", &m_meshLoadingScene.getOptions().displayGrid);
+    ImGui::Indent(indent);
+    optionInfiniteGridBackground();
     ImGui::Unindent(indent);
 
     ImGui::End();

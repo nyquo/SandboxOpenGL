@@ -2,10 +2,14 @@
 
 layout (location = 0) in vec2 aPos;
 
+const vec3 planePos[6] = vec3[] (
+    vec3(-1, -1, 0), vec3(1, 1, 0), vec3(-1, 1, 0),
+    vec3(1, 1, 0), vec3(-1, -1, 0), vec3(1, -1, 0)
+);
+
 uniform mat4 inversedProjection;
 uniform mat4 inversedView;
 
-out vec2 pos;
 out vec3 nearPoint;
 out vec3 farPoint;
 
@@ -15,9 +19,7 @@ vec3 unprojectPoint(float x, float y, float z, mat4 inversedView, mat4 inversedP
 }
 
 void main() {
-    pos = aPos;
-
-    vec3 p = vec3(aPos, 0.0);
+    vec3 p = planePos[gl_VertexID];
     nearPoint = unprojectPoint(p.x, p.y, 0.0, inversedView, inversedProjection);
     farPoint = unprojectPoint(p.x, p.y, 1.0, inversedView, inversedProjection);
 

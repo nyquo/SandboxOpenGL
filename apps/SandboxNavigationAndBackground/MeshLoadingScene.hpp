@@ -19,7 +19,6 @@ struct MeshLoadingSceneOptions
         SingleColor,
         Vignette,
         Gradient,
-        InfiniteGrid
     };
 
     enum class CameraMode
@@ -32,6 +31,7 @@ struct MeshLoadingSceneOptions
     BackgroundMode backgroundMode{BackgroundMode::SingleColor};
     CameraMode oldCameraMode{CameraMode::Fixed};
     CameraMode cameraMode{CameraMode::Fixed};
+    bool displayGrid{true};
 
     // Single color settings
     glm::vec3 backgroundColor{0.15f, 0.15f, 0.15f};
@@ -77,6 +77,7 @@ class MeshLoadingScene
     void setupSingleColorBackground();
     void setupVignetteBackground();
     void setupGradientBackground();
+    void renderInfiniteGrid();
     void setupInfiniteGridBackground();
 
   private:
@@ -92,7 +93,7 @@ class MeshLoadingScene
     std::shared_ptr<renderer::Shader> m_basicModelShader;
     std::shared_ptr<renderer::Shader> m_backgroundVignetteShader;
     std::shared_ptr<renderer::Shader> m_backgroundGradientShader;
-    std::shared_ptr<renderer::Shader> m_backgroundInfiniteGridShader;
+    std::shared_ptr<renderer::Shader> m_infiniteGridShader;
 
     std::unique_ptr<renderer::VertexBuffer> m_quadVBO;
     std::unique_ptr<renderer::VertexArray> m_quadVAO;

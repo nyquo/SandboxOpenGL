@@ -1,9 +1,6 @@
 #version 330 core
 
 // inspiration: https://asliceofrendering.com/scene%20helper/2020/01/05/InfiniteGrid/
-
-in vec2 pos;
-
 in vec3 nearPoint;
 in vec3 farPoint;
 

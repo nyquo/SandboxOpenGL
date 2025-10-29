@@ -17,7 +17,7 @@ MeshLoadingScene::MeshLoadingScene()
     m_backgroundGradientShader =
       std::make_shared<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundGradient.vert",
                                          std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundGradient.frag");
-    m_backgroundInfiniteGridShader =
+    m_infiniteGridShader =
       std::make_shared<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundInfiniteGrid.vert",
                                          std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundInfiniteGrid.frag");
 
@@ -81,6 +81,7 @@ void MeshLoadingScene::renderScene()
     renderBackground();
     glEnable(GL_DEPTH_TEST);
     renderModel(); // TODO render background afterwards? May need to tweek zindex handeling
+    renderInfiniteGrid();
     endFrame();
 }
 
@@ -98,10 +99,6 @@ void MeshLoadingScene::renderBackground()
         }
         case MeshLoadingSceneOptions::BackgroundMode::Gradient: {
             setupGradientBackground();
-            break;
-        }
-        case MeshLoadingSceneOptions::BackgroundMode::InfiniteGrid: {
-            setupInfiniteGridBackground();
             break;
         }
     }
@@ -166,12 +163,18 @@ void MeshLoadingScene::setupGradientBackground()
     m_currentBackgroundShader->setVec3("bottomRightColor", m_options.backgroundColorBottomRight);
 }
 
-void MeshLoadingScene::setupInfiniteGridBackground()
+void MeshLoadingScene::renderInfiniteGrid()
 {
-    m_currentBackgroundShader = m_backgroundInfiniteGridShader;
-    m_currentBackgroundShader->bind();
-    m_currentBackgroundShader->setMat4("inversedProjection", glm::inverse(m_camera->getProjection()));
-    m_currentBackgroundShader->setMat4("inversedView", glm::inverse(m_camera->getView()));
+    if(m_options.displayGrid)
+    {
+        m_infiniteGridShader->bind();
+        m_infiniteGridShader->setMat4("inversedProjection", glm::inverse(m_camera->getProjection()));
+        m_infiniteGridShader->setMat4("inversedView", glm::inverse(m_camera->getView()));
+
+        renderer::VertexArray emptyVAO;
+        emptyVAO.bind(); // A non-zero Vertex Array Object must be bound
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
 }
 
 void MeshLoadingScene::setViewport(int x, int y, int width, int height)
