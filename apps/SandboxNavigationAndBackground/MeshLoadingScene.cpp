@@ -168,6 +168,8 @@ void MeshLoadingScene::setupGradientBackground()
 void MeshLoadingScene::setupInfiniteGridBackground()
 {
     m_currentBackgroundShader = m_backgroundInfiniteGridShader;
+    m_currentBackgroundShader->setMat4("inversedProjection", glm::inverse(m_camera->getProjection()));
+    m_currentBackgroundShader->setMat4("inversedView", glm::inverse(m_camera->getView()));
     m_currentBackgroundShader->bind();
 }
 
