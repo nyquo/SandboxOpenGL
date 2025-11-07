@@ -3,6 +3,8 @@
 // inspiration: https://asliceofrendering.com/scene%20helper/2020/01/05/InfiniteGrid/
 in vec3 nearPoint;
 in vec3 farPoint;
+in mat4 fragProjection;
+in mat4 fragView;
 
 out vec4 FragColor;
 
@@ -35,13 +37,23 @@ vec4 grid(vec3 fragPos3D, float scale) {
     return color;
 }
 
+float computeDepth(vec3 pos) {
+    vec4 clipSpacePos = fragProjection * fragView * vec4(pos, 1.0);
+    return (clipSpacePos.z / clipSpacePos.w);
+}
+
 void main() {
+    // float linearizedDepth = (2.0 * 0.1 * 100.0) / (100.0 + 0.1 - (gl_FragCoord.z * 2.0 - 1.0) * (100.0 - 0.1));
+    // FragColor = vec4(vec3(linearizedDepth), 1.0);
+
     float t = -nearPoint.y / (farPoint.y - nearPoint.y);
 
     vec3 fragPos3D = nearPoint + t * (farPoint - nearPoint);
 
+
     vec4 gridColor = grid(fragPos3D, 2);
     vec4 color = mix(vec4(backgroundColor, 1.0), gridColor, gridColor.a);
 
+    gl_FragDepth = computeDepth(fragPos3D);
     FragColor =  color * float(t > 0);
 }

@@ -79,9 +79,9 @@ void MeshLoadingScene::renderScene()
     beginFrame();
     glDisable(GL_DEPTH_TEST);
     renderBackground();
+    renderInfiniteGrid();
     glEnable(GL_DEPTH_TEST);
     renderModel(); // TODO render background afterwards? May need to tweek zindex handeling
-    renderInfiniteGrid();
     endFrame();
 }
 
@@ -168,8 +168,8 @@ void MeshLoadingScene::renderInfiniteGrid()
     if(m_options.displayGrid)
     {
         m_infiniteGridShader->bind();
-        m_infiniteGridShader->setMat4("inversedProjection", glm::inverse(m_camera->getProjection()));
-        m_infiniteGridShader->setMat4("inversedView", glm::inverse(m_camera->getView()));
+        m_infiniteGridShader->setMat4("projection", m_camera->getProjection());
+        m_infiniteGridShader->setMat4("view", m_camera->getView());
 
         renderer::VertexArray emptyVAO;
         emptyVAO.bind(); // A non-zero Vertex Array Object must be bound
