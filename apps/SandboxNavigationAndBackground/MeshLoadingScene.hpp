@@ -1,7 +1,6 @@
 #pragma once
 
 #include <CameraMover.hpp>
-#include <CylinderCameraMover.hpp>
 #include <filesystem>
 #include <glm/glm.hpp>
 #include <memory>
@@ -24,7 +23,8 @@ struct MeshLoadingSceneOptions
     enum class CameraMode
     {
         Fixed,
-        Cylinder
+        Cylinder,
+        Arcball
     };
 
     char meshPath[256] = "";

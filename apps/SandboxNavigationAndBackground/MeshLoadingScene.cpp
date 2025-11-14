@@ -1,5 +1,8 @@
 #include "MeshLoadingScene.hpp"
 
+#include "ArcballCameraMover.hpp"
+#include "CylinderCameraMover.hpp"
+
 #include <core/Logger.hpp>
 #include <core/gl.h>
 #include <glm/glm.hpp>
@@ -59,6 +62,11 @@ void MeshLoadingScene::update()
             }
             case MeshLoadingSceneOptions::CameraMode::Cylinder: {
                 m_cameraMover = std::make_shared<CylinderCameraMover>(m_camera);
+                m_cameraMover->init();
+                break;
+            }
+            case MeshLoadingSceneOptions::CameraMode::Arcball: {
+                m_cameraMover = std::make_shared<ArcballCameraMover>(m_camera);
                 m_cameraMover->init();
                 break;
             }

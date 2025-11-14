@@ -3,6 +3,8 @@ set(RESSOURCES_FOLDER ${AppName}Ressources)
 sogl_add_executable(SandboxNavigationAndBackground
     SOURCES
         main.cpp
+        ArcballCameraMover.cpp
+        ArcballCameraMover.cpp
         CameraMover.hpp
         CylinderCameraMover.cpp
         CylinderCameraMover.hpp
