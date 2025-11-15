@@ -10,6 +10,7 @@ set(HEADERS
     Layer.hpp
     LayerStack.hpp
     Logger.hpp
+    Viewport.hpp
     Window.hpp
 )
 
@@ -17,6 +18,7 @@ set(SOURCES
     Application.cpp
     LayerStack.cpp
     Logger.cpp
+    Viewport.cpp
     Window.cpp
 )
 
