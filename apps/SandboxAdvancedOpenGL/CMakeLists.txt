@@ -1,0 +1,25 @@
+set(RESSOURCES_FOLDER ${AppName}Ressources)
+
+sogl_add_executable(SandboxAdvancedOpenGL
+    SOURCES
+        main.cpp
+        EditorLayer.cpp
+        EditorLayer.hpp
+        Sandbox.cpp
+        Sandbox.hpp
+        ViewportScene.cpp
+        ViewportScene.hpp
+    INCLUDES
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include/>
+    LINKS
+        Core
+        Glad
+        Renderer
+        glm::glm
+        imgui
+        Utils
+    RESSOURCES
+    DEFINITIONS
+        RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
+)
