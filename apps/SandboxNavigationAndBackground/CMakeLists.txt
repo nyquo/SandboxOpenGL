@@ -10,6 +10,8 @@ sogl_add_executable(SandboxNavigationAndBackground
         EditorLayer.hpp
         MeshLoadingScene.cpp
         MeshLoadingScene.hpp
+        OldModelMover.cpp
+        OldModelMover.hpp
         Sandbox.cpp
         Sandbox.hpp
         TrackballCameraMover.hpp

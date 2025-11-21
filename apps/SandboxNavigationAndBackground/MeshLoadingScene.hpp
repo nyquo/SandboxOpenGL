@@ -1,5 +1,7 @@
 #pragma once
 
+#include "OldModelMover.hpp"
+
 #include <CameraMover.hpp>
 #include <filesystem>
 #include <glm/glm.hpp>
@@ -25,7 +27,8 @@ struct MeshLoadingSceneOptions
         Fixed,
         Cylinder,
         Turntable,
-        Trackball
+        Trackball,
+        ModelMover
     };
 
     char meshPath[256] = "";
@@ -88,8 +91,10 @@ class MeshLoadingScene
     int m_height{600};
 
     std::shared_ptr<renderer::Model> m_model;
+    std::shared_ptr<glm::mat4> m_modelMatrix;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
     std::shared_ptr<CameraMover> m_cameraMover;
+    std::shared_ptr<OldModelMover> m_modelMover;
 
     std::shared_ptr<renderer::Shader> m_basicModelShader;
     std::shared_ptr<renderer::Shader> m_backgroundVignetteShader;
