@@ -7,16 +7,16 @@
 #include <memory>
 #include <renderer/PerspectiveCamera.hpp>
 
-class TurntableCameraMover : public CameraMover
+class TrackballCameraMover : public CameraMover
 {
   public:
-    TurntableCameraMover() = default;
-    TurntableCameraMover(const std::shared_ptr<renderer::PerspectiveCamera>& camera);
-    TurntableCameraMover(const TurntableCameraMover& other) = delete;
-    TurntableCameraMover(TurntableCameraMover&& other) = delete;
-    TurntableCameraMover operator=(const TurntableCameraMover& other) = delete;
-    TurntableCameraMover operator=(TurntableCameraMover&& other) = delete;
-    virtual ~TurntableCameraMover() = default;
+    TrackballCameraMover() = default;
+    TrackballCameraMover(const std::shared_ptr<renderer::PerspectiveCamera>& camera);
+    TrackballCameraMover(const TrackballCameraMover& other) = delete;
+    TrackballCameraMover(TrackballCameraMover&& other) = delete;
+    TrackballCameraMover operator=(const TrackballCameraMover& other) = delete;
+    TrackballCameraMover operator=(TrackballCameraMover&& other) = delete;
+    virtual ~TrackballCameraMover() = default;
 
     void onEvent(core::Event& event) override;
     void update() override;

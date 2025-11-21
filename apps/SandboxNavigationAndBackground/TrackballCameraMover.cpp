@@ -1,15 +1,15 @@
-#include "TurntableCameraMover.hpp"
+#include "TrackballCameraMover.hpp"
 
 #include <algorithm>
 #include <core/Logger.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-TurntableCameraMover::TurntableCameraMover(const std::shared_ptr<renderer::PerspectiveCamera>& camera)
+TrackballCameraMover::TrackballCameraMover(const std::shared_ptr<renderer::PerspectiveCamera>& camera)
   : CameraMover(camera)
 {}
 
-void TurntableCameraMover::update()
+void TrackballCameraMover::update()
 {
     if(!m_camera || !m_enabled)
     {
@@ -33,22 +33,22 @@ void TurntableCameraMover::update()
     m_camera->lookAt(m_target);
 }
 
-void TurntableCameraMover::init()
+void TrackballCameraMover::init()
 {
     m_camera->setPosition(glm::vec3(0.0F, 0.0F, -distance));
     m_camera->lookAt(m_target);
 }
 
-void TurntableCameraMover::onEvent(core::Event& event)
+void TrackballCameraMover::onEvent(core::Event& event)
 {
     core::EventDispatcher dispatcher(event);
-    dispatcher.dispatch<core::MouseScrolledEvent>(BIND_EVENT_FN(TurntableCameraMover::onMouseScrolled));
-    dispatcher.dispatch<core::MouseMovedEvent>(BIND_EVENT_FN(TurntableCameraMover::onMouseMoved));
-    dispatcher.dispatch<core::MouseButtonPressedEvent>(BIND_EVENT_FN(TurntableCameraMover::onMouseButtonPressed));
-    dispatcher.dispatch<core::MouseButtonReleasedEvent>(BIND_EVENT_FN(TurntableCameraMover::onMouseButtonReleased));
+    dispatcher.dispatch<core::MouseScrolledEvent>(BIND_EVENT_FN(TrackballCameraMover::onMouseScrolled));
+    dispatcher.dispatch<core::MouseMovedEvent>(BIND_EVENT_FN(TrackballCameraMover::onMouseMoved));
+    dispatcher.dispatch<core::MouseButtonPressedEvent>(BIND_EVENT_FN(TrackballCameraMover::onMouseButtonPressed));
+    dispatcher.dispatch<core::MouseButtonReleasedEvent>(BIND_EVENT_FN(TrackballCameraMover::onMouseButtonReleased));
 }
 
-bool TurntableCameraMover::onMouseScrolled(core::MouseScrolledEvent& event)
+bool TrackballCameraMover::onMouseScrolled(core::MouseScrolledEvent& event)
 {
     if(!m_camera || !m_enabled)
     {
@@ -60,7 +60,7 @@ bool TurntableCameraMover::onMouseScrolled(core::MouseScrolledEvent& event)
     return false;
 }
 
-bool TurntableCameraMover::onMouseMoved(core::MouseMovedEvent& event)
+bool TrackballCameraMover::onMouseMoved(core::MouseMovedEvent& event)
 {
     if(!m_camera || !m_enabled)
     {
@@ -74,7 +74,7 @@ bool TurntableCameraMover::onMouseMoved(core::MouseMovedEvent& event)
     return false;
 }
 
-bool TurntableCameraMover::onMouseButtonPressed(core::MouseButtonPressedEvent& event)
+bool TrackballCameraMover::onMouseButtonPressed(core::MouseButtonPressedEvent& event)
 {
     auto* currentWindow = glfwGetCurrentContext();
     if(event.getButtonCode() == GLFW_MOUSE_BUTTON_MIDDLE)
@@ -85,7 +85,7 @@ bool TurntableCameraMover::onMouseButtonPressed(core::MouseButtonPressedEvent& e
     return false;
 }
 
-bool TurntableCameraMover::onMouseButtonReleased(core::MouseButtonReleasedEvent& event)
+bool TrackballCameraMover::onMouseButtonReleased(core::MouseButtonReleasedEvent& event)
 {
     auto* currentWindow = glfwGetCurrentContext();
     if(event.getButtonCode() == GLFW_MOUSE_BUTTON_MIDDLE)

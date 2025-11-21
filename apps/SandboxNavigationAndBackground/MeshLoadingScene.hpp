@@ -17,7 +17,7 @@ struct MeshLoadingSceneOptions
     {
         SingleColor,
         Vignette,
-        Gradient,
+        Gradient
     };
 
     enum class CameraMode
@@ -25,6 +25,7 @@ struct MeshLoadingSceneOptions
         Fixed,
         Cylinder,
         Turntable,
+        Trackball
     };
 
     char meshPath[256] = "";

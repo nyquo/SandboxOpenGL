@@ -1,6 +1,7 @@
 #include "MeshLoadingScene.hpp"
 
 #include "CylinderCameraMover.hpp"
+#include "TrackballCameraMover.hpp"
 #include "TurntableCameraMover.hpp"
 
 #include <core/Logger.hpp>
@@ -67,6 +68,11 @@ void MeshLoadingScene::update()
             }
             case MeshLoadingSceneOptions::CameraMode::Turntable: {
                 m_cameraMover = std::make_shared<TurntableCameraMover>(m_camera);
+                m_cameraMover->init();
+                break;
+            }
+            case MeshLoadingSceneOptions::CameraMode::Trackball: {
+                m_cameraMover = std::make_shared<TrackballCameraMover>(m_camera);
                 m_cameraMover->init();
                 break;
             }

@@ -87,7 +87,7 @@ void EditorLayer::displayOptionWindow()
     ImGui::Unindent(indent);
 
     // Camera modes
-    std::vector<const char*> cameraModes = {"Fixed", "Cylinder", "Turntable"};
+    std::vector<const char*> cameraModes = {"Fixed", "Cylinder", "Turntable", "Trackball"};
     static int currentCameraMode = 0;
     ImGui::Combo("Camera Mode", &currentCameraMode, cameraModes.data(), static_cast<int>(cameraModes.size()));
     ImGui::Indent(indent);
@@ -103,6 +103,10 @@ void EditorLayer::displayOptionWindow()
         }
         case 2: {
             m_meshLoadingScene.getOptions().cameraMode = MeshLoadingSceneOptions::CameraMode::Turntable;
+            break;
+        }
+        case 3: {
+            m_meshLoadingScene.getOptions().cameraMode = MeshLoadingSceneOptions::CameraMode::Trackball;
             break;
         }
         default: break;

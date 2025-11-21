@@ -3,8 +3,6 @@ set(RESSOURCES_FOLDER ${AppName}Ressources)
 sogl_add_executable(SandboxNavigationAndBackground
     SOURCES
         main.cpp
-        TurntableCameraMover.cpp
-        TurntableCameraMover.cpp
         CameraMover.hpp
         CylinderCameraMover.cpp
         CylinderCameraMover.hpp
@@ -14,6 +12,10 @@ sogl_add_executable(SandboxNavigationAndBackground
         MeshLoadingScene.hpp
         Sandbox.cpp
         Sandbox.hpp
+        TrackballCameraMover.hpp
+        TrackballCameraMover.cpp
+        TurntableCameraMover.cpp
+        TurntableCameraMover.hpp
     INCLUDES
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include/>
