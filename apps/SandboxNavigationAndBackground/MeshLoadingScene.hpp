@@ -24,7 +24,7 @@ struct MeshLoadingSceneOptions
     {
         Fixed,
         Cylinder,
-        Arcball
+        Turntable,
     };
 
     char meshPath[256] = "";
