@@ -29,6 +29,7 @@ class OldModelMover
         m_rotationSpeedYaw = sensitivityX;
         m_rotationSpeedPitch = sensitivityY;
     }
+    void setTouchScreenMode(bool touchScreenMode) { m_touchScreenMode = touchScreenMode; }
 
   private:
     bool onMouseScrolled(core::MouseScrolledEvent& event);
@@ -51,4 +52,5 @@ class OldModelMover
 
     float m_rotationSpeedYaw{0.3f};
     float m_rotationSpeedPitch{0.3f};
+    float m_touchScreenMode{false};
 };

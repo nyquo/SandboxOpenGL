@@ -98,11 +98,13 @@ void MeshLoadingScene::update()
     {
         m_cameraMover->update();
         m_cameraMover->setMouseSensitivity(m_options.sensitivity, m_options.sensitivity);
+        m_cameraMover->setTouchScreenMode(m_options.touchScreenMode);
     }
     if(m_modelMover)
     {
         m_modelMover->update();
         m_modelMover->setSensitivity(m_options.sensitivity, m_options.sensitivity);
+        m_modelMover->setTouchScreenMode(m_options.touchScreenMode);
     }
     renderScene();
 }

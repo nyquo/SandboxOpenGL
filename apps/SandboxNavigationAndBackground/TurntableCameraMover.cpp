@@ -64,7 +64,9 @@ bool TurntableCameraMover::onMouseMoved(core::MouseMovedEvent& event)
     {
         return false;
     }
-    if(core::Input::isMouseButtonPressed(GLFW_MOUSE_BUTTON_MIDDLE))
+    auto buttonChecked = m_touchScreenMode ? GLFW_MOUSE_BUTTON_LEFT : GLFW_MOUSE_BUTTON_MIDDLE;
+
+    if(core::Input::isMouseButtonPressed(buttonChecked))
     {
         m_currentMousePos = core::Input::getMousePosition();
     }
@@ -75,9 +77,14 @@ bool TurntableCameraMover::onMouseMoved(core::MouseMovedEvent& event)
 bool TurntableCameraMover::onMouseButtonPressed(core::MouseButtonPressedEvent& event)
 {
     auto* currentWindow = glfwGetCurrentContext();
-    if(event.getButtonCode() == GLFW_MOUSE_BUTTON_MIDDLE)
+    auto buttonChecked = m_touchScreenMode ? GLFW_MOUSE_BUTTON_LEFT : GLFW_MOUSE_BUTTON_MIDDLE;
+
+    if(event.getButtonCode() == buttonChecked)
     {
-        glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        if(!m_touchScreenMode)
+        {
+            glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
         m_lastMousePos = core::Input::getMousePosition();
         m_currentMousePos = core::Input::getMousePosition();
     }
@@ -87,7 +94,7 @@ bool TurntableCameraMover::onMouseButtonPressed(core::MouseButtonPressedEvent& e
 bool TurntableCameraMover::onMouseButtonReleased(core::MouseButtonReleasedEvent& event)
 {
     auto* currentWindow = glfwGetCurrentContext();
-    if(event.getButtonCode() == GLFW_MOUSE_BUTTON_MIDDLE)
+    if(event.getButtonCode() == GLFW_MOUSE_BUTTON_MIDDLE && !m_touchScreenMode)
     {
         glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }

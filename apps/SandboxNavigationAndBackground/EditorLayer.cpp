@@ -53,6 +53,7 @@ void EditorLayer::displayOptionWindow()
 
     // Sensibility Settings
     ImGui::SliderFloat("Sensitiviy", &m_meshLoadingScene.getOptions().sensitivity, 0.0f, 1.0f);
+    ImGui::Checkbox("Touchscreen mode", &m_meshLoadingScene.getOptions().displayGrid);
 
     // Mesh loading controls
     ImGui::InputText(

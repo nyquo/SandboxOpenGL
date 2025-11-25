@@ -10,19 +10,27 @@ CylinderCameraMover::CylinderCameraMover(const std::shared_ptr<renderer::Perspec
 void CylinderCameraMover::update()
 {
     auto* currentWindow = glfwGetCurrentContext();
-    if(!core::Input::isMouseButtonPressed(GLFW_MOUSE_BUTTON_MIDDLE))
+    auto buttonChecked = m_touchScreenMode ? GLFW_MOUSE_BUTTON_LEFT : GLFW_MOUSE_BUTTON_MIDDLE;
+
+    if(!core::Input::isMouseButtonPressed(buttonChecked))
     {
         m_firstMouse = true;
-        if(currentWindow != nullptr && m_enabled)
+        if(!m_touchScreenMode)
         {
-            glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            if(currentWindow != nullptr && m_enabled)
+            {
+                glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
         }
     }
     else
     {
-        if(currentWindow != nullptr && m_enabled)
+        if(!m_touchScreenMode)
         {
-            glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            if(currentWindow != nullptr && m_enabled)
+            {
+                glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            }
         }
     }
     if(!m_camera || !m_enabled)
@@ -82,7 +90,9 @@ bool CylinderCameraMover::onMouseMoved(core::MouseMovedEvent& event)
     {
         return false;
     }
-    if(core::Input::isMouseButtonPressed(GLFW_MOUSE_BUTTON_MIDDLE))
+    auto buttonChecked = m_touchScreenMode ? GLFW_MOUSE_BUTTON_LEFT : GLFW_MOUSE_BUTTON_MIDDLE;
+
+    if(core::Input::isMouseButtonPressed(buttonChecked))
     {
         if(m_firstMouse)
         {
