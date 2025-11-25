@@ -34,9 +34,16 @@ class OldModelMover
   private:
     glm::vec2 m_currentMousePos{0.0F, 0.0F};
     glm::vec2 m_lastMousePos{0.0F, 0.0F};
+
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
     std::shared_ptr<glm::mat4> m_modelMatrix;
+
     glm::vec3 m_target{0.0F, 0.0F, 0.0F};
+
     float m_distance{10.0f};
     bool m_enabled{true};
+    float m_zoomOffset{2.0};
+
+    float m_rotationSpeedYaw{0.3f};
+    float m_rotationSpeedPitch{0.3f};
 };

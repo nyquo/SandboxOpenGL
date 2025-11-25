@@ -31,6 +31,7 @@ class TurntableCameraMover : public CameraMover
   private:
     glm::vec3 m_target{0.0F, 0.0F, 0.0F};
     float distance = 10.0f;
+    float m_zoomOffset{2.0};
 
     float m_yaw = 0.0f;   // around y axis (world up)
     float m_pitch = 0.0f; // around x axis (camera right)

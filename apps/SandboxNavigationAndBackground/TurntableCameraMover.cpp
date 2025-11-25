@@ -53,10 +53,8 @@ bool TurntableCameraMover::onMouseScrolled(core::MouseScrolledEvent& event)
     if(!m_camera || !m_enabled)
     {
         return false;
-
-        m_camera->adustFov(-2.0 * event.getYOffset());
     }
-    // m_camera->adustFov(-m_zoomOffset * event.getYOffset());
+    m_camera->adustFov(-m_zoomOffset * event.getYOffset());
     return false;
 }
 
@@ -81,6 +79,7 @@ bool TurntableCameraMover::onMouseButtonPressed(core::MouseButtonPressedEvent& e
     {
         glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         m_lastMousePos = core::Input::getMousePosition();
+        m_currentMousePos = core::Input::getMousePosition();
     }
     return false;
 }
