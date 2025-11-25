@@ -37,9 +37,6 @@ class TrackballCameraMover : public CameraMover
     float m_minPitch = glm::radians(-89.0f);
     float m_maxPitch = glm::radians(89.0f);
 
-    float m_rotationSpeedX{0.3f};
-    float m_rotationSpeedY{0.3f};
-
     glm::vec2 m_currentMousePos{0.0F, 0.0F};
     glm::vec2 m_lastMousePos{0.0F, 0.0F};
 };

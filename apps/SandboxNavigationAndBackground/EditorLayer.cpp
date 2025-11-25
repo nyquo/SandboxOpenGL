@@ -49,6 +49,11 @@ void EditorLayer::displayOptionWindow()
     // FPS Display
     ImGui::Text("FPS: %.1f", fps);
 
+    ImGui::NewLine();
+
+    // Sensibility Settings
+    ImGui::SliderFloat("Sensitiviy", &m_meshLoadingScene.getOptions().sensitivity, 0.0f, 1.0f);
+
     // Mesh loading controls
     ImGui::InputText(
       "Mesh Path", m_meshLoadingScene.getOptions().meshPath, IM_ARRAYSIZE(m_meshLoadingScene.getOptions().meshPath));

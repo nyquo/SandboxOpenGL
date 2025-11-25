@@ -36,6 +36,7 @@ struct MeshLoadingSceneOptions
     CameraMode oldCameraMode{CameraMode::Fixed};
     CameraMode cameraMode{CameraMode::Fixed};
     bool displayGrid{false};
+    float sensitivity{0.3f};
 
     // Single color settings
     glm::vec3 backgroundColor{0.15f, 0.15f, 0.15f};

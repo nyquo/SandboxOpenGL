@@ -97,10 +97,12 @@ void MeshLoadingScene::update()
     if(m_cameraMover)
     {
         m_cameraMover->update();
+        m_cameraMover->setMouseSensitivity(m_options.sensitivity, m_options.sensitivity);
     }
     if(m_modelMover)
     {
         m_modelMover->update();
+        m_modelMover->setSensitivity(m_options.sensitivity, m_options.sensitivity);
     }
     renderScene();
 }

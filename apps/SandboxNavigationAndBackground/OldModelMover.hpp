@@ -24,6 +24,11 @@ class OldModelMover
     void onEvent(core::Event& event);
     void update();
     void init();
+    void setSensitivity(float sensitivityX, float sensitivityY)
+    {
+        m_rotationSpeedYaw = sensitivityX;
+        m_rotationSpeedPitch = sensitivityY;
+    }
 
   private:
     bool onMouseScrolled(core::MouseScrolledEvent& event);

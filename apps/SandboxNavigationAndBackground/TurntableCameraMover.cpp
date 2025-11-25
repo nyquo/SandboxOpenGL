@@ -20,8 +20,8 @@ void TurntableCameraMover::update()
     float deltaPitch = m_currentMousePos.y - m_lastMousePos.y;
     m_lastMousePos = m_currentMousePos;
 
-    m_yaw -= glm::radians(deltaYaw * m_rotationSpeedX);
-    m_pitch += glm::radians(deltaPitch * m_rotationSpeedY);
+    m_yaw -= glm::radians(deltaYaw * m_mouseSensitivityX);
+    m_pitch += glm::radians(deltaPitch * m_mouseSensitivityY);
     m_pitch = std::clamp(m_pitch, m_minPitch, m_maxPitch);
 
     float x = distance * cosf(m_pitch) * sinf(m_yaw);
