@@ -9,20 +9,20 @@ ViewportScene::ViewportScene(float layerWidth, float layerHeight)
                                                            std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.frag",
                                                            std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.geom");
 
+    // clang-format off
     float points[] = {
-      -0.5f,
-      0.5f, // top-left
-      0.5f,
-      0.5f, // top-right
-      0.5f,
-      -0.5f, // bottom-right
-      -0.5f,
-      -0.5f // bottom-left
+      -0.5f, 0.5f, 1.0, 0.0, 0.0, // top-left
+      0.5f, 0.5f, 0.0, 1.0, 0.0,// top-right
+      0.5f, -0.5f, 0.0, 0.0, 1.0,// bottom-right
+      -0.5f, -0.5f, 1.0, 1.0, 0.0// bottom-left
     };
+    // clang-format on
+
     m_vbo.setData(points, sizeof(points));
 
     // Set the buffer layout to describe the vertex attributes
-    renderer::BufferLayout layout{renderer::BufferElement(GL_FLOAT, 2, false, sizeof(float))};
+    renderer::BufferLayout layout{renderer::BufferElement(GL_FLOAT, 2, false, sizeof(float)),
+                                  renderer::BufferElement(GL_FLOAT, 3, false, sizeof(float))};
     m_vbo.setLayout(std::move(layout));
 
     m_vao.addVertexBuffer(m_vbo);

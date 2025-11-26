@@ -19,6 +19,6 @@ class ViewportScene : public core::Viewport
   private:
   private:
     std::unique_ptr<renderer::Shader> m_geomTrialShader;
-    renderer::VertexBuffer m_vbo{8 * sizeof(float)};
+    renderer::VertexBuffer m_vbo{20 * sizeof(float)};
     renderer::VertexArray m_vao;
 };
