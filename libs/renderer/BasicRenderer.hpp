@@ -44,13 +44,15 @@ class RENDERER_API BasicRenderer : public Renderer
     mutable BasicCube m_cube;
 
     bool m_wireFrame{false};
-    bool m_offscreen{true};
+    bool m_offscreen{false};
 
     unsigned int m_frameBuffer{0};
     unsigned int m_textureColorBuffer{0};
     unsigned int m_rbo{0};
-    unsigned int m_offscreenVAO{0};
-    unsigned int m_offscreenVBO{0};
+
+    std::unique_ptr<VertexArray> m_offscreenQuadVA;
+    std::unique_ptr<VertexBuffer> m_offscreenQuadVB;
+    std::unique_ptr<IndexBuffer> m_offscreenQuadIB;
     unsigned int m_offscreenTextureWidth{1920};
     unsigned int m_offscreenTextureHeight{1080};
 };

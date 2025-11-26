@@ -120,6 +120,12 @@ Window::Window(const std::string& name, unsigned int width, unsigned int height)
         }
     });
 
+    glfwSetDropCallback(m_window, [](GLFWwindow* window, int count, const char** paths) {
+        auto eventCallBack = *(std::function<void(Event&)>*)glfwGetWindowUserPointer(window);
+        FileDropEvent e(count, paths);
+        eventCallBack(e);
+    });
+
     IMGUI_CHECKVERSION();
 
     ImGui::CreateContext();

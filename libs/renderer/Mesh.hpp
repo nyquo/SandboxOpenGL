@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Vertex.hpp"
+#include "renderer/Buffers.hpp"
+#include "renderer/RendererExport.hpp"
+#include "renderer/Shader.hpp"
+#include "renderer/Texture.hpp"
 
-#include <Buffers.hpp>
-#include <RendererExport.hpp>
-#include <Shader.hpp>
-#include <Texture.hpp>
 #include <glm/glm.hpp>
 
 #include <vector>
@@ -30,9 +30,9 @@ class RENDERER_API Mesh
     std::vector<Texture> textures;
 
   private:
+    VertexArray m_vertexArray;
     VertexBuffer m_vertexBuffer;
     IndexBuffer m_indexBuffer;
-    unsigned int m_vao{0};
 };
 
 }

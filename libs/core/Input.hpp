@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CoreExport.hpp"
-#include "gl.h"
+#include "core/CoreExport.hpp"
+#include "core/gl.h"
 
 #include <glm/glm.hpp>
 

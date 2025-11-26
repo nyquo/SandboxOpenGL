@@ -1,3 +1,3 @@
-add_subdirectory(HelloWord)
-add_subdirectory(Lighting)
-add_subdirectory(MeshLoading)
+add_subdirectory(Sandbox)
+add_subdirectory(Sandbox2)
+add_subdirectory(SandboxNavigationAndBackground)

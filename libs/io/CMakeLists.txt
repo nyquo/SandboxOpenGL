@@ -1,18 +1,15 @@
-set(LibName Io)
-
-file(GLOB_RECURSE Headers
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+sogl_add_library(Io
+    SOURCES
+        ${SOURCES}
+    HEADERS
+        stb_image.h
+    PUBLIC_INCLUDES
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/libs>
+        $<INSTALL_INTERFACE:include/>
+    PRIVATE_INCLUDES
+    PUBLIC_LINKS
+    PRIVATE_LINKS
+    PUBLIC_DEFINITIONS
+    PRIVATE_DEFINITIONS
+    RESSOURCES
 )
-
-file(GLOB_RECURSE Sources
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.c
-)
-
-add_library(${LibName} INTERFACE
-        ${Headers}
-        ${Sources}
-)
-
-target_include_directories(${LibName} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

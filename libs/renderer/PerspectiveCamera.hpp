@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Camera.hpp"
-#include "CoreExport.hpp"
+#include "core/CoreExport.hpp"
 
 namespace renderer {
 
@@ -20,6 +20,8 @@ class CORE_API PerspectiveCamera : public Camera
     void rotateCamera(float xOffset, float yOffset);
     void translateCamera(glm::vec3 translation);
     void translateCameraRelative(glm::vec3 translation);
+    void setPosition(const glm::vec3& position);
+    void lookAt(const glm::vec3& target);
 
     void setViewPortSize(float m_width, float m_height);
 

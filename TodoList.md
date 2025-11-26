@@ -15,3 +15,6 @@ This might need to bump up to opengl 4.1
 - Move differents ui panels to different files/classes
 - remove old assets from bin when needed (cmake)
 - improve docking
+- Fix outline
+- disable face culling for sprites
+- see in buffers if it is needed to unbind after initalization (probably safer but slower)

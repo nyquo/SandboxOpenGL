@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoreExport.hpp"
+#include "core/CoreExport.hpp"
 
 #include <ctime>
 #include <iostream>

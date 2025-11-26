@@ -1,6 +1,6 @@
 #include "Model.hpp"
 
-#include <Logger.hpp>
+#include <core/Logger.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 

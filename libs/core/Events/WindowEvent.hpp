@@ -1,7 +1,10 @@
 #pragma once
 
-#include "CoreExport.hpp"
 #include "Event.hpp"
+#include "core/CoreExport.hpp"
+
+#include <filesystem>
+#include <vector>
 
 #ifndef NDEBUG
 #include <sstream>
@@ -50,6 +53,39 @@ class CORE_API WindowResizeEvent : public Event
 
   private:
     unsigned int m_width, m_height;
+};
+
+class CORE_API FileDropEvent : public Event
+{
+  public:
+    FileDropEvent(int count, const char** paths)
+    {
+        m_filePaths.reserve(count);
+        for(int i = 0; i < count; ++i)
+        {
+            m_filePaths.emplace_back(paths[i]);
+        }
+    }
+
+    const std::vector<std::filesystem::path>& getPaths() const { return m_filePaths; }
+
+    EVENT_CLASS_CATEGORY(EventCategoryWindowEvent)
+    EVENT_CLASS_TYPE(FileDropEvent)
+
+#ifndef NDEBUG
+    std::string toString() const override
+    {
+        std::stringstream ss;
+        for(const auto& path : m_filePaths)
+        {
+            ss << path.string() << "\n";
+        }
+        return ss.str();
+    }
+#endif
+
+  private:
+    std::vector<std::filesystem::path> m_filePaths;
 };
 
 }

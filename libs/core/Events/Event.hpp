@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CoreExport.hpp"
+#include "core/CoreExport.hpp"
 
 #include <functional>
 #include <type_traits>
@@ -17,6 +17,7 @@ enum class EventType
     // Window events
     WindowCloseEvent,
     WindowResizeEvent,
+    FileDropEvent,
 
     // Mouse events
     MouseMovedEvent,

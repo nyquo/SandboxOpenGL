@@ -2,8 +2,8 @@
 
 #include "RendererExport.hpp"
 
-#include <gl.h>
-#include <stb_image.h>
+#include <core/gl.h>
+#include <io/stb_image.h>
 
 #include <filesystem>
 #include <map>

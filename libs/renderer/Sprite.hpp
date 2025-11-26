@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Entity.hpp"
-#include "RendererExport.hpp"
-#include "Shader.hpp"
-#include "Vertex.hpp"
-
-#include <Texture.hpp>
+#include "renderer/Buffers.hpp"
+#include "renderer/Entity.hpp"
+#include "renderer/RendererExport.hpp"
+#include "renderer/Shader.hpp"
+#include "renderer/Texture.hpp"
+#include "renderer/Vertex.hpp"
 
 #include <vector>
 
@@ -26,12 +26,14 @@ class RENDERER_API Sprite : public Entity
     std::string getName() const;
 
   private:
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture> textures;
+    std::vector<Vertex> m_vertices;
+    std::vector<unsigned int> m_indices;
+    std::vector<Texture> m_textures;
 
-    unsigned int m_vao{0}, m_vbo{0}, m_ebo{0};
-    void setupMesh();
+    VertexArray m_vertexArray;
+    VertexBuffer m_vertexBuffer;
+    IndexBuffer m_indexBuffer;
+
     std::string m_textureName;
 };
 

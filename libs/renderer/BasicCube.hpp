@@ -2,8 +2,8 @@
 
 #include "Buffers.hpp"
 
-#include <Shader.hpp>
-#include <gl.h>
+#include <renderer/Shader.hpp>
+#include <core/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -17,14 +17,12 @@ class BasicCube
     BasicCube(glm::vec3 position = glm::vec3(0.0F))
       : m_position(position)
       , m_vertexBuffer(sizeof(float) * m_vertices.size(), m_vertices.data())
-      , m_indexBuffer(sizeof(unsigned int) * m_indices.size(), m_indices.data())
+      , m_indexBuffer(m_indices.size(), m_indices.data())
     {
-        glGenVertexArrays(1, &m_vao);
-        glBindVertexArray(m_vao);
-
-        glBindBuffer(GL_ARRAY_BUFFER, m_vao);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
+        renderer::BufferLayout layout{renderer::BufferElement(GL_FLOAT, 3, GL_FALSE, sizeof(float))};
+        m_vertexBuffer.setLayout(std::move(layout));
+        m_vertexArray.addVertexBuffer(m_vertexBuffer);
+        m_vertexArray.setIndexBuffer(m_indexBuffer);
 
         glBindVertexArray(0);
 
@@ -32,11 +30,7 @@ class BasicCube
                                                       std::string(RESSOURCES_FOLDER) + "/shaders/LightCubeShader.frag");
     }
 
-    ~BasicCube()
-    {
-        glDeleteVertexArrays(1, &m_vao);
-        glDeleteBuffers(1, &m_vao);
-    }
+    ~BasicCube() {}
 
     const float* getRawVertices() const { return m_vertices.data(); }
 
@@ -54,9 +48,9 @@ class BasicCube
     glm::vec3 m_position;
     glm::vec3 m_rotationVector;
 
+    renderer::VertexArray m_vertexArray;
     renderer::VertexBuffer m_vertexBuffer;
     renderer::IndexBuffer m_indexBuffer;
-    unsigned int m_vao;
 
     std::unique_ptr<renderer::Shader> m_shader;
 };

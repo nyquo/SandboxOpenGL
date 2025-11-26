@@ -1,0 +1,42 @@
+set(RESSOURCES_FOLDER ${AppName}Ressources)
+
+sogl_add_executable(SandboxNavigationAndBackground
+    SOURCES
+        main.cpp
+        CameraMover.hpp
+        CylinderCameraMover.cpp
+        CylinderCameraMover.hpp
+        EditorLayer.cpp
+        EditorLayer.hpp
+        MeshLoadingScene.cpp
+        MeshLoadingScene.hpp
+        OldModelMover.cpp
+        OldModelMover.hpp
+        Sandbox.cpp
+        Sandbox.hpp
+        TrackballCameraMover.hpp
+        TrackballCameraMover.cpp
+        TurntableCameraMover.cpp
+        TurntableCameraMover.hpp
+    INCLUDES
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include/>
+    LINKS
+        Core
+        Glad
+        Renderer
+        glm::glm
+        imgui
+        Utils
+    RESSOURCES
+        shaders/BackgroundGradient.frag
+        shaders/BackgroundGradient.vert
+        shaders/BackgroundInfiniteGrid.frag
+        shaders/BackgroundInfiniteGrid.vert
+        shaders/BackgroundVignette.frag
+        shaders/BackgroundVignette.vert
+        shaders/BasicModelShader.frag
+        shaders/BasicModelShader.vert
+    DEFINITIONS
+        RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
+)

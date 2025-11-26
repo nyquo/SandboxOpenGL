@@ -1,7 +1,8 @@
 #include "BasicRenderer.hpp"
 
-#include <Logger.hpp>
-#include <Vertex.hpp>
+#include "renderer/Vertex.hpp"
+
+#include <core/Logger.hpp>
 #include <glm/gtx/norm.hpp>
 
 namespace renderer {
@@ -89,9 +90,9 @@ void BasicRenderer::renderSceneOffscren(const Scene& scene, const std::shared_pt
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     m_screenShader->bind();
-    glBindVertexArray(m_offscreenVAO);
+    m_offscreenQuadVA->bind();
     glBindTexture(GL_TEXTURE_2D, m_textureColorBuffer);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
@@ -108,7 +109,7 @@ void BasicRenderer::renderSceneImpl(const Scene& scene, const std::shared_ptr<Ca
     // TEMP draw point lights as cube
     glStencilMask(0x00);
     m_cube.m_shader->bind();
-    glBindVertexArray(m_cube.m_vao);
+    m_cube.m_vertexArray.bind();
     for(const auto& pointLight : scene.getPointLights())
     {
         m_cube.m_position = pointLight.m_position;
@@ -123,8 +124,6 @@ void BasicRenderer::renderSceneImpl(const Scene& scene, const std::shared_ptr<Ca
         m_cube.m_shader->setMat4("projection", camera->getProjection());
         m_cube.m_shader->setMat4("model", m_cube.m_modelMatrix);
 
-        glBindVertexArray(m_cube.m_vao);
-        m_cube.m_indexBuffer.bind();
         glDrawElements(GL_TRIANGLES, m_cube.getIndicesCount(), GL_UNSIGNED_INT, 0);
     }
 
@@ -256,18 +255,16 @@ void BasicRenderer::initOffscreenRendering()
                                             0.0f,  1.0f, 1.0f,  1.0f, 1.0f
 
     };
+    std::vector<unsigned int> indexes{0, 1, 2, 3, 4, 5};
 
-    glGenVertexArrays(1, &m_offscreenVAO);
-    glGenBuffers(1, &m_offscreenVBO);
-    glBindVertexArray(m_offscreenVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, m_offscreenVBO);
-    glBufferData(
-      GL_ARRAY_BUFFER, sizeof(float) * verticesAndTexCoords.size(), &verticesAndTexCoords[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-    glBindVertexArray(0);
+    m_offscreenQuadVB.reset(new VertexBuffer(verticesAndTexCoords.size() * sizeof(float), verticesAndTexCoords.data()));
+    m_offscreenQuadIB.reset(new IndexBuffer(indexes.size(), indexes.data()));
+    BufferLayout layout{BufferElement(GL_FLOAT, 2, false, sizeof(float)),
+                        BufferElement(GL_FLOAT, 2, false, sizeof(float))};
+    m_offscreenQuadVA.reset(new VertexArray());
+    m_offscreenQuadVB->setLayout(std::move(layout));
+    m_offscreenQuadVA->addVertexBuffer(*m_offscreenQuadVB);
+    m_offscreenQuadVA->setIndexBuffer(*m_offscreenQuadIB);
     m_screenShader->bind();
     m_screenShader->setInt("screenTexture", 0);
 }
@@ -285,15 +282,6 @@ void BasicRenderer::deinitOffscreenRendering()
     if(m_rbo != 0)
     {
         glDeleteRenderbuffers(1, &m_rbo);
-    }
-
-    if(m_offscreenVBO != 0)
-    {
-        glDeleteBuffers(1, &m_offscreenVBO);
-    }
-    if(m_offscreenVAO != 0)
-    {
-        glDeleteVertexArrays(1, &m_offscreenVAO);
     }
 }
 

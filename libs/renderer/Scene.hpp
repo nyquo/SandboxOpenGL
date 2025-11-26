@@ -2,8 +2,8 @@
 
 #include "RendererExport.hpp"
 
-#include <Lights.hpp>
-#include <Model.hpp>
+#include <renderer/Lights.hpp>
+#include <renderer/Model.hpp>
 
 #include <vector>
 
