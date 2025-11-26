@@ -59,6 +59,8 @@ void Viewport::displayViewportWindow()
     vMax.x += ImGui::GetWindowPos().x;
     vMax.y += ImGui::GetWindowPos().y;
 
+    m_isCollapsed = ImGui::IsWindowCollapsed();
+
     m_x = vMin.x;
     m_y = m_layerHeight - vMax.y;
     m_width = vMax.x - vMin.x;

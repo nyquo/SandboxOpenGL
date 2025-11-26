@@ -1,9 +1,9 @@
-#include "ViewportScene.hpp"
+#include "ColoredHouseScene.hpp"
 
 #include <core/gl.h>
 
-ViewportScene::ViewportScene(float layerWidth, float layerHeight)
-  : Viewport(layerWidth, layerHeight, "Viewport", 50, 50, 800, 600, glm::vec3(0.0f))
+ColoredHouseScene::ColoredHouseScene(float layerWidth, float layerHeight)
+  : Viewport(layerWidth, layerHeight, "Colored houses", 50, 50, 800, 600, glm::vec3(0.0f))
 {
     m_geomTrialShader = std::make_unique<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.vert",
                                                            std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.frag",
@@ -28,13 +28,21 @@ ViewportScene::ViewportScene(float layerWidth, float layerHeight)
     m_vao.addVertexBuffer(m_vbo);
 }
 
-void ViewportScene::onEvent(core::Event& event) {}
+void ColoredHouseScene::onEvent(core::Event& event) {}
 
-void ViewportScene::onUpdate()
+void ColoredHouseScene::onUpdate()
 {
-    begin();
+    if(!isCollapsed())
+    {
+        begin();
+        drawScene();
+        end();
+    }
+}
+
+void ColoredHouseScene::drawScene()
+{
     m_geomTrialShader->bind();
     m_vao.bind();
     glDrawArrays(GL_POINTS, 0, 4);
-    end();
 }

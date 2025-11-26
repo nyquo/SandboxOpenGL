@@ -7,16 +7,18 @@
 #include <renderer/Buffers.hpp>
 #include <renderer/Shader.hpp>
 
-class ViewportScene : public core::Viewport
+class ColoredHouseScene : public core::Viewport
 {
   public:
-    ViewportScene(float layerWidth, float layerHeight);
-    virtual ~ViewportScene() = default;
+    ColoredHouseScene(float layerWidth, float layerHeight);
+    virtual ~ColoredHouseScene() = default;
 
     void onEvent(core::Event& event) override;
     void onUpdate() override;
 
   private:
+    void drawScene();
+
   private:
     std::unique_ptr<renderer::Shader> m_geomTrialShader;
     renderer::VertexBuffer m_vbo{20 * sizeof(float)};

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ViewportScene.hpp"
+#include "ColoredHouseScene.hpp"
 
 #include <core/Layer.hpp>
 #include <core/Viewport.hpp>
@@ -23,6 +23,6 @@ class EditorLayer : public core::Layer
     float m_layerWidth;
     float m_layerHeight;
 
-    ViewportScene m_viewportScene{m_layerWidth, m_layerHeight};
+    ColoredHouseScene m_coloredHouseScene{m_layerWidth, m_layerHeight};
     glm::vec3 m_windowBackgroundColor{0.1f, 0.1f, 0.1f};
 };
