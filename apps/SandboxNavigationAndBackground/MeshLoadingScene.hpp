@@ -1,5 +1,7 @@
 #pragma once
 
+#include "OldModelMover.hpp"
+
 #include <CameraMover.hpp>
 #include <filesystem>
 #include <glm/glm.hpp>
@@ -17,21 +19,25 @@ struct MeshLoadingSceneOptions
     {
         SingleColor,
         Vignette,
-        Gradient,
+        Gradient
     };
 
     enum class CameraMode
     {
         Fixed,
         Cylinder,
-        Arcball
+        Turntable,
+        Trackball,
+        ModelMover
     };
 
     char meshPath[256] = "";
     BackgroundMode backgroundMode{BackgroundMode::SingleColor};
     CameraMode oldCameraMode{CameraMode::Fixed};
     CameraMode cameraMode{CameraMode::Fixed};
-    bool displayGrid{true};
+    bool displayGrid{false};
+    float sensitivity{0.3f};
+    bool touchScreenMode{false};
 
     // Single color settings
     glm::vec3 backgroundColor{0.15f, 0.15f, 0.15f};
@@ -87,8 +93,10 @@ class MeshLoadingScene
     int m_height{600};
 
     std::shared_ptr<renderer::Model> m_model;
+    std::shared_ptr<glm::mat4> m_modelMatrix;
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
     std::shared_ptr<CameraMover> m_cameraMover;
+    std::shared_ptr<OldModelMover> m_modelMover;
 
     std::shared_ptr<renderer::Shader> m_basicModelShader;
     std::shared_ptr<renderer::Shader> m_backgroundVignetteShader;

@@ -23,9 +23,18 @@ class CameraMover
     void setCamera(const std::shared_ptr<renderer::PerspectiveCamera>& camera) { m_camera = camera; }
     void enable() { m_enabled = true; };
     void disable() { m_enabled = false; };
+    void setMouseSensitivity(float sensitivityX, float sensitivityY)
+    {
+        m_mouseSensitivityX = sensitivityX;
+        m_mouseSensitivityY = sensitivityY;
+    }
+    void setTouchScreenMode(bool touchScreenMode) { m_touchScreenMode = touchScreenMode; }
 
   protected:
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
+    float m_mouseSensitivityX{0.3};
+    float m_mouseSensitivityY{0.3};
+    float m_touchScreenMode{false};
 
     bool m_enabled{true};
 };

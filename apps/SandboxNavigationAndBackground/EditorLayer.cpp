@@ -49,6 +49,12 @@ void EditorLayer::displayOptionWindow()
     // FPS Display
     ImGui::Text("FPS: %.1f", fps);
 
+    ImGui::NewLine();
+
+    // Sensibility Settings
+    ImGui::SliderFloat("Sensitiviy", &m_meshLoadingScene.getOptions().sensitivity, 0.0f, 1.0f);
+    ImGui::Checkbox("Touchscreen mode", &m_meshLoadingScene.getOptions().displayGrid);
+
     // Mesh loading controls
     ImGui::InputText(
       "Mesh Path", m_meshLoadingScene.getOptions().meshPath, IM_ARRAYSIZE(m_meshLoadingScene.getOptions().meshPath));
@@ -87,7 +93,7 @@ void EditorLayer::displayOptionWindow()
     ImGui::Unindent(indent);
 
     // Camera modes
-    std::vector<const char*> cameraModes = {"Fixed", "Cylinder", "Arcball"};
+    std::vector<const char*> cameraModes = {"Fixed", "Cylinder", "Turntable", "Trackball", "Model mover"};
     static int currentCameraMode = 0;
     ImGui::Combo("Camera Mode", &currentCameraMode, cameraModes.data(), static_cast<int>(cameraModes.size()));
     ImGui::Indent(indent);
@@ -102,7 +108,15 @@ void EditorLayer::displayOptionWindow()
             break;
         }
         case 2: {
-            m_meshLoadingScene.getOptions().cameraMode = MeshLoadingSceneOptions::CameraMode::Arcball;
+            m_meshLoadingScene.getOptions().cameraMode = MeshLoadingSceneOptions::CameraMode::Turntable;
+            break;
+        }
+        case 3: {
+            m_meshLoadingScene.getOptions().cameraMode = MeshLoadingSceneOptions::CameraMode::Trackball;
+            break;
+        }
+        case 4: {
+            m_meshLoadingScene.getOptions().cameraMode = MeshLoadingSceneOptions::CameraMode::ModelMover;
             break;
         }
         default: break;

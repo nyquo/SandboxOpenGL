@@ -37,8 +37,6 @@ class CylinderCameraMover : public CameraMover
     double m_lastMouseX{0};
     double m_lastMouseY{0};
     bool m_firstMouse{true};
-    float m_mouseSensitivityX{0.2};
-    float m_mouseSensitivityY{0.02};
 
     float m_centerPointDistance{10.0F};
     double m_minHeight{-15.0};

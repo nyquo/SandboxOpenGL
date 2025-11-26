@@ -1,7 +1,9 @@
 #include "MeshLoadingScene.hpp"
 
-#include "ArcballCameraMover.hpp"
 #include "CylinderCameraMover.hpp"
+#include "OldModelMover.hpp"
+#include "TrackballCameraMover.hpp"
+#include "TurntableCameraMover.hpp"
 
 #include <core/Logger.hpp>
 #include <core/gl.h>
@@ -23,6 +25,8 @@ MeshLoadingScene::MeshLoadingScene()
     m_infiniteGridShader =
       std::make_shared<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundInfiniteGrid.vert",
                                          std::string(RESSOURCES_FOLDER) + "/shaders/BackgroundInfiniteGrid.frag");
+
+    m_modelMatrix = std::make_shared<glm::mat4>(1.0f);
 
     m_camera = std::make_shared<renderer::PerspectiveCamera>(m_width, m_height, glm::vec3(0.0F, 3.0F, 10.0F));
     m_camera->lookAt(glm::vec3(0.0F, 0.0F, 0.0F));
@@ -48,12 +52,18 @@ void MeshLoadingScene::onEvent(core::Event& event)
     {
         m_cameraMover->onEvent(event);
     }
+    if(m_modelMover)
+    {
+        m_modelMover->onEvent(event);
+    }
 }
 
 void MeshLoadingScene::update()
 {
     if(m_options.cameraMode != m_options.oldCameraMode)
     {
+        m_modelMover = nullptr;
+        *m_modelMatrix = glm::mat4(1.0f);
         switch(m_options.cameraMode)
         {
             case MeshLoadingSceneOptions::CameraMode::Fixed: {
@@ -65,9 +75,20 @@ void MeshLoadingScene::update()
                 m_cameraMover->init();
                 break;
             }
-            case MeshLoadingSceneOptions::CameraMode::Arcball: {
-                m_cameraMover = std::make_shared<ArcballCameraMover>(m_camera);
+            case MeshLoadingSceneOptions::CameraMode::Turntable: {
+                m_cameraMover = std::make_shared<TurntableCameraMover>(m_camera);
                 m_cameraMover->init();
+                break;
+            }
+            case MeshLoadingSceneOptions::CameraMode::Trackball: {
+                m_cameraMover = std::make_shared<TrackballCameraMover>(m_camera);
+                m_cameraMover->init();
+                break;
+            }
+            case MeshLoadingSceneOptions::CameraMode::ModelMover: {
+                m_modelMover = std::make_shared<OldModelMover>(m_camera, m_modelMatrix);
+                m_modelMover->init();
+                m_cameraMover = nullptr;
                 break;
             }
         }
@@ -76,6 +97,14 @@ void MeshLoadingScene::update()
     if(m_cameraMover)
     {
         m_cameraMover->update();
+        m_cameraMover->setMouseSensitivity(m_options.sensitivity, m_options.sensitivity);
+        m_cameraMover->setTouchScreenMode(m_options.touchScreenMode);
+    }
+    if(m_modelMover)
+    {
+        m_modelMover->update();
+        m_modelMover->setSensitivity(m_options.sensitivity, m_options.sensitivity);
+        m_modelMover->setTouchScreenMode(m_options.touchScreenMode);
     }
     renderScene();
 }
@@ -127,7 +156,7 @@ void MeshLoadingScene::renderModel()
         m_basicModelShader->setMat4("view", m_camera->getView());
         m_basicModelShader->setMat4("projection", m_camera->getProjection());
         m_basicModelShader->setVec3("viewPos", m_camera->getPosition());
-        m_basicModelShader->setMat4("model", glm::mat4(1.0f));
+        m_basicModelShader->setMat4("model", *m_modelMatrix);
 
         m_model->draw(*m_basicModelShader);
     }
