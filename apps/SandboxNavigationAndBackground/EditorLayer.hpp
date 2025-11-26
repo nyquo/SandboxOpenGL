@@ -49,5 +49,5 @@ class EditorLayer : public core::Layer
     MeshLoadingScene m_meshLoadingScene;
 
     ViewportData m_viewportData;
-    glm::vec3 m_windowBackgroundColor{0.1f, 0.1f, 0.1f};
+    glm::vec3 m_windowBackgroundColor{0.039, 0.059, 0.09};
 };
