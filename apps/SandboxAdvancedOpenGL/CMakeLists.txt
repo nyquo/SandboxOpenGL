@@ -20,6 +20,9 @@ sogl_add_executable(SandboxAdvancedOpenGL
         imgui
         Utils
     RESSOURCES
+        shaders/GeomTrial.frag
+        shaders/GeomTrial.vert
+        shaders/GeomTrial.geom
     DEFINITIONS
         RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
 )

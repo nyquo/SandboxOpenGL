@@ -1,9 +1,17 @@
 #include "Viewport.hpp"
 
+#include <core/gl.h>
+
 namespace core {
 
-Viewport::Viewport(
-  float m_layerWidth, float m_layerHeight, std::string viewportName, float x, float y, float width, float height)
+Viewport::Viewport(float m_layerWidth,
+                   float m_layerHeight,
+                   std::string viewportName,
+                   float x,
+                   float y,
+                   float width,
+                   float height,
+                   glm::vec3 backgroundColor)
   : m_layerWidth(m_layerWidth)
   , m_layerHeight(m_layerHeight)
   , m_viewportName(viewportName)
@@ -11,6 +19,7 @@ Viewport::Viewport(
   , m_y(y)
   , m_width(width)
   , m_height(height)
+  , m_backgroundColor(backgroundColor)
 {}
 
 Viewport::~Viewport() {}
@@ -19,6 +28,16 @@ float Viewport::getX() const { return m_x; }
 float Viewport::getY() const { return m_y; }
 float Viewport::getWidth() const { return m_width; }
 float Viewport::getHeight() const { return m_height; }
+
+void Viewport::begin()
+{
+    glEnable(GL_SCISSOR_TEST);
+    glViewport(m_x, m_y, m_width, m_height);
+    glScissor(m_x, m_y, m_width, m_height);
+    glClearColor(m_backgroundColor.r, m_backgroundColor.g, m_backgroundColor.b, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+void Viewport::end() { glDisable(GL_SCISSOR_TEST); }
 
 void Viewport::displayViewportWindow()
 {

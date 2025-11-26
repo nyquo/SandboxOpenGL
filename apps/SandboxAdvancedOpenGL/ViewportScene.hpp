@@ -1,27 +1,22 @@
 #pragma once
 
 #include <core/Events/Event.hpp>
+#include <core/Viewport.hpp>
 #include <glm/glm.hpp>
+#include <memory>
+#include <renderer/Buffers.hpp>
+#include <renderer/Shader.hpp>
 
-class ViewportScene
+class ViewportScene : public core::Viewport
 {
   public:
-    ViewportScene() = default;
+    ViewportScene(float layerWidth, float layerHeight);
     virtual ~ViewportScene() = default;
 
-    virtual void onEvent(core::Event& event);
-    virtual void onUpdate();
-    virtual void setViewport(float x, float y, float width, float height);
+    void onEvent(core::Event& event) override;
+    void onUpdate() override;
 
   private:
-    void begin();
-    void end();
-
   private:
-    float m_x{0.0f};
-    float m_y{0.0f};
-    float m_width{800.0f};
-    float m_height{600.0f};
-
-    glm::vec3 m_backgroundColor{0.3f, 0.3f, 0.3f};
+    std::unique_ptr<renderer::Shader> m_geomTrialShader;
 };

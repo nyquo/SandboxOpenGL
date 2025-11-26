@@ -1,5 +1,6 @@
 #pragma once
 
+#include <core/Events/Event.hpp>
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <string>
@@ -15,7 +16,8 @@ class Viewport
              float x = 0,
              float y = 0,
              float width = 800,
-             float height = 600);
+             float height = 600,
+             glm::vec3 backgroundColor = glm::vec3(0.3f, 0.3f, 0.3f));
     ~Viewport();
 
     float getX() const;
@@ -23,8 +25,17 @@ class Viewport
     float getWidth() const;
     float getHeight() const;
 
+    virtual void onEvent(core::Event& event) = 0;
+    virtual void onUpdate() = 0;
+
     void displayViewportWindow();
     void setLayerSize(float width, float height);
+
+    void setBackgroundColor(const glm::vec3& color) { m_backgroundColor = color; }
+
+  protected:
+    void begin();
+    void end();
 
   private:
     ImVec2 m_vMin{0.0f, 0.0f};
@@ -34,8 +45,10 @@ class Viewport
     float m_y;
     float m_width;
     float m_height;
-    float m_layerWidth; // Not really used
+    float m_layerWidth;
     float m_layerHeight;
+
+    glm::vec3 m_backgroundColor;
 
     std::string m_viewportName;
 };

@@ -14,13 +14,12 @@ void EditorLayer::onUpdate()
     glViewport(0, 0, m_layerWidth, m_layerHeight);
     glClearColor(m_windowBackgroundColor.r, m_windowBackgroundColor.g, m_windowBackgroundColor.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    updateViewportSceneBounds();
     m_viewportScene.onUpdate();
 }
 
 void EditorLayer::onImGuiRender()
 {
-    m_viewport.displayViewportWindow();
+    m_viewportScene.displayViewportWindow();
     ImGui::Begin("Settings");
     ImGui::Text("Hello from Editor Layer!");
     ImGui::End();
@@ -32,9 +31,5 @@ void EditorLayer::setLayerSize(float width, float height)
 {
     m_layerWidth = width;
     m_layerHeight = height;
-}
-
-void EditorLayer::updateViewportSceneBounds()
-{
-    m_viewportScene.setViewport(m_viewport.getX(), m_viewport.getY(), m_viewport.getWidth(), m_viewport.getHeight());
+    m_viewportScene.setLayerSize(width, height);
 }
