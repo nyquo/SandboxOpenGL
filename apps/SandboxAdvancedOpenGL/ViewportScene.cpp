@@ -5,10 +5,27 @@
 ViewportScene::ViewportScene(float layerWidth, float layerHeight)
   : Viewport(layerWidth, layerHeight, "Viewport", 50, 50, 800, 600, glm::vec3(0.0f))
 {
-    m_geomTrialShader =
-      std::make_unique<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.vert",
-                               std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.frag"/*,
-                               std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.geom"*/);
+    m_geomTrialShader = std::make_unique<renderer::Shader>(std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.vert",
+                                                           std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.frag",
+                                                           std::string(RESSOURCES_FOLDER) + "/shaders/GeomTrial.geom");
+
+    float points[] = {
+      -0.5f,
+      0.5f, // top-left
+      0.5f,
+      0.5f, // top-right
+      0.5f,
+      -0.5f, // bottom-right
+      -0.5f,
+      -0.5f // bottom-left
+    };
+    m_vbo.setData(points, sizeof(points));
+
+    // Set the buffer layout to describe the vertex attributes
+    renderer::BufferLayout layout{renderer::BufferElement(GL_FLOAT, 2, false, sizeof(float))};
+    m_vbo.setLayout(std::move(layout));
+
+    m_vao.addVertexBuffer(m_vbo);
 }
 
 void ViewportScene::onEvent(core::Event& event) {}
@@ -16,6 +33,8 @@ void ViewportScene::onEvent(core::Event& event) {}
 void ViewportScene::onUpdate()
 {
     begin();
-    // Rendering code would go here
+    m_geomTrialShader->bind();
+    m_vao.bind();
+    glDrawArrays(GL_POINTS, 0, 4);
     end();
 }
