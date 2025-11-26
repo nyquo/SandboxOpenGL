@@ -46,7 +46,8 @@ void Viewport::displayViewportWindow()
     ImGui::SetNextWindowSizeConstraints(ImVec2(200.0f, 150.0f), ImVec2(FLT_MAX, FLT_MAX));
     ImGui::SetNextWindowPos(ImVec2(m_x, m_y), ImGuiCond_FirstUseEver);
     ImGui::SetNextWindowSize(ImVec2(m_width, m_height), ImGuiCond_FirstUseEver);
-    ImGui::Begin(m_viewportName.c_str());
+
+    bool isCurrentTab = ImGui::Begin(m_viewportName.c_str());
 
     auto& vMin = m_vMin;
     auto& vMax = m_vMax;
@@ -59,7 +60,7 @@ void Viewport::displayViewportWindow()
     vMax.x += ImGui::GetWindowPos().x;
     vMax.y += ImGui::GetWindowPos().y;
 
-    m_isCollapsed = ImGui::IsWindowCollapsed();
+    m_isActive = !ImGui::IsWindowCollapsed() && isCurrentTab;
 
     m_x = vMin.x;
     m_y = m_layerHeight - vMax.y;

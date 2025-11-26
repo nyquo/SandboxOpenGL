@@ -32,7 +32,7 @@ void ColoredHouseScene::onEvent(core::Event& event) {}
 
 void ColoredHouseScene::onUpdate()
 {
-    if(!isCollapsed())
+    if(isActive())
     {
         begin();
         drawScene();

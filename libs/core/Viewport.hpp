@@ -32,7 +32,7 @@ class Viewport
     void setLayerSize(float width, float height);
 
     void setBackgroundColor(const glm::vec3& color) { m_backgroundColor = color; }
-    bool isCollapsed() const { return m_isCollapsed; }
+    bool isActive() const { return m_isActive; }
 
   protected:
     void begin();
@@ -48,7 +48,7 @@ class Viewport
     float m_height;
     float m_layerWidth;
     float m_layerHeight;
-    bool m_isCollapsed{false};
+    bool m_isActive{true};
 
     glm::vec3 m_backgroundColor;
 

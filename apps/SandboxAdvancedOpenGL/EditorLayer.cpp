@@ -15,11 +15,13 @@ void EditorLayer::onUpdate()
     glClearColor(m_windowBackgroundColor.r, m_windowBackgroundColor.g, m_windowBackgroundColor.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     m_coloredHouseScene.onUpdate();
+    m_exploadingModelScene.onUpdate();
 }
 
 void EditorLayer::onImGuiRender()
 {
     m_coloredHouseScene.displayViewportWindow();
+    m_exploadingModelScene.displayViewportWindow();
     ImGui::Begin("Settings");
     ImGui::Text("Hello from Editor Layer!");
     ImGui::End();
@@ -32,4 +34,5 @@ void EditorLayer::setLayerSize(float width, float height)
     m_layerWidth = width;
     m_layerHeight = height;
     m_coloredHouseScene.setLayerSize(width, height);
+    m_exploadingModelScene.setLayerSize(width, height);
 }

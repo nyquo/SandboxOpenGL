@@ -9,6 +9,8 @@ sogl_add_executable(SandboxAdvancedOpenGL
         Sandbox.hpp
         ColoredHouseScene.cpp
         ColoredHouseScene.hpp
+        ExploadingModelScene.cpp
+        ExploadingModelScene.hpp
     INCLUDES
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include/>
