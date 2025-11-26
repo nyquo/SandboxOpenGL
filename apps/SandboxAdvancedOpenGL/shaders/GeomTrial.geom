@@ -2,11 +2,13 @@
 layout (points) in;
 layout (triangle_strip, max_vertices = 5) out;
 
-in vec3 vertColor[];
-out vec3 geomColor;
+in VS_OUT {
+    vec3 color;
+} gs_in[];
+out vec3 fColor;
 
 void buildHouse(vec4 position) {
-    geomColor = vertColor[0];
+    fColor = gs_in[0].color;
     gl_Position = position + vec4(-0.2, -0.2, 0.0, 0.0);
     EmitVertex();
     gl_Position = position + vec4(0.2, -0.2, 0.0, 0.0);

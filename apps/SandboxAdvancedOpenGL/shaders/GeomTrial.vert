@@ -2,10 +2,12 @@
 layout (location = 0) in vec2 aPos;
 layout (location = 1) in vec3 aColor;
 
-out vec3 vertColor;
+out VS_OUT {
+    vec3 color;
+} vs_out;
 
 void main()
 {
-    vertColor = aColor;
+    vs_out.color = aColor;
     gl_Position = vec4(aPos.xy, 0.0, 1.0); 
 }
