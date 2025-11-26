@@ -2,9 +2,8 @@
 
 #include "RendererExport.hpp"
 
-#include <glm/glm.hpp>
-
 #include <filesystem>
+#include <glm/glm.hpp>
 #include <string>
 
 namespace renderer {
@@ -14,7 +13,7 @@ namespace fs = std::filesystem;
 class RENDERER_API Shader
 {
   public:
-    Shader(const fs::path& vertexPath, const fs::path& fragmentPath);
+    Shader(const fs::path& vertexPath, const fs::path& fragmentPath, const fs::path& geometryPath = {});
     Shader(const Shader& other) = delete;
     Shader(Shader&& other) = delete;
     Shader operator=(const Shader& other) = delete;
