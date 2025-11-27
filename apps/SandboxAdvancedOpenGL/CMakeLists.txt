@@ -27,6 +27,9 @@ sogl_add_executable(SandboxAdvancedOpenGL
         imgui
         Utils
     RESSOURCES
+        shaders/ExploadingModel.frag
+        shaders/ExploadingModel.vert
+        shaders/ExploadingModel.geom
         shaders/GeomTrial.frag
         shaders/GeomTrial.vert
         shaders/GeomTrial.geom
