@@ -1,5 +1,10 @@
 set(RESSOURCES_FOLDER ${AppName}Ressources)
 
+file(GLOB BACKPACK_MODEL
+    CONFIGURE_DEPENDS
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    Models/backpack/*
+)
 sogl_add_executable(SandboxAdvancedOpenGL
     SOURCES
         main.cpp
@@ -25,6 +30,7 @@ sogl_add_executable(SandboxAdvancedOpenGL
         shaders/GeomTrial.frag
         shaders/GeomTrial.vert
         shaders/GeomTrial.geom
+        ${BACKPACK_MODEL}
     DEFINITIONS
         RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
 )
