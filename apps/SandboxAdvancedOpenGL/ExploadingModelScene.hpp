@@ -22,6 +22,11 @@ class ExploadingModelScene : public core::Viewport
     void drawScene();
 
   private:
+    float m_cameraDistance{10.0f};
+    float m_cameraAmplitude{5.0f};
+    float m_movingSpeedYaw{1.0f};
+    float m_movingSpeedPitch{2.0f};
+
     renderer::PerspectiveCamera m_camera;
     renderer::Model m_model;
     renderer::Shader m_exploadingModelShader;
