@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <renderer/Buffers.hpp>
+#include <renderer/Model.hpp>
+#include <renderer/PerspectiveCamera.hpp>
 #include <renderer/Shader.hpp>
 
 class ExploadingModelScene : public core::Viewport
@@ -20,4 +22,7 @@ class ExploadingModelScene : public core::Viewport
     void drawScene();
 
   private:
+    renderer::PerspectiveCamera m_camera;
+    renderer::Model m_model;
+    renderer::Shader m_exploadingModelShader;
 };
