@@ -24,6 +24,8 @@ class Viewport
     float getY() const;
     float getWidth() const;
     float getHeight() const;
+    float getLayerWidth() const { return m_layerWidth; }
+    float getLayerHeight() const { return m_layerHeight; }
 
     virtual void onEvent(core::Event& event) = 0;
     virtual void onUpdate() = 0;
