@@ -35,5 +35,6 @@ void ExploadingModelScene::drawScene()
     m_exploadingModelShader.setMat4("projection", m_camera.getProjection());
     m_exploadingModelShader.setMat4("view", m_camera.getView());
     m_exploadingModelShader.setMat4("model", glm::mat4(1.0f));
+    m_exploadingModelShader.setFloat("time", glfwGetTime());
     m_model.draw(m_exploadingModelShader);
 }
