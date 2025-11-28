@@ -16,6 +16,8 @@ sogl_add_executable(SandboxAdvancedOpenGL
         ColoredHouseScene.hpp
         ExploadingModelScene.cpp
         ExploadingModelScene.hpp
+        NormalVisualizationScene.cpp
+        NormalVisualizationScene.hpp
     INCLUDES
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include/>
@@ -27,12 +29,17 @@ sogl_add_executable(SandboxAdvancedOpenGL
         imgui
         Utils
     RESSOURCES
+        shaders/BaseModel.frag
+        shaders/BaseModel.vert
         shaders/ExploadingModel.frag
         shaders/ExploadingModel.vert
         shaders/ExploadingModel.geom
         shaders/GeomTrial.frag
         shaders/GeomTrial.vert
         shaders/GeomTrial.geom
+        shaders/NormalVis.frag
+        shaders/NormalVis.vert
+        shaders/NormalVis.geom
         ${BACKPACK_MODEL}
     DEFINITIONS
         RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
