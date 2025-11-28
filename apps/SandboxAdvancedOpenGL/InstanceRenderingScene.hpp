@@ -8,6 +8,7 @@
 #include <renderer/Model.hpp>
 #include <renderer/PerspectiveCamera.hpp>
 #include <renderer/Shader.hpp>
+#include <vector>
 
 class InstanceRenderingScene : public core::Viewport
 {
@@ -23,9 +24,13 @@ class InstanceRenderingScene : public core::Viewport
     void updateCameraPosition();
 
   private:
-    float m_cameraDistance{20.0f};
+    float m_cameraDistance{60.0f};
     float m_cameraHeight{5.0f};
     float m_cameraSpeed{0.2f};
+
+    const size_t m_amountOfInstances{100};
+
+    std::vector<glm::mat4> m_instancesModelMatrices;
 
     renderer::Shader m_basicShader;
     renderer::Model m_planetModel;
