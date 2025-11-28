@@ -207,6 +207,16 @@ void Shader::setVec3(const std::string& name, float x, float y, float z) const
     setVec3(name, vec);
 }
 
+void Shader::setVec2(const std::string& name, const glm::vec2& value) const
+{
+    glUniform2fv(glGetUniformLocation(m_programId, name.c_str()), 1, &value[0]);
+}
+void Shader::setVec2(const std::string& name, float x, float y) const
+{
+    glm::vec2 vec(x, y);
+    setVec2(name, vec);
+}
+
 std::string Shader::parseFile(const fs::path& filePath)
 {
     core::Logger::logTrace("FilePath: " + filePath.filename().string());

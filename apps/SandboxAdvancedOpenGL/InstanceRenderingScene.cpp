@@ -6,7 +6,28 @@ InstanceRenderingScene::InstanceRenderingScene(float layerWidth, float layerHeig
   : Viewport(layerWidth, layerHeight, "Instance Rendering", 50, 50, 800, 600, glm::vec3(0.0f))
   , m_quadShader(std::string(RESSOURCES_FOLDER) + "/shaders/ColoredQuad.vert",
                  std::string(RESSOURCES_FOLDER) + "/shaders/ColoredQuad.frag")
-{}
+  , m_quadVBO(sizeof(float) * (2 + 3) * 6, nullptr)
+{
+    // clang-format off
+    float quadVertices[] = {
+    // positions     // colors
+    -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
+     0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
+    -0.05f, -0.05f,  0.0f, 0.0f, 1.0f,
+
+    -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
+     0.05f, -0.05f,  0.0f, 1.0f, 0.0f,   
+     0.05f,  0.05f,  0.0f, 1.0f, 1.0f	
+    };
+    // clang-format on
+    m_quadVBO.setData(quadVertices, sizeof(quadVertices));
+    renderer::BufferLayout layout{
+      renderer::BufferElement(GL_FLOAT, 2, false, sizeof(float)), // position
+      renderer::BufferElement(GL_FLOAT, 3, false, sizeof(float))  // color
+    };
+    m_quadVBO.setLayout(std::move(layout));
+    m_quadVAO.addVertexBuffer(m_quadVBO);
+}
 
 void InstanceRenderingScene::onEvent(core::Event& event) {}
 
@@ -24,4 +45,33 @@ void InstanceRenderingScene::onUpdate()
     end();
 }
 
-void InstanceRenderingScene::drawScene() {}
+void InstanceRenderingScene::drawScene()
+{
+    glm::vec2 translations[100];
+
+    int index = 0;
+
+    float quadSize = 0.1f;
+    float quadPerSide = 10.0f;
+    float spacing = (2.0f - (quadSize * quadPerSide)) / quadPerSide;
+    float margin = spacing * 0.5f;
+
+    for(float y = -1.0 + margin; y <= 1.0 - quadSize - margin; y += quadSize + spacing)
+    {
+        for(float x = -1.0 + margin; x <= 1.0 - quadSize - margin; x += quadSize + spacing)
+        {
+            glm::vec2 translation;
+            translation.x = x + quadSize * 0.5f;
+            translation.y = y + quadSize * 0.5f;
+            translations[index++] = translation;
+        }
+    }
+
+    m_quadShader.bind();
+    for(int i = 0; i < 100; i++)
+    {
+        m_quadShader.setVec2("offsets[" + std::to_string(i) + "]", translations[i]);
+    }
+    m_quadVAO.bind();
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
+}

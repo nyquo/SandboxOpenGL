@@ -20,7 +20,6 @@ ColoredHouseScene::ColoredHouseScene(float layerWidth, float layerHeight)
 
     m_vbo.setData(points, sizeof(points));
 
-    // Set the buffer layout to describe the vertex attributes
     renderer::BufferLayout layout{renderer::BufferElement(GL_FLOAT, 2, false, sizeof(float)),
                                   renderer::BufferElement(GL_FLOAT, 3, false, sizeof(float))};
     m_vbo.setLayout(std::move(layout));
