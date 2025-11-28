@@ -7,6 +7,7 @@ InstanceRenderingScene::InstanceRenderingScene(float layerWidth, float layerHeig
   , m_quadShader(std::string(RESSOURCES_FOLDER) + "/shaders/ColoredQuad.vert",
                  std::string(RESSOURCES_FOLDER) + "/shaders/ColoredQuad.frag")
   , m_quadVBO(sizeof(float) * (2 + 3) * 6, nullptr)
+  , m_instanceVBO(sizeof(glm::vec2) * 100, nullptr)
 {
     // clang-format off
     float quadVertices[] = {
@@ -27,26 +28,7 @@ InstanceRenderingScene::InstanceRenderingScene(float layerWidth, float layerHeig
     };
     m_quadVBO.setLayout(std::move(layout));
     m_quadVAO.addVertexBuffer(m_quadVBO);
-}
 
-void InstanceRenderingScene::onEvent(core::Event& event) {}
-
-void InstanceRenderingScene::onUpdate()
-{
-    if(!isActive())
-    {
-        return;
-    }
-
-    // m_camera.setViewPortSize(getWidth(), getHeight());
-
-    begin();
-    drawScene();
-    end();
-}
-
-void InstanceRenderingScene::drawScene()
-{
     glm::vec2 translations[100];
 
     int index = 0;
@@ -67,11 +49,32 @@ void InstanceRenderingScene::drawScene()
         }
     }
 
-    m_quadShader.bind();
-    for(int i = 0; i < 100; i++)
+    m_instanceVBO.setData(translations, sizeof(translations));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(2, 1); // Tell OpenGL this is an instanced vertex attribute.
+}
+
+void InstanceRenderingScene::onEvent(core::Event& event) {}
+
+void InstanceRenderingScene::onUpdate()
+{
+    if(!isActive())
     {
-        m_quadShader.setVec2("offsets[" + std::to_string(i) + "]", translations[i]);
+        return;
     }
+
+    // m_camera.setViewPortSize(getWidth(), getHeight());
+
+    begin();
+    drawScene();
+    end();
+}
+
+void InstanceRenderingScene::drawScene()
+{
+    m_quadShader.bind();
     m_quadVAO.bind();
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
 }

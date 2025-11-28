@@ -23,4 +23,5 @@ class InstanceRenderingScene : public core::Viewport
     renderer::Shader m_quadShader;
     renderer::VertexArray m_quadVAO;
     renderer::VertexBuffer m_quadVBO;
+    renderer::VertexBuffer m_instanceVBO;
 };
