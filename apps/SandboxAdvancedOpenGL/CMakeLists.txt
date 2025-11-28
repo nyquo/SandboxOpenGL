@@ -1,9 +1,10 @@
 set(RESSOURCES_FOLDER ${AppName}Ressources)
 
-file(GLOB BACKPACK_MODEL
+file(GLOB MODELS
     CONFIGURE_DEPENDS
     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
     Models/backpack/*
+    Models/planet/*
 )
 sogl_add_executable(SandboxAdvancedOpenGL
     SOURCES
@@ -44,7 +45,7 @@ sogl_add_executable(SandboxAdvancedOpenGL
         shaders/NormalVis.frag
         shaders/NormalVis.vert
         shaders/NormalVis.geom
-        ${BACKPACK_MODEL}
+        ${MODELS}
     DEFINITIONS
         RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
 )
