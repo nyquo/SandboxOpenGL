@@ -22,9 +22,6 @@ void EditorLayer::onImGuiRender()
 {
     m_coloredHouseScene.displayViewportWindow();
     m_exploadingModelScene.displayViewportWindow();
-    ImGui::Begin("Settings");
-    ImGui::Text("Hello from Editor Layer!");
-    ImGui::End();
 }
 
 void EditorLayer::onEvent(core::Event& e) { core::EventDispatcher dispatcher(e); }
