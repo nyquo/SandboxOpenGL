@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <renderer/Buffers.hpp>
+#include <renderer/Model.hpp>
+#include <renderer/PerspectiveCamera.hpp>
 #include <renderer/Shader.hpp>
 
 class InstanceRenderingScene : public core::Viewport
@@ -18,10 +20,16 @@ class InstanceRenderingScene : public core::Viewport
 
   private:
     void drawScene();
+    void updateCameraPosition();
 
   private:
-    renderer::Shader m_quadShader;
-    renderer::VertexArray m_quadVAO;
-    renderer::VertexBuffer m_quadVBO;
+    float m_cameraDistance{20.0f};
+    float m_cameraHeight{5.0f};
+    float m_cameraSpeed{0.2f};
+
+    renderer::Shader m_basicShader;
+    renderer::Model m_planetModel;
+    renderer::Model m_backpackModel;
+    renderer::PerspectiveCamera m_camera;
     renderer::VertexBuffer m_instanceVBO;
 };
