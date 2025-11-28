@@ -2,6 +2,7 @@
 
 #include "ColoredHouseScene.hpp"
 #include "ExploadingModelScene.hpp"
+#include "InstanceRenderingScene.hpp"
 #include "NormalVisualizationScene.hpp"
 
 #include <core/Layer.hpp>
@@ -27,6 +28,7 @@ class EditorLayer : public core::Layer
 
     ColoredHouseScene m_coloredHouseScene{m_layerWidth, m_layerHeight};
     ExploadingModelScene m_exploadingModelScene{m_layerWidth, m_layerHeight};
+    InstanceRenderingScene m_instanceRenderingScene{m_layerWidth, m_layerHeight};
     NormalVisualizationScene m_normalVisualizationScene{m_layerWidth, m_layerHeight};
     glm::vec3 m_windowBackgroundColor{0.1f, 0.1f, 0.1f};
 };

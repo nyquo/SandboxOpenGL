@@ -16,6 +16,8 @@ sogl_add_executable(SandboxAdvancedOpenGL
         ColoredHouseScene.hpp
         ExploadingModelScene.cpp
         ExploadingModelScene.hpp
+        InstanceRenderingScene.cpp
+        InstanceRenderingScene.hpp
         NormalVisualizationScene.cpp
         NormalVisualizationScene.hpp
     INCLUDES
@@ -31,6 +33,8 @@ sogl_add_executable(SandboxAdvancedOpenGL
     RESSOURCES
         shaders/BaseModel.frag
         shaders/BaseModel.vert
+        shaders/ColoredQuad.frag
+        shaders/ColoredQuad.vert
         shaders/ExploadingModel.frag
         shaders/ExploadingModel.vert
         shaders/ExploadingModel.geom

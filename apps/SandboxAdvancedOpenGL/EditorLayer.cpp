@@ -17,6 +17,7 @@ void EditorLayer::onUpdate()
     m_coloredHouseScene.onUpdate();
     m_exploadingModelScene.onUpdate();
     m_normalVisualizationScene.onUpdate();
+    m_instanceRenderingScene.onUpdate();
 }
 
 void EditorLayer::onImGuiRender()
@@ -24,6 +25,7 @@ void EditorLayer::onImGuiRender()
     m_coloredHouseScene.displayViewportWindow();
     m_exploadingModelScene.displayViewportWindow();
     m_normalVisualizationScene.displayViewportWindow();
+    m_instanceRenderingScene.displayViewportWindow();
 }
 
 void EditorLayer::onEvent(core::Event& e) { core::EventDispatcher dispatcher(e); }
@@ -35,4 +37,5 @@ void EditorLayer::setLayerSize(float width, float height)
     m_coloredHouseScene.setLayerSize(width, height);
     m_exploadingModelScene.setLayerSize(width, height);
     m_normalVisualizationScene.setLayerSize(width, height);
+    m_instanceRenderingScene.setLayerSize(width, height);
 }
