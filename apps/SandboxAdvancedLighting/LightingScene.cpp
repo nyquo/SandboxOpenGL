@@ -8,12 +8,13 @@ LightingScene::LightingScene(float layerWidth, float layerHeight)
   , m_shader(std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.vert",
              std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.frag")
 {
+    const float floorHalfSize = 10.0f;
     std::vector<renderer::Vertex> floorVertices = {
       // positions            // normals         // texture coords
-      {{5.0f, 0.0f, 5.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
-      {{-5.0f, 0.0f, -5.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-      {{-5.0f, 0.0f, 5.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
-      {{5.0f, 0.0f, -5.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+      {{floorHalfSize, 0.0f, floorHalfSize}, {0.0f, 1.0f, 0.0f}, {10.0f, 10.0f}},
+      {{-floorHalfSize, 0.0f, -floorHalfSize}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+      {{-floorHalfSize, 0.0f, floorHalfSize}, {0.0f, 1.0f, 0.0f}, {0.0f, 10.0f}},
+      {{floorHalfSize, 0.0f, -floorHalfSize}, {0.0f, 1.0f, 0.0f}, {10.0f, 0.0f}},
     };
 
     std::vector<unsigned int> floorIndices = {
