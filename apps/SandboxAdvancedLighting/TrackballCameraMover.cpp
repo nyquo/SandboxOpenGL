@@ -1,6 +1,7 @@
 #include "TrackballCameraMover.hpp"
 
 #include <algorithm>
+#include <core/Input.hpp>
 #include <core/Logger.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -16,6 +17,25 @@ void TrackballCameraMover::update()
         return;
     }
 
+    if(m_moveCameraMode)
+    {
+        rotateCamera();
+    }
+    else
+    {
+        moveCamera();
+    }
+}
+
+void TrackballCameraMover::init()
+{
+    m_pitch = glm::radians(20.0f);
+    m_yaw = glm::radians(0.0f);
+    rotateCamera();
+}
+
+void TrackballCameraMover::rotateCamera()
+{
     float deltaYaw = m_currentMousePos.x - m_lastMousePos.x;
     float deltaPitch = m_currentMousePos.y - m_lastMousePos.y;
     m_lastMousePos = m_currentMousePos;
@@ -29,13 +49,24 @@ void TrackballCameraMover::update()
     float z = m_distance * cosf(m_pitch) * cosf(m_yaw);
 
     glm::vec3 pos = glm::vec3(x, y, z);
-    m_camera->setPosition(pos);
+    m_camera->setPosition(pos + m_target);
     m_camera->lookAt(m_target);
 }
 
-void TrackballCameraMover::init()
+void TrackballCameraMover::moveCamera()
 {
-    m_camera->setPosition(glm::vec3(0.0F, m_initialHeight, -m_distance));
+    float deltaX = m_currentMousePos.x - m_lastMousePos.x;
+    float deltaY = m_currentMousePos.y - m_lastMousePos.y;
+    m_lastMousePos = m_currentMousePos;
+    m_target.x -= deltaX * 0.05f * m_mouseSensitivityX;
+    m_target.y += deltaY * 0.05f * m_mouseSensitivityY;
+
+    float x = m_distance * cosf(m_pitch) * sinf(m_yaw);
+    float y = m_distance * sinf(m_pitch);
+    float z = m_distance * cosf(m_pitch) * cosf(m_yaw);
+
+    glm::vec3 pos = glm::vec3(x, y, z);
+    m_camera->setPosition(pos + m_target);
     m_camera->lookAt(m_target);
 }
 
@@ -87,6 +118,7 @@ bool TrackballCameraMover::onMouseButtonPressed(core::MouseButtonPressedEvent& e
         }
         m_lastMousePos = core::Input::getMousePosition();
         m_currentMousePos = core::Input::getMousePosition();
+        m_moveCameraMode = !core::Input::isKeyPressed(GLFW_KEY_LEFT_SHIFT);
     }
     return false;
 }

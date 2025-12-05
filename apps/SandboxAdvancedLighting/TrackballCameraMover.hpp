@@ -28,12 +28,16 @@ class TrackballCameraMover : public CameraMover
     bool onMouseButtonPressed(core::MouseButtonPressedEvent& event);
     bool onMouseButtonReleased(core::MouseButtonReleasedEvent& event);
 
+    void rotateCamera();
+    void moveCamera();
+
   private:
+    float m_initialHeight{5.0f};
+    float m_zoomOffset{2.0f};
+
     glm::vec3 m_target{0.0F, 0.0F, 0.0F};
     float m_distance{10.0f};
-    float m_initialHeight{5.0f};
-
-    float m_zoomOffset{2.0f};
+    bool m_moveCameraMode{false};
 
     float m_yaw = 0.0f;   // around y axis (world up)
     float m_pitch = 0.0f; // around x axis (camera right)
