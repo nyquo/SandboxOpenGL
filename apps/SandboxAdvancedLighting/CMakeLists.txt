@@ -5,6 +5,13 @@ set(RESSOURCES_FOLDER ${AppName}Ressources)
 #     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
 #     Models/backpack/*
 # )
+
+file(GLOB TEXTURES
+    CONFIGURE_DEPENDS
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    textures/*
+)
+
 sogl_add_executable(SandboxAdvancedLighting
     SOURCES
         main.cpp
@@ -25,20 +32,10 @@ sogl_add_executable(SandboxAdvancedLighting
         imgui
         Utils
     RESSOURCES
-        # shaders/BaseModel.frag
-        # shaders/BaseModel.vert
-        # shaders/ColoredQuad.frag
-        # shaders/ColoredQuad.vert
-        # shaders/ExploadingModel.frag
-        # shaders/ExploadingModel.vert
-        # shaders/ExploadingModel.geom
-        # shaders/GeomTrial.frag
-        # shaders/GeomTrial.vert
-        # shaders/GeomTrial.geom
-        # shaders/NormalVis.frag
-        # shaders/NormalVis.vert
-        # shaders/NormalVis.geom
+        shaders/modelShader.frag
+        shaders/modelShader.vert
         # ${BACKPACK_MODEL}
+        ${TEXTURES}
     DEFINITIONS
         RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
 )
