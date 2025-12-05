@@ -19,7 +19,11 @@ void EditorLayer::onUpdate()
 
 void EditorLayer::onImGuiRender() { m_lightingScene.displayViewportWindow(); }
 
-void EditorLayer::onEvent(core::Event& e) { core::EventDispatcher dispatcher(e); }
+void EditorLayer::onEvent(core::Event& e)
+{
+    core::EventDispatcher dispatcher(e);
+    m_lightingScene.onEvent(e);
+}
 
 void EditorLayer::setLayerSize(float width, float height)
 {

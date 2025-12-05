@@ -15,12 +15,15 @@ file(GLOB TEXTURES
 sogl_add_executable(SandboxAdvancedLighting
     SOURCES
         main.cpp
+        CameraMover.hpp
         EditorLayer.cpp
         EditorLayer.hpp
         Sandbox.cpp
         Sandbox.hpp
         LightingScene.cpp
         LightingScene.hpp
+        TrackballCameraMover.hpp
+        TrackballCameraMover.cpp
     INCLUDES
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include/>
