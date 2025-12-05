@@ -8,7 +8,6 @@
 #include <assimp/material.h>
 #include <assimp/mesh.h>
 #include <assimp/scene.h>
-
 #include <filesystem>
 #include <vector>
 
@@ -28,6 +27,8 @@ class RENDERER_API Model : public Entity
 
     void draw(Shader& shader) const;
     std::string getName() const;
+
+    std::vector<Mesh>& getMeshes() { return m_meshes; } // TEMP
 
   private:
     void loadModel(const fs::path& path);

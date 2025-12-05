@@ -28,13 +28,14 @@ class InstanceRenderingScene : public core::Viewport
     float m_cameraHeight{5.0f};
     float m_cameraSpeed{0.2f};
 
-    const size_t m_amountOfInstances{100};
+    const size_t m_amountOfInstances{1000};
 
     std::vector<glm::mat4> m_instancesModelMatrices;
 
     renderer::Shader m_basicShader;
+    renderer::Shader m_instanceShader;
     renderer::Model m_planetModel;
     renderer::Model m_backpackModel;
     renderer::PerspectiveCamera m_camera;
-    renderer::VertexBuffer m_instanceVBO;
+    renderer::VertexBuffer m_instancesVBO;
 };

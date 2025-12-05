@@ -7,7 +7,6 @@
 #include "renderer/Texture.hpp"
 
 #include <glm/glm.hpp>
-
 #include <vector>
 
 namespace renderer {
@@ -24,6 +23,7 @@ class RENDERER_API Mesh
 
     void draw(Shader& shader) const;
 
+    VertexArray& getVAO() { return m_vertexArray; } // TEMP
   public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;

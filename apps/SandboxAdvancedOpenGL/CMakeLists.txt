@@ -42,6 +42,8 @@ sogl_add_executable(SandboxAdvancedOpenGL
         shaders/GeomTrial.frag
         shaders/GeomTrial.vert
         shaders/GeomTrial.geom
+        shaders/InstanceModel.frag
+        shaders/InstanceModel.vert
         shaders/NormalVis.frag
         shaders/NormalVis.vert
         shaders/NormalVis.geom

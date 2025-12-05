@@ -8,10 +8,12 @@ InstanceRenderingScene::InstanceRenderingScene(float layerWidth, float layerHeig
   : Viewport(layerWidth, layerHeight, "Instance Rendering", 50, 50, 800, 600, glm::vec3(0.0f))
   , m_basicShader(std::string(RESSOURCES_FOLDER) + "/shaders/BaseModel.vert",
                   std::string(RESSOURCES_FOLDER) + "/shaders/BaseModel.frag")
+  , m_instanceShader(std::string(RESSOURCES_FOLDER) + "/shaders/InstanceModel.vert",
+                     std::string(RESSOURCES_FOLDER) + "/shaders/InstanceModel.frag")
   , m_planetModel(std::string(RESSOURCES_FOLDER) + "/Models/planet/planet.obj")
   , m_backpackModel(std::string(RESSOURCES_FOLDER) + "/Models/backpack/backpack.obj")
   , m_camera(getLayerWidth(), getLayerHeight(), glm::vec3(0.0F, m_cameraHeight, m_cameraDistance))
-  , m_instanceVBO(sizeof(glm::vec2) * 100, nullptr)
+  , m_instancesVBO(sizeof(glm::mat4) * m_amountOfInstances, nullptr)
 {
     m_camera.lookAt(glm::vec3(0.0F, 0.0F, 0.0F));
 
@@ -46,6 +48,30 @@ InstanceRenderingScene::InstanceRenderingScene(float layerWidth, float layerHeig
         // 4. now add to list of matrices
         m_instancesModelMatrices.push_back(model);
     }
+
+    m_instancesVBO.bind();
+    m_instancesVBO.setData(m_instancesModelMatrices.data(), sizeof(glm::mat4) * m_amountOfInstances);
+
+    for(auto& mesh : m_backpackModel.getMeshes()) // TEMP
+    {
+        mesh.getVAO().bind();
+        GLsizei vec4Size = sizeof(glm::vec4);
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * vec4Size));
+        glEnableVertexAttribArray(5);
+        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * vec4Size));
+        glEnableVertexAttribArray(6);
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * vec4Size));
+
+        glVertexAttribDivisor(3, 1);
+        glVertexAttribDivisor(4, 1);
+        glVertexAttribDivisor(5, 1);
+        glVertexAttribDivisor(6, 1);
+
+        glBindVertexArray(0);
+    }
 }
 
 void InstanceRenderingScene::onEvent(core::Event& event) {}
@@ -74,14 +100,18 @@ void InstanceRenderingScene::drawScene()
     m_basicShader.setMat4("model", model);
     m_planetModel.draw(m_basicShader);
 
-    for(const auto& instanceModelMat : m_instancesModelMatrices)
+    m_instanceShader.bind();
+    m_instanceShader.setMat4("projection", m_camera.getProjection());
+    m_instanceShader.setMat4("view", m_camera.getView());
+    for(auto& mesh : m_backpackModel.getMeshes())
     {
-        m_basicShader.setMat4("model", instanceModelMat);
-        m_backpackModel.draw(m_basicShader);
+        mesh.getVAO().bind();
+        glDrawElementsInstanced(GL_TRIANGLES,
+                                static_cast<GLsizei>(mesh.indices.size()),
+                                GL_UNSIGNED_INT,
+                                0,
+                                static_cast<GLsizei>(m_amountOfInstances));
     }
-    // m_quadShader.bind();
-    // m_quadVAO.bind();
-    // glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
 }
 
 void InstanceRenderingScene::updateCameraPosition()
