@@ -1,0 +1,44 @@
+set(RESSOURCES_FOLDER ${AppName}Ressources)
+
+# file(GLOB MODELS
+#     CONFIGURE_DEPENDS
+#     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+#     Models/backpack/*
+# )
+sogl_add_executable(SandboxAdvancedLighting
+    SOURCES
+        main.cpp
+        EditorLayer.cpp
+        EditorLayer.hpp
+        Sandbox.cpp
+        Sandbox.hpp
+        LightingScene.cpp
+        LightingScene.hpp
+    INCLUDES
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include/>
+    LINKS
+        Core
+        Glad
+        Renderer
+        glm::glm
+        imgui
+        Utils
+    RESSOURCES
+        # shaders/BaseModel.frag
+        # shaders/BaseModel.vert
+        # shaders/ColoredQuad.frag
+        # shaders/ColoredQuad.vert
+        # shaders/ExploadingModel.frag
+        # shaders/ExploadingModel.vert
+        # shaders/ExploadingModel.geom
+        # shaders/GeomTrial.frag
+        # shaders/GeomTrial.vert
+        # shaders/GeomTrial.geom
+        # shaders/NormalVis.frag
+        # shaders/NormalVis.vert
+        # shaders/NormalVis.geom
+        # ${BACKPACK_MODEL}
+    DEFINITIONS
+        RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"
+)
