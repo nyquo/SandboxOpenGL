@@ -5,7 +5,10 @@
 #include <glm/glm.hpp>
 #include <memory>
 #include <renderer/Buffers.hpp>
+#include <renderer/Model.hpp>
+#include <renderer/PerspectiveCamera.hpp>
 #include <renderer/Shader.hpp>
+#include <vector>
 
 class InstanceRenderingScene : public core::Viewport
 {
@@ -18,10 +21,21 @@ class InstanceRenderingScene : public core::Viewport
 
   private:
     void drawScene();
+    void updateCameraPosition();
 
   private:
-    renderer::Shader m_quadShader;
-    renderer::VertexArray m_quadVAO;
-    renderer::VertexBuffer m_quadVBO;
-    renderer::VertexBuffer m_instanceVBO;
+    float m_cameraDistance{60.0f};
+    float m_cameraHeight{5.0f};
+    float m_cameraSpeed{0.2f};
+
+    const size_t m_amountOfInstances{1000};
+
+    std::vector<glm::mat4> m_instancesModelMatrices;
+
+    renderer::Shader m_basicShader;
+    renderer::Shader m_instanceShader;
+    renderer::Model m_planetModel;
+    renderer::Model m_backpackModel;
+    renderer::PerspectiveCamera m_camera;
+    renderer::VertexBuffer m_instancesVBO;
 };

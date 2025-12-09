@@ -2,58 +2,76 @@
 
 #include <core/Logger.hpp>
 #include <core/gl.h>
+#include <glm/gtc/matrix_transform.hpp>
+
 InstanceRenderingScene::InstanceRenderingScene(float layerWidth, float layerHeight)
   : Viewport(layerWidth, layerHeight, "Instance Rendering", 50, 50, 800, 600, glm::vec3(0.0f))
-  , m_quadShader(std::string(RESSOURCES_FOLDER) + "/shaders/ColoredQuad.vert",
-                 std::string(RESSOURCES_FOLDER) + "/shaders/ColoredQuad.frag")
-  , m_quadVBO(sizeof(float) * (2 + 3) * 6, nullptr)
-  , m_instanceVBO(sizeof(glm::vec2) * 100, nullptr)
+  , m_basicShader(std::string(RESSOURCES_FOLDER) + "/shaders/BaseModel.vert",
+                  std::string(RESSOURCES_FOLDER) + "/shaders/BaseModel.frag")
+  , m_instanceShader(std::string(RESSOURCES_FOLDER) + "/shaders/InstanceModel.vert",
+                     std::string(RESSOURCES_FOLDER) + "/shaders/InstanceModel.frag")
+  , m_planetModel(std::string(RESSOURCES_FOLDER) + "/Models/planet/planet.obj")
+  , m_backpackModel(std::string(RESSOURCES_FOLDER) + "/Models/backpack/backpack.obj")
+  , m_camera(getLayerWidth(), getLayerHeight(), glm::vec3(0.0F, m_cameraHeight, m_cameraDistance))
+  , m_instancesVBO(sizeof(glm::mat4) * m_amountOfInstances, nullptr)
 {
-    // clang-format off
-    float quadVertices[] = {
-    // positions     // colors
-    -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
-     0.05f, -0.05f,  0.0f, 1.0f, 0.0f,
-    -0.05f, -0.05f,  0.0f, 0.0f, 1.0f,
+    m_camera.lookAt(glm::vec3(0.0F, 0.0F, 0.0F));
 
-    -0.05f,  0.05f,  1.0f, 0.0f, 0.0f,
-     0.05f, -0.05f,  0.0f, 1.0f, 0.0f,   
-     0.05f,  0.05f,  0.0f, 1.0f, 1.0f	
-    };
-    // clang-format on
-    m_quadVBO.setData(quadVertices, sizeof(quadVertices));
-    renderer::BufferLayout layout{
-      renderer::BufferElement(GL_FLOAT, 2, false, sizeof(float)), // position
-      renderer::BufferElement(GL_FLOAT, 3, false, sizeof(float))  // color
-    };
-    m_quadVBO.setLayout(std::move(layout));
-    m_quadVAO.addVertexBuffer(m_quadVBO);
+    m_instancesModelMatrices.reserve(m_amountOfInstances);
 
-    glm::vec2 translations[100];
+    srand(glfwGetTime()); // initialize random seed
+    const float radius = 30.0;
+    const float offset = 2.5f;
 
-    int index = 0;
-
-    float quadSize = 0.1f;
-    float quadPerSide = 10.0f;
-    float spacing = (2.0f - (quadSize * quadPerSide)) / quadPerSide;
-    float margin = spacing * 0.5f;
-
-    for(float y = -1.0 + margin; y <= 1.0 - quadSize - margin; y += quadSize + spacing)
+    for(int i = 0; i < m_amountOfInstances; ++i)
     {
-        for(float x = -1.0 + margin; x <= 1.0 - quadSize - margin; x += quadSize + spacing)
-        {
-            glm::vec2 translation;
-            translation.x = x + quadSize * 0.5f;
-            translation.y = y + quadSize * 0.5f;
-            translations[index++] = translation;
-        }
+        glm::mat4 model = glm::mat4(1.0f);
+
+        // 1. translation: displace along circle with 'radius' in range [-offset, offset]
+        float angle = (float)i / (float)m_amountOfInstances * 360.0f;
+        float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float x = sin(angle) * radius + displacement;
+        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float y = displacement * 0.4f; // keep height of field smaller compared to width of x and z
+        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+        float z = cos(angle) * radius + displacement;
+        model = glm::translate(model, glm::vec3(x, y, z));
+
+        // 2. scale: scale between 0.05 and 0.25f
+        float scale = (rand() % 20) / 100.0f + 0.05;
+        model = glm::scale(model, glm::vec3(scale));
+
+        // 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
+        float rotAngle = (rand() % 360);
+        model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+        // 4. now add to list of matrices
+        m_instancesModelMatrices.push_back(model);
     }
 
-    m_instanceVBO.setData(translations, sizeof(translations));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glVertexAttribDivisor(2, 1); // Tell OpenGL this is an instanced vertex attribute.
+    m_instancesVBO.bind();
+    m_instancesVBO.setData(m_instancesModelMatrices.data(), sizeof(glm::mat4) * m_amountOfInstances);
+
+    for(auto& mesh : m_backpackModel.getMeshes()) // TEMP
+    {
+        mesh.getVAO().bind();
+        GLsizei vec4Size = sizeof(glm::vec4);
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * vec4Size));
+        glEnableVertexAttribArray(5);
+        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * vec4Size));
+        glEnableVertexAttribArray(6);
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * vec4Size));
+
+        glVertexAttribDivisor(3, 1);
+        glVertexAttribDivisor(4, 1);
+        glVertexAttribDivisor(5, 1);
+        glVertexAttribDivisor(6, 1);
+
+        glBindVertexArray(0);
+    }
 }
 
 void InstanceRenderingScene::onEvent(core::Event& event) {}
@@ -65,7 +83,8 @@ void InstanceRenderingScene::onUpdate()
         return;
     }
 
-    // m_camera.setViewPortSize(getWidth(), getHeight());
+    m_camera.setViewPortSize(getWidth(), getHeight());
+    updateCameraPosition();
 
     begin();
     drawScene();
@@ -74,7 +93,32 @@ void InstanceRenderingScene::onUpdate()
 
 void InstanceRenderingScene::drawScene()
 {
-    m_quadShader.bind();
-    m_quadVAO.bind();
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100);
+    m_basicShader.bind();
+    m_basicShader.setMat4("projection", m_camera.getProjection());
+    m_basicShader.setMat4("view", m_camera.getView());
+    glm::mat4 model = glm::mat4(1.0f);
+    m_basicShader.setMat4("model", model);
+    m_planetModel.draw(m_basicShader);
+
+    m_instanceShader.bind();
+    m_instanceShader.setMat4("projection", m_camera.getProjection());
+    m_instanceShader.setMat4("view", m_camera.getView());
+    for(auto& mesh : m_backpackModel.getMeshes())
+    {
+        mesh.getVAO().bind();
+        glDrawElementsInstanced(GL_TRIANGLES,
+                                static_cast<GLsizei>(mesh.indices.size()),
+                                GL_UNSIGNED_INT,
+                                0,
+                                static_cast<GLsizei>(m_amountOfInstances));
+    }
+}
+
+void InstanceRenderingScene::updateCameraPosition()
+{
+    float t = glfwGetTime() * m_cameraSpeed;
+    float x = cos(t) * m_cameraDistance;
+    float z = sin(t) * m_cameraDistance;
+    m_camera.setPosition(glm::vec3(x, m_cameraHeight, z));
+    m_camera.lookAt(glm::vec3(0.0F, 0.0F, 0.0F));
 }
