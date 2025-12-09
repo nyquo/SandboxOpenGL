@@ -2,9 +2,8 @@
 
 #include "RendererExport.hpp"
 
-#include <glm/glm.hpp>
-
 #include <filesystem>
+#include <glm/glm.hpp>
 #include <string>
 
 namespace renderer {
@@ -14,7 +13,7 @@ namespace fs = std::filesystem;
 class RENDERER_API Shader
 {
   public:
-    Shader(const fs::path& vertexPath, const fs::path& fragmentPath);
+    Shader(const fs::path& vertexPath, const fs::path& fragmentPath, const fs::path& geometryPath = {});
     Shader(const Shader& other) = delete;
     Shader(Shader&& other) = delete;
     Shader operator=(const Shader& other) = delete;
@@ -32,6 +31,8 @@ class RENDERER_API Shader
     void setMat4(const std::string& name, const glm::mat4& value) const;
     void setVec3(const std::string& name, const glm::vec3& value) const;
     void setVec3(const std::string& name, float x, float y, float z) const;
+    void setVec2(const std::string& name, const glm::vec2& value) const;
+    void setVec2(const std::string& name, float x, float y) const;
 
   private:
     std::string parseFile(const std::filesystem::path& filePath);

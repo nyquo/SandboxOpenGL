@@ -3,14 +3,13 @@
 #include "core/Logger.hpp"
 #include "core/gl.h"
 
-#include <glm/gtc/type_ptr.hpp>
-
 #include <fstream>
+#include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
 namespace renderer {
 
-Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
+Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath, const fs::path& geometryPath)
 {
     // Create an empty vertex shader handle
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -81,6 +80,46 @@ Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
     }
     core::Logger::logTrace("Fragment Shader compilation success!");
 
+    GLuint geometryShader;
+    if(!geometryPath.empty())
+    {
+        // Create an empty geometry shader handle
+        geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+
+        // Send the geometry shader source code to GL
+        // Note that std::string's .c_str is NULL character terminated.
+        const std::string geometrySrc = parseFile(geometryPath);
+        source = geometrySrc.c_str();
+        glShaderSource(geometryShader, 1, &source, nullptr);
+
+        // Compile the geometry shader
+        glCompileShader(geometryShader);
+
+        glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &isCompiled);
+        if(isCompiled == GL_FALSE)
+        {
+            GLint maxLength = 0;
+            glGetShaderiv(geometryShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+            // The maxLength includes the NULL character
+            std::vector<GLchar> infoLog(maxLength);
+            glGetShaderInfoLog(geometryShader, maxLength, &maxLength, infoLog.data());
+
+            // We don't need the shader anymore.
+            glDeleteShader(geometryShader);
+            // All of them. Don't leak shaders.
+            glDeleteShader(fragmentShader);
+            glDeleteShader(vertexShader);
+
+            // Log error
+            core::Logger::logError("Geometry shader compilation error:");
+            core::Logger::logError(infoLog.data());
+
+            return;
+        }
+        core::Logger::logTrace("Geometry Shader compilation success!");
+    }
+
     // Vertex and fragment shaders are successfully compiled.
     // Now time to link them together into a program.
     // Get a program object.
@@ -89,6 +128,10 @@ Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
     // Attach our shaders to our program
     glAttachShader(m_programId, vertexShader);
     glAttachShader(m_programId, fragmentShader);
+    if(!geometryPath.empty())
+    {
+        glAttachShader(m_programId, geometryShader);
+    }
 
     // Link our program
     glLinkProgram(m_programId);
@@ -110,6 +153,10 @@ Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
         // Don't leak shaders either.
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
+        if(!geometryPath.empty())
+        {
+            glDeleteShader(geometryShader);
+        }
 
         // Use the infoLog as you see fit.
         core::Logger::logError("Shader linking error:");
@@ -122,6 +169,10 @@ Shader::Shader(const fs::path& vertexPath, const fs::path& fragmentPath)
     // Always detach shaders after a successful link.
     glDetachShader(m_programId, vertexShader);
     glDetachShader(m_programId, fragmentShader);
+    if(!geometryPath.empty())
+    {
+        glDetachShader(m_programId, geometryShader);
+    }
 }
 
 Shader::~Shader() { glDeleteProgram(m_programId); }
@@ -156,6 +207,16 @@ void Shader::setVec3(const std::string& name, float x, float y, float z) const
     setVec3(name, vec);
 }
 
+void Shader::setVec2(const std::string& name, const glm::vec2& value) const
+{
+    glUniform2fv(glGetUniformLocation(m_programId, name.c_str()), 1, &value[0]);
+}
+void Shader::setVec2(const std::string& name, float x, float y) const
+{
+    glm::vec2 vec(x, y);
+    setVec2(name, vec);
+}
+
 std::string Shader::parseFile(const fs::path& filePath)
 {
     core::Logger::logTrace("FilePath: " + filePath.filename().string());
@@ -175,5 +236,4 @@ std::string Shader::parseFile(const fs::path& filePath)
     core::Logger::logTrace("Shader content: " + content);
     return content;
 }
-
 }

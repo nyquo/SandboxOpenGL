@@ -1,7 +1,6 @@
 #pragma once
 
 #include <core/gl.h>
-
 #include <vector>
 
 namespace renderer {
@@ -39,6 +38,7 @@ class BufferLayout
 class VertexBuffer
 {
   public:
+    VertexBuffer(size_t size);
     VertexBuffer(size_t size, void* data);
     VertexBuffer(const VertexBuffer& other) = delete;
     VertexBuffer(VertexBuffer&& other) noexcept;
@@ -48,6 +48,8 @@ class VertexBuffer
 
     void bind() const;
     void unbind() const;
+
+    void setData(const void* data, size_t size);
 
     const BufferLayout& getLayout() const { return m_layout; }
     void setLayout(BufferLayout&& layout);
