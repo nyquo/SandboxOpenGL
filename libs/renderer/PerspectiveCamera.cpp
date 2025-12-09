@@ -1,6 +1,8 @@
 
 #include "PerspectiveCamera.hpp"
 
+#include "glm/fwd.hpp"
+
 #include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -67,6 +69,10 @@ void PerspectiveCamera::setViewPortSize(float m_width, float m_height)
 glm::vec3 PerspectiveCamera::getPosition() { return m_position; }
 
 glm::vec3 PerspectiveCamera::getDirection() { return m_front; }
+
+glm::vec3 PerspectiveCamera::getRight() { return m_right; }
+
+glm::vec3 PerspectiveCamera::getUp() { return m_up; }
 
 void PerspectiveCamera::setPosition(const glm::vec3& position)
 {

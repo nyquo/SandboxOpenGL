@@ -44,13 +44,7 @@ void TrackballCameraMover::rotateCamera()
     m_pitch += glm::radians(deltaPitch * m_mouseSensitivityY);
     m_pitch = std::clamp(m_pitch, m_minPitch, m_maxPitch);
 
-    float x = m_distance * cosf(m_pitch) * sinf(m_yaw);
-    float y = m_distance * sinf(m_pitch);
-    float z = m_distance * cosf(m_pitch) * cosf(m_yaw);
-
-    glm::vec3 pos = glm::vec3(x, y, z);
-    m_camera->setPosition(pos + m_target);
-    m_camera->lookAt(m_target);
+    refreshCameraPosition();
 }
 
 void TrackballCameraMover::moveCamera()
@@ -58,9 +52,18 @@ void TrackballCameraMover::moveCamera()
     float deltaX = m_currentMousePos.x - m_lastMousePos.x;
     float deltaY = m_currentMousePos.y - m_lastMousePos.y;
     m_lastMousePos = m_currentMousePos;
-    m_target.x -= deltaX * 0.05f * m_mouseSensitivityX;
-    m_target.y += deltaY * 0.05f * m_mouseSensitivityY;
 
+    auto cameraRight = m_camera->getRight();
+    auto cameraUp = m_camera->getUp();
+
+    m_target -= deltaX * 0.1f * m_mouseSensitivityX * cameraRight;
+    m_target += deltaY * 0.1f * m_mouseSensitivityY * cameraUp;
+
+    refreshCameraPosition();
+}
+
+void TrackballCameraMover::refreshCameraPosition()
+{
     float x = m_distance * cosf(m_pitch) * sinf(m_yaw);
     float y = m_distance * sinf(m_pitch);
     float z = m_distance * cosf(m_pitch) * cosf(m_yaw);
@@ -84,10 +87,13 @@ bool TrackballCameraMover::onMouseScrolled(core::MouseScrolledEvent& event)
     if(!m_camera || !m_enabled)
     {
         return false;
-
-        m_camera->adustFov(-2.0 * event.getYOffset());
     }
-    m_camera->adustFov(-m_zoomOffset * event.getYOffset());
+
+    m_distanceMultiplier += -event.getYOffset();
+    m_distanceMultiplier = std::max(0.0f, m_distanceMultiplier);
+    m_distance = pow(1.2f, m_distanceMultiplier);
+    refreshCameraPosition();
+
     return false;
 }
 

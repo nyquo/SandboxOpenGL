@@ -30,6 +30,7 @@ class TrackballCameraMover : public CameraMover
 
     void rotateCamera();
     void moveCamera();
+    void refreshCameraPosition();
 
   private:
     float m_initialHeight{5.0f};
@@ -37,6 +38,7 @@ class TrackballCameraMover : public CameraMover
 
     glm::vec3 m_target{0.0F, 0.0F, 0.0F};
     float m_distance{10.0f};
+    float m_distanceMultiplier{10};
     bool m_moveCameraMode{false};
 
     float m_yaw = 0.0f;   // around y axis (world up)

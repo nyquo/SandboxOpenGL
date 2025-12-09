@@ -27,6 +27,8 @@ class CORE_API PerspectiveCamera : public Camera
 
     glm::vec3 getPosition() override;
     glm::vec3 getDirection();
+    glm::vec3 getRight();
+    glm::vec3 getUp();
 
   private:
     void updateView();
