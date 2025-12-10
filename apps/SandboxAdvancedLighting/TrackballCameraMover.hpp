@@ -30,7 +30,8 @@ class TrackballCameraMover : public CameraMover
 
     void rotateCamera();
     void moveCamera();
-    void refreshCameraPosition();
+    void updateCameraPosition();
+    void updateCameraDistance();
 
   private:
     float m_initialHeight{5.0f};

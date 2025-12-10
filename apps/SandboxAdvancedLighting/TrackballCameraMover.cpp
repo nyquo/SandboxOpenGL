@@ -32,6 +32,7 @@ void TrackballCameraMover::init()
     m_pitch = glm::radians(20.0f);
     m_yaw = glm::radians(0.0f);
     rotateCamera();
+    updateCameraDistance();
 }
 
 void TrackballCameraMover::rotateCamera()
@@ -44,7 +45,7 @@ void TrackballCameraMover::rotateCamera()
     m_pitch += glm::radians(deltaPitch * m_mouseSensitivityY);
     m_pitch = std::clamp(m_pitch, m_minPitch, m_maxPitch);
 
-    refreshCameraPosition();
+    updateCameraPosition();
 }
 
 void TrackballCameraMover::moveCamera()
@@ -56,13 +57,13 @@ void TrackballCameraMover::moveCamera()
     auto cameraRight = m_camera->getRight();
     auto cameraUp = m_camera->getUp();
 
-    m_target -= deltaX * 0.1f * m_mouseSensitivityX * cameraRight;
-    m_target += deltaY * 0.1f * m_mouseSensitivityY * cameraUp;
+    m_target -= deltaX * 0.005f * m_mouseSensitivityX * m_distance * cameraRight;
+    m_target += deltaY * 0.005f * m_mouseSensitivityY * m_distance * cameraUp;
 
-    refreshCameraPosition();
+    updateCameraPosition();
 }
 
-void TrackballCameraMover::refreshCameraPosition()
+void TrackballCameraMover::updateCameraPosition()
 {
     float x = m_distance * cosf(m_pitch) * sinf(m_yaw);
     float y = m_distance * sinf(m_pitch);
@@ -71,6 +72,12 @@ void TrackballCameraMover::refreshCameraPosition()
     glm::vec3 pos = glm::vec3(x, y, z);
     m_camera->setPosition(pos + m_target);
     m_camera->lookAt(m_target);
+}
+
+void TrackballCameraMover::updateCameraDistance()
+{
+    m_distance = pow(1.1f, m_distanceMultiplier);
+    updateCameraPosition();
 }
 
 void TrackballCameraMover::onEvent(core::Event& event)
@@ -91,8 +98,7 @@ bool TrackballCameraMover::onMouseScrolled(core::MouseScrolledEvent& event)
 
     m_distanceMultiplier += -event.getYOffset();
     m_distanceMultiplier = std::max(0.0f, m_distanceMultiplier);
-    m_distance = pow(1.2f, m_distanceMultiplier);
-    refreshCameraPosition();
+    updateCameraDistance();
 
     return false;
 }

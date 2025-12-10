@@ -45,7 +45,7 @@ class CORE_API PerspectiveCamera : public Camera
     float m_pitch;
 
     float m_near{0.1};
-    float m_far{100};
+    float m_far{150};
 
     float m_fov{45.0};
     float m_minFov{0.0F};
