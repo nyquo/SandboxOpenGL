@@ -17,7 +17,11 @@ void EditorLayer::onUpdate()
     m_lightingScene.onUpdate();
 }
 
-void EditorLayer::onImGuiRender() { m_lightingScene.displayViewportWindow(); }
+void EditorLayer::onImGuiRender()
+{
+    m_lightingScene.displayViewportWindow();
+    m_lightingScene.onImGuiRender();
+}
 
 void EditorLayer::onEvent(core::Event& e)
 {

@@ -1,5 +1,7 @@
 #include "LightingScene.hpp"
 
+#include "imgui.h"
+
 #include <core/gl.h>
 
 LightingScene::LightingScene(float layerWidth, float layerHeight)
@@ -8,6 +10,9 @@ LightingScene::LightingScene(float layerWidth, float layerHeight)
       std::make_shared<renderer::PerspectiveCamera>(getLayerWidth(), getLayerHeight(), glm::vec3(0.0F, 0.0F, 10.0F)))
   , m_shader(std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.vert",
              std::string(RESSOURCES_FOLDER) + "/shaders/modelShader.frag")
+  , m_lightCubeShader(std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.vert",
+                      std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.frag",
+                      std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.geom")
   , m_cameraMover(m_camera)
 {
     const float floorHalfSize = 10.0f;
@@ -35,9 +40,24 @@ LightingScene::LightingScene(float layerWidth, float layerHeight)
       std::make_unique<renderer::Mesh>(std::move(floorVertices), std::move(floorIndices), std::move(floorTextures));
 
     m_cameraMover.init();
+
+    // Setup point light VBO and VAO
+    updatePointLightBuffer();
+    renderer::BufferLayout layout{renderer::BufferElement(GL_FLOAT, 3, false, sizeof(float)),
+                                  renderer::BufferElement(GL_FLOAT, 3, false, sizeof(float))};
+    m_pointLightsVBO.setLayout(std::move(layout));
+    m_pointLightsVAO.addVertexBuffer(m_pointLightsVBO);
 }
 
 void LightingScene::onEvent(core::Event& event) { m_cameraMover.onEvent(event); }
+
+void LightingScene::onImGuiRender()
+{
+    ImGui::Begin("Lighting Scene Settings");
+    ImGui::ColorEdit3("Point light color", (float*)&m_pointLight.m_diffuseColor);
+    ImGui::DragFloat3("Point light position", (float*)&m_pointLight.m_position, 0.01f);
+    ImGui::End();
+}
 
 void LightingScene::onUpdate()
 {
@@ -61,4 +81,24 @@ void LightingScene::drawScene()
     m_shader.setMat4("view", m_camera->getView());
     m_shader.setMat4("model", glm::mat4(1.0f));
     m_floorMesh->draw(m_shader);
+
+    updatePointLightBuffer();
+    m_lightCubeShader.bind();
+    m_lightCubeShader.setMat4("projection", m_camera->getProjection());
+    m_lightCubeShader.setMat4("view", m_camera->getView());
+    m_pointLightsVAO.bind();
+    glDrawArrays(GL_POINTS, 0, 1);
+}
+
+void LightingScene::updatePointLightBuffer()
+{
+    float pointLightData[6] = {
+      m_pointLight.m_position.x,
+      m_pointLight.m_position.y,
+      m_pointLight.m_position.z,
+      m_pointLight.m_diffuseColor.r,
+      m_pointLight.m_diffuseColor.g,
+      m_pointLight.m_diffuseColor.b,
+    };
+    m_pointLightsVBO.setData(pointLightData, sizeof(pointLightData));
 }
