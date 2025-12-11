@@ -33,8 +33,12 @@ class LightingScene : public core::Viewport
     renderer::Shader m_shader;
     renderer::Shader m_lightCubeShader;
     TrackballCameraMover m_cameraMover;
-    renderer::PointLight m_pointLight{
-      glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f)};
+    bool m_blinnPhong{false};
+
+    // Lights
+    renderer::DirectionalLight m_directionalLight{
+      glm::vec3(-0.2f, -1.0f, -0.3f), glm::vec3(0.05f), glm::vec3(0.0f), glm::vec3(0.0f)};
+    renderer::PointLight m_pointLight{glm::vec3(0.0f, 2.0f, 0.0f), glm::vec3(0.05f), glm::vec3(1.0f), glm::vec3(0.3f)};
     renderer::VertexBuffer m_pointLightsVBO{6 * sizeof(float)}; // 3 for position, 3 for color
     renderer::VertexArray m_pointLightsVAO;
 };

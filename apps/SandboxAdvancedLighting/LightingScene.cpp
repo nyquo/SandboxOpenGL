@@ -54,8 +54,25 @@ void LightingScene::onEvent(core::Event& event) { m_cameraMover.onEvent(event); 
 void LightingScene::onImGuiRender()
 {
     ImGui::Begin("Lighting Scene Settings");
-    ImGui::ColorEdit3("Point light color", (float*)&m_pointLight.m_diffuseColor);
+    ImGui::Checkbox("Blinn-Phong", &m_blinnPhong);
+    ImGui::Text("Material settings");
+    float shininess = m_floorMesh->getShininess();
+    if(ImGui::DragFloat("Shininess", &shininess, 1.0f, 1.0f, 128.0f))
+    {
+        m_floorMesh->setShininess(shininess);
+    }
+    ImGui::NewLine();
+    ImGui::Text("Directional Light Settings");
+    ImGui::DragFloat3("Direction", (float*)&m_directionalLight.m_direction, .01);
+    ImGui::ColorEdit3("D Ambient light color", (float*)&m_directionalLight.m_ambientColor);
+    ImGui::ColorEdit3("D Diffuse light color", (float*)&m_directionalLight.m_diffuseColor);
+    ImGui::ColorEdit3("D Specular light color", (float*)&m_directionalLight.m_specularColor);
+    ImGui::NewLine();
+    ImGui::Text("Point Light Settings");
     ImGui::DragFloat3("Point light position", (float*)&m_pointLight.m_position, 0.01f);
+    ImGui::ColorEdit3("Point light ambient color", (float*)&m_pointLight.m_ambientColor);
+    ImGui::ColorEdit3("Point light diffuse color", (float*)&m_pointLight.m_diffuseColor);
+    ImGui::ColorEdit3("Point light specular color", (float*)&m_pointLight.m_specularColor);
     ImGui::End();
 }
 
@@ -76,16 +93,39 @@ void LightingScene::onUpdate()
 
 void LightingScene::drawScene()
 {
+    auto projectionView = m_camera->getProjection() * m_camera->getView();
+
     m_shader.bind();
+
+    m_shader.setBool("blinn", m_blinnPhong);
+
     m_shader.setMat4("projection", m_camera->getProjection());
     m_shader.setMat4("view", m_camera->getView());
     m_shader.setMat4("model", glm::mat4(1.0f));
+    m_shader.setVec3("viewPos", m_camera->getPosition());
+
+    // Directional light
+    m_shader.setVec3("dirLight.direction", m_directionalLight.m_direction);
+    m_shader.setVec3("dirLight.ambient", m_directionalLight.m_ambientColor);
+    m_shader.setVec3("dirLight.diffuse", m_directionalLight.m_diffuseColor);
+    m_shader.setVec3("dirLight.specular", m_directionalLight.m_specularColor);
+
+    // Point light
+    m_shader.setInt("nbPointLights", 1);
+    std::string str = "pointLights[0].";
+    m_shader.setVec3(str + "position", m_pointLight.m_position);
+    m_shader.setVec3(str + "ambient", m_pointLight.m_ambientColor);
+    m_shader.setVec3(str + "diffuse", m_pointLight.m_diffuseColor);
+    m_shader.setVec3(str + "specular", m_pointLight.m_specularColor);
+    m_shader.setFloat(str + "constant", 1.0f);
+    m_shader.setFloat(str + "linear", 0.09f);
+    m_shader.setFloat(str + "quadratic", 0.032f);
+
     m_floorMesh->draw(m_shader);
 
     updatePointLightBuffer();
     m_lightCubeShader.bind();
-    m_lightCubeShader.setMat4("projection", m_camera->getProjection());
-    m_lightCubeShader.setMat4("view", m_camera->getView());
+    m_lightCubeShader.setMat4("projectionView", projectionView);
     m_pointLightsVAO.bind();
     glDrawArrays(GL_POINTS, 0, 1);
 }
