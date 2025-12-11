@@ -4,11 +4,14 @@ out vec4 FragColor;
 in vec3 fColor;
 in vec3 fCenter;
 in float fSize;
+in vec3 fFragPos;
 
 void main()
 {
-    float dist = distance(gl_Position, fCenter);
-    vec3 dimmed = mix(vec3(0.0), vec3(1.0), 0.5);
-    //vec3 dimmed = mix(fColor, 0.5 * fColor, 0.8);//dist/fSize);
+    
+    float dist = distance(fFragPos, fCenter);
+    float halfSizeSquared = pow(fSize/2, 2);
+    float distToCorner = sqrt(halfSizeSquared + halfSizeSquared);
+    vec3 dimmed = mix(fColor, fColor * 0.3, dist/distToCorner);
     FragColor = vec4(dimmed, 1.0);   
 }  
