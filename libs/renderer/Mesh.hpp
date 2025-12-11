@@ -24,6 +24,9 @@ class RENDERER_API Mesh
     void draw(Shader& shader) const;
 
     VertexArray& getVAO() { return m_vertexArray; } // TEMP
+    void setShininess(float shininess) { m_shininess = shininess; }
+    float getShininess() const { return m_shininess; }
+
   public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
@@ -33,6 +36,7 @@ class RENDERER_API Mesh
     VertexArray m_vertexArray;
     VertexBuffer m_vertexBuffer;
     IndexBuffer m_indexBuffer;
+    float m_shininess{16};
 };
 
 }
