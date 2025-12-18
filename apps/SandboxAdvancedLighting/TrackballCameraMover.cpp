@@ -35,6 +35,8 @@ void TrackballCameraMover::init()
     updateCameraDistance();
 }
 
+void TrackballCameraMover::setIsMouseInViewport(bool isMouseInViewport) { m_isMouseInViewport = isMouseInViewport; }
+
 void TrackballCameraMover::rotateCamera()
 {
     float deltaYaw = m_currentMousePos.x - m_lastMousePos.x;
@@ -91,7 +93,7 @@ void TrackballCameraMover::onEvent(core::Event& event)
 
 bool TrackballCameraMover::onMouseScrolled(core::MouseScrolledEvent& event)
 {
-    if(!m_camera || !m_enabled)
+    if(!m_camera || !m_enabled || !m_isMouseInViewport)
     {
         return false;
     }
@@ -109,6 +111,12 @@ bool TrackballCameraMover::onMouseMoved(core::MouseMovedEvent& event)
     {
         return false;
     }
+
+    if(!m_isMouseInViewport && !m_isInMovement)
+    {
+        return false;
+    }
+
     auto buttonChecked = m_touchScreenMode ? GLFW_MOUSE_BUTTON_LEFT : GLFW_MOUSE_BUTTON_MIDDLE;
     if(core::Input::isMouseButtonPressed(buttonChecked))
     {
@@ -120,10 +128,16 @@ bool TrackballCameraMover::onMouseMoved(core::MouseMovedEvent& event)
 
 bool TrackballCameraMover::onMouseButtonPressed(core::MouseButtonPressedEvent& event)
 {
+    if(!m_enabled || !m_isMouseInViewport)
+    {
+        return false;
+    }
+
     auto* currentWindow = glfwGetCurrentContext();
     auto buttonChecked = m_touchScreenMode ? GLFW_MOUSE_BUTTON_LEFT : GLFW_MOUSE_BUTTON_MIDDLE;
     if(event.getButtonCode() == buttonChecked)
     {
+        m_isInMovement = true;
         if(!m_touchScreenMode)
         {
             glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -141,6 +155,7 @@ bool TrackballCameraMover::onMouseButtonReleased(core::MouseButtonReleasedEvent&
     auto buttonChecked = m_touchScreenMode ? GLFW_MOUSE_BUTTON_LEFT : GLFW_MOUSE_BUTTON_MIDDLE;
     if(event.getButtonCode() == buttonChecked && !m_touchScreenMode)
     {
+        m_isInMovement = false;
         glfwSetInputMode(currentWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     return false;

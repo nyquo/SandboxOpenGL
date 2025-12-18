@@ -33,7 +33,7 @@ class LightingScene : public core::Viewport
     renderer::Shader m_shader;
     renderer::Shader m_lightCubeShader;
     TrackballCameraMover m_cameraMover;
-    bool m_blinnPhong{false};
+    bool m_blinnPhong{true};
 
     // Lights
     renderer::DirectionalLight m_directionalLight{

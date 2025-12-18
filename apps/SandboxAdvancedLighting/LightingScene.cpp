@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 
+#include <core/Input.hpp>
 #include <core/gl.h>
 
 LightingScene::LightingScene(float layerWidth, float layerHeight)
@@ -84,6 +85,8 @@ void LightingScene::onUpdate()
     }
 
     m_camera->setViewPortSize(getWidth(), getHeight());
+    auto mousePosition = core::Input::getMousePosition();
+    m_cameraMover.setIsMouseInViewport(isInViewport(mousePosition.x, mousePosition.y));
     m_cameraMover.update();
 
     begin();

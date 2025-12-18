@@ -21,6 +21,7 @@ class TrackballCameraMover : public CameraMover
     void onEvent(core::Event& event) override;
     void update() override;
     void init() override;
+    void setIsMouseInViewport(bool isMouseInViewport); // Dirty but will do the job for now
 
   private:
     bool onMouseScrolled(core::MouseScrolledEvent& event);
@@ -41,6 +42,8 @@ class TrackballCameraMover : public CameraMover
     float m_distance{10.0f};
     float m_distanceMultiplier{10};
     bool m_moveCameraMode{false};
+    bool m_isMouseInViewport{false};
+    bool m_isInMovement{false};
 
     float m_yaw = 0.0f;   // around y axis (world up)
     float m_pitch = 0.0f; // around x axis (camera right)
