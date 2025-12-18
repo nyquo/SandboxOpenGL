@@ -35,6 +35,7 @@ class Viewport
 
     void setBackgroundColor(const glm::vec3& color) { m_backgroundColor = color; }
     bool isActive() const { return m_isActive; }
+    bool isInViewport(float x, float y) const;
 
   protected:
     void begin();

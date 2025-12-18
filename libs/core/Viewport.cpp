@@ -78,4 +78,16 @@ void Viewport::setLayerSize(float width, float height)
     m_layerHeight = height;
 }
 
+bool Viewport::isInViewport(float x, float y) const
+{
+    if(x >= m_x && x <= m_x + m_width)
+    {
+        if(y >= m_layerHeight - (m_y + m_height) && y <= m_layerHeight - m_y)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 }
