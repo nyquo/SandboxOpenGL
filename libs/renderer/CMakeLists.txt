@@ -5,6 +5,7 @@ set(HEADERS
     Camera.hpp
     Entity.hpp
     FpsCameraMover.hpp
+    FrameBuffer.hpp
     Lights.hpp
     Mesh.hpp
     Model.hpp
@@ -26,6 +27,7 @@ set(SOURCES
     BasicRenderer.cpp
     Buffers.cpp
     FpsCameraMover.cpp
+    FrameBuffer.cpp
     Mesh.cpp
     Model.cpp
     PerspectiveCamera.cpp
