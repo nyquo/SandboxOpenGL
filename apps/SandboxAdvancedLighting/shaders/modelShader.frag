@@ -110,7 +110,8 @@ vec4 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
     vec4 specular = vec4(light.specular, 1) * spec;// * vec4(texture(material.texture_specular1, TexCoords));
 
     float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+    //float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance)); // old without gamma correction -> quadratic attenuation
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance)); // new with gamma correction -> linear attenuation
 
     return attenuation * (ambient + diffuse + specular);
 }

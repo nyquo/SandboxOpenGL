@@ -1,8 +1,11 @@
 #include "Texture.hpp"
 
 #include "core/Logger.hpp"
+#include "core/gl.h"
 
 namespace renderer {
+
+bool Texture::s_gammaCorrectionEnabled = false;
 
 std::map<fs::path, std::pair<unsigned int, Texture::TextureData>> Texture::m_loadedCount = {};
 
@@ -39,19 +42,23 @@ Texture::Texture(const fs::path& texturePath, std::string type)
         if(m_textureData.channels == 1)
         {
             m_format = GL_RED;
+            m_internalFormat = GL_RED;
         }
         else if(m_textureData.channels == 4)
         {
             m_format = GL_RGBA;
+            m_internalFormat =
+              m_textureData.type == "texture_diffuse" && s_gammaCorrectionEnabled ? GL_SRGB_ALPHA : GL_RGBA;
         }
         else
         {
             m_format = GL_RGB;
+            m_internalFormat = m_textureData.type == "texture_diffuse" && s_gammaCorrectionEnabled ? GL_SRGB : GL_RGB;
         }
 
         glTexImage2D(GL_TEXTURE_2D,
                      0,
-                     m_format,
+                     m_internalFormat,
                      m_textureData.width,
                      m_textureData.height,
                      0,

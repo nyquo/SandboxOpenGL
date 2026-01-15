@@ -20,6 +20,8 @@ sogl_add_executable(SandboxAdvancedLighting
         EditorLayer.hpp
         LightingScene.cpp
         LightingScene.hpp
+        OffScreenRenderer.cpp
+        OffScreenRenderer.hpp
         Sandbox.cpp
         Sandbox.hpp
         TrackballCameraMover.hpp
@@ -40,6 +42,8 @@ sogl_add_executable(SandboxAdvancedLighting
         shaders/pointLightCube.frag
         shaders/pointLightCube.geom
         shaders/pointLightCube.vert
+        shaders/screen.frag
+        shaders/screen.vert
         # ${BACKPACK_MODEL}
         ${TEXTURES}
     DEFINITIONS

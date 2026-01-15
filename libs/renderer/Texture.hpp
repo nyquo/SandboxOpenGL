@@ -3,9 +3,8 @@
 #include "RendererExport.hpp"
 
 #include <core/gl.h>
-#include <io/stb_image.h>
-
 #include <filesystem>
+#include <io/stb_image.h>
 #include <map>
 #include <string>
 
@@ -27,7 +26,11 @@ class RENDERER_API Texture
     [[nodiscard]] unsigned int getId() const;
     [[nodiscard]] GLenum getFormat() const;
 
+    static void setGammaCorrectionEnabled(bool enabled) { s_gammaCorrectionEnabled = enabled; }
+
   private:
+    static bool s_gammaCorrectionEnabled;
+
     struct TextureData
     {
         GLuint textureId;
@@ -39,6 +42,7 @@ class RENDERER_API Texture
     TextureData m_textureData;
     fs::path m_path;
     GLenum m_format{GL_RGB};
+    GLenum m_internalFormat{GL_RGB};
 
     static std::map<fs::path, std::pair<unsigned int, TextureData>> m_loadedCount;
 };

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "OffScreenRenderer.hpp"
 #include "TrackballCameraMover.hpp"
 
 #include <core/Events/Event.hpp>
@@ -32,8 +33,10 @@ class LightingScene : public core::Viewport
     std::unique_ptr<renderer::Mesh> m_floorMesh;
     renderer::Shader m_shader;
     renderer::Shader m_lightCubeShader;
+    OffScreenRenderer m_offScreenRenderer;
     TrackballCameraMover m_cameraMover;
     bool m_blinnPhong{true};
+    float m_gammaCorrection{2.2};
 
     // Lights
     renderer::DirectionalLight m_directionalLight{

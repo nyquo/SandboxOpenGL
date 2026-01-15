@@ -1,5 +1,6 @@
 #include "LightingScene.hpp"
 
+#include "OffScreenRenderer.hpp"
 #include "imgui.h"
 
 #include <core/Input.hpp>
@@ -15,6 +16,7 @@ LightingScene::LightingScene(float layerWidth, float layerHeight)
                       std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.frag",
                       std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.geom")
   , m_cameraMover(m_camera)
+  , m_offScreenRenderer(800, 600) // initial size, will be resized later
 {
     const float floorHalfSize = 10.0f;
     std::vector<renderer::Vertex> floorVertices = {
@@ -34,6 +36,7 @@ LightingScene::LightingScene(float layerWidth, float layerHeight)
       1,
     };
 
+    renderer::Texture::setGammaCorrectionEnabled(true);
     std::vector<renderer::Texture> floorTextures;
     floorTextures.emplace_back(std::string(RESSOURCES_FOLDER) + "/textures/wood.png", "texture_diffuse");
 
@@ -56,6 +59,10 @@ void LightingScene::onImGuiRender()
 {
     ImGui::Begin("Lighting Scene Settings");
     ImGui::Checkbox("Blinn-Phong", &m_blinnPhong);
+    if(ImGui::DragFloat("Gamma Correction", &m_gammaCorrection, 0.01f, 1.0f, 5.0f))
+    {
+        m_offScreenRenderer.setGammaCorrection(m_gammaCorrection);
+    }
     ImGui::Text("Material settings");
     float shininess = m_floorMesh->getShininess();
     if(ImGui::DragFloat("Shininess", &shininess, 1.0f, 1.0f, 128.0f))
@@ -89,13 +96,25 @@ void LightingScene::onUpdate()
     m_cameraMover.setIsMouseInViewport(isInViewport(mousePosition.x, mousePosition.y));
     m_cameraMover.update();
 
-    begin();
+    // draw to framebuffer
+    m_offScreenRenderer.resize(static_cast<unsigned int>(getWidth()), static_cast<unsigned int>(getHeight()));
+    m_offScreenRenderer.bindFrameBuffer();
     drawScene();
+    m_offScreenRenderer.unbindFrameBuffer();
+
+    // draw framebuffer texture to screen
+    begin();
+    m_offScreenRenderer.draw();
     end();
 }
 
 void LightingScene::drawScene()
 {
+    // See if the clearing should be elsewhere
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
     auto projectionView = m_camera->getProjection() * m_camera->getView();
 
     m_shader.bind();

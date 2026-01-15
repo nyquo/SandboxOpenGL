@@ -15,7 +15,7 @@ FrameBuffer::FrameBuffer(const FrameBufferSpecification& frameBufferSpec)
     glBindTexture(GL_TEXTURE_2D, m_textureColorBufferId);
 
     glTexImage2D(
-      GL_TEXTURE_2D, 0, GL_RGB, m_specification.width, m_specification.height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+      GL_TEXTURE_2D, 0, GL_RGB, m_specification.width, m_specification.height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -37,16 +37,32 @@ FrameBuffer::FrameBuffer(const FrameBufferSpecification& frameBufferSpec)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-FrameBuffer::FrameBuffer(FrameBuffer&& other) noexcept {}
+FrameBuffer::~FrameBuffer()
+{
+    glDeleteFramebuffers(1, &m_frameBufferId);
+    glDeleteTextures(1, &m_textureColorBufferId);
+    glDeleteRenderbuffers(1, &m_renderBufferId);
+}
 
-FrameBuffer& FrameBuffer::operator=(FrameBuffer&& other) noexcept {}
+void FrameBuffer::bind() const
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId);
+    glViewport(0, 0, m_specification.width, m_specification.height);
+}
 
-FrameBuffer::~FrameBuffer() {}
+void FrameBuffer::unbind() const { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+void FrameBuffer::resize(unsigned int width, unsigned int height) {
+    m_specification.width = width;
+    m_specification.height = height;
 
-void FrameBuffer::bind() const {}
+    glBindTexture(GL_TEXTURE_2D, m_textureColorBufferId);
+    glTexImage2D(
+      GL_TEXTURE_2D, 0, GL_RGB, m_specification.width, m_specification.height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-void FrameBuffer::unbind() const {}
-
-void FrameBuffer::resize(unsigned int width, unsigned int height) {}
+    glBindRenderbuffer(GL_RENDERBUFFER, m_renderBufferId);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_specification.width, m_specification.height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+}
 
 }
