@@ -1,10 +1,10 @@
 set(RESSOURCES_FOLDER ${AppName}Ressources)
 
-# file(GLOB MODELS
-#     CONFIGURE_DEPENDS
-#     RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
-#     Models/backpack/*
-# )
+file(GLOB MODELS
+    CONFIGURE_DEPENDS
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}"
+    models/Barrel/*
+)
 
 file(GLOB TEXTURES
     CONFIGURE_DEPENDS
@@ -44,7 +44,7 @@ sogl_add_executable(SandboxAdvancedLighting
         shaders/pointLightCube.vert
         shaders/screen.frag
         shaders/screen.vert
-        # ${BACKPACK_MODEL}
+        ${MODELS}
         ${TEXTURES}
     DEFINITIONS
         RESSOURCES_FOLDER="${RESSOURCES_FOLDER}"

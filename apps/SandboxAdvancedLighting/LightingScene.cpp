@@ -1,10 +1,17 @@
 #include "LightingScene.hpp"
 
 #include "OffScreenRenderer.hpp"
+#include "glm/ext/matrix_clip_space.hpp"
 #include "imgui.h"
+#include "renderer/FrameBuffer.hpp"
 
 #include <core/Input.hpp>
 #include <core/gl.h>
+#include <cstdlib>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/norm.hpp>
+#include <random>
 
 LightingScene::LightingScene(float layerWidth, float layerHeight)
   : Viewport(layerWidth, layerHeight, "Lighting Scene", 50, 50, 800, 600, glm::vec3(0.0f))
@@ -17,32 +24,12 @@ LightingScene::LightingScene(float layerWidth, float layerHeight)
                       std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.geom")
   , m_cameraMover(m_camera)
   , m_offScreenRenderer(800, 600) // initial size, will be resized later
+  , m_shadowsFB({1024, 1024, false, renderer::DepthAttachmentType::Texture})
 {
-    const float floorHalfSize = 10.0f;
-    std::vector<renderer::Vertex> floorVertices = {
-      // positions            // normals         // texture coords
-      {{floorHalfSize, 0.0f, floorHalfSize}, {0.0f, 1.0f, 0.0f}, {10.0f, 10.0f}},
-      {{-floorHalfSize, 0.0f, -floorHalfSize}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-      {{-floorHalfSize, 0.0f, floorHalfSize}, {0.0f, 1.0f, 0.0f}, {0.0f, 10.0f}},
-      {{floorHalfSize, 0.0f, -floorHalfSize}, {0.0f, 1.0f, 0.0f}, {10.0f, 0.0f}},
-    };
-
-    std::vector<unsigned int> floorIndices = {
-      0,
-      1,
-      2,
-      0,
-      3,
-      1,
-    };
-
     renderer::Texture::setGammaCorrectionEnabled(true);
-    std::vector<renderer::Texture> floorTextures;
-    floorTextures.emplace_back(std::string(RESSOURCES_FOLDER) + "/textures/wood.png", "texture_diffuse");
-
-    m_floorMesh =
-      std::make_unique<renderer::Mesh>(std::move(floorVertices), std::move(floorIndices), std::move(floorTextures));
-
+    m_model = std::make_unique<renderer::Model>(std::string(RESSOURCES_FOLDER) + "/models/Barrel/Barrel.obj", false);
+    initFloorMesh();
+    randomizeModelsPositions();
     m_cameraMover.init();
 
     // Setup point light VBO and VAO
@@ -51,6 +38,10 @@ LightingScene::LightingScene(float layerWidth, float layerHeight)
                                   renderer::BufferElement(GL_FLOAT, 3, false, sizeof(float))};
     m_pointLightsVBO.setLayout(std::move(layout));
     m_pointLightsVAO.addVertexBuffer(m_pointLightsVBO);
+
+    float near{1.0f};
+    float far{10.0f};
+    glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
 }
 
 void LightingScene::onEvent(core::Event& event) { m_cameraMover.onEvent(event); }
@@ -62,6 +53,11 @@ void LightingScene::onImGuiRender()
     if(ImGui::DragFloat("Gamma Correction", &m_gammaCorrection, 0.01f, 1.0f, 5.0f))
     {
         m_offScreenRenderer.setGammaCorrection(m_gammaCorrection);
+    }
+    if(ImGui::Button("New seed"))
+    {
+        m_gen.seed(m_rd());
+        randomizeModelsPositions();
     }
     ImGui::Text("Material settings");
     float shininess = m_floorMesh->getShininess();
@@ -82,6 +78,33 @@ void LightingScene::onImGuiRender()
     ImGui::ColorEdit3("Point light diffuse color", (float*)&m_pointLight.m_diffuseColor);
     ImGui::ColorEdit3("Point light specular color", (float*)&m_pointLight.m_specularColor);
     ImGui::End();
+}
+
+void LightingScene::initFloorMesh()
+{
+    const float floorHalfSize = 10.0f;
+    std::vector<renderer::Vertex> floorVertices = {
+      // positions            // normals         // texture coords
+      {{floorHalfSize, 0.0f, floorHalfSize}, {0.0f, 1.0f, 0.0f}, {10.0f, 10.0f}},
+      {{-floorHalfSize, 0.0f, -floorHalfSize}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+      {{-floorHalfSize, 0.0f, floorHalfSize}, {0.0f, 1.0f, 0.0f}, {0.0f, 10.0f}},
+      {{floorHalfSize, 0.0f, -floorHalfSize}, {0.0f, 1.0f, 0.0f}, {10.0f, 0.0f}},
+    };
+
+    std::vector<unsigned int> floorIndices = {
+      0,
+      1,
+      2,
+      0,
+      3,
+      1,
+    };
+
+    std::vector<renderer::Texture> floorTextures;
+    floorTextures.emplace_back(std::string(RESSOURCES_FOLDER) + "/textures/wood.png", "texture_diffuse");
+
+    m_floorMesh =
+      std::make_unique<renderer::Mesh>(std::move(floorVertices), std::move(floorIndices), std::move(floorTextures));
 }
 
 void LightingScene::onUpdate()
@@ -144,6 +167,11 @@ void LightingScene::drawScene()
     m_shader.setFloat(str + "quadratic", 0.032f);
 
     m_floorMesh->draw(m_shader);
+    for(const auto& modelMatrix : m_modelMatrices)
+    {
+        m_shader.setMat4("model", modelMatrix);
+        m_model->draw(m_shader);
+    }
 
     updatePointLightBuffer();
     m_lightCubeShader.bind();
@@ -163,4 +191,28 @@ void LightingScene::updatePointLightBuffer()
       m_pointLight.m_diffuseColor.b,
     };
     m_pointLightsVBO.setData(pointLightData, sizeof(pointLightData));
+}
+
+void LightingScene::randomizeModelsPositions()
+{
+    std::uniform_real_distribution<float> d(0, 10);
+    std::uniform_real_distribution<float> angle(0, 360);
+    std::normal_distribution<float> n(0.0f, 1.0f);
+
+    m_modelMatrices.clear();
+
+    for(int i = 0; i < 10; ++i)
+    {
+        glm::mat4 modelMatrix = glm::mat4(1.0f);
+        modelMatrix = glm::translate(modelMatrix, glm::vec3(d(m_gen) - 5.0f, d(m_gen) / 2.0f, d(m_gen) - 5.0f));
+        glm::vec3 axis;
+        do
+        {
+            axis = glm::vec3(n(m_gen), n(m_gen), n(m_gen));
+        } while(glm::length2(axis) < 1e-12f);
+        axis = glm::normalize(axis);
+        modelMatrix = modelMatrix * glm::mat4_cast(glm::quat(glm::angleAxis(angle(m_gen), axis)));
+
+        m_modelMatrices.push_back(modelMatrix);
+    }
 }

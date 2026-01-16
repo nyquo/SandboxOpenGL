@@ -1,12 +1,16 @@
 #include "Model.hpp"
 
-#include <core/Logger.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+#include <core/Logger.hpp>
 
 namespace renderer {
 
-Model::Model(const fs::path& path) { loadModel(path); }
+Model::Model(const fs::path& path, bool flipTextures)
+  : m_flipTextures(flipTextures)
+{
+    loadModel(path);
+}
 
 Model::~Model() {}
 
@@ -24,7 +28,12 @@ void Model::loadModel(const fs::path& path)
 {
     Assimp::Importer importer;
     // TODO consider using aiProcess_GenNormals
-    const aiScene* scene = importer.ReadFile(path.string().c_str(), aiProcess_Triangulate | aiProcess_FlipUVs);
+    unsigned int flags = aiProcess_Triangulate;
+    if(m_flipTextures)
+    {
+        flags |= aiProcess_FlipUVs;
+    }
+    const aiScene* scene = importer.ReadFile(path.string().c_str(), flags);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {

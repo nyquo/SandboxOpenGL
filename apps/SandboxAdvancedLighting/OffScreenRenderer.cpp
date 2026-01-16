@@ -40,6 +40,6 @@ void OffScreenRenderer::draw()
     m_screenShader.setFloat("gamma", m_gammaCorrection);
     m_quadVAO.bind();
     glDisable(GL_DEPTH_TEST);
-    glBindTexture(GL_TEXTURE_2D, m_frameBuffer.getColorAttachmentRendererId());
+    glBindTexture(GL_TEXTURE_2D, m_frameBuffer.getColorAttachmentId());
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }

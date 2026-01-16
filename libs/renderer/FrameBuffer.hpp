@@ -4,10 +4,20 @@
 
 namespace renderer {
 
+enum class DepthAttachmentType
+{
+    None = 0,
+    RenderBuffer = 1,
+    Texture = 2
+};
+
+// May be too simple, will see later
 struct FrameBufferSpecification
 {
     unsigned int width{800};
     unsigned int height{600};
+    bool hasColorAttachment{true};
+    DepthAttachmentType depthAttachmentType{DepthAttachmentType::RenderBuffer};
 };
 
 class FrameBuffer
@@ -25,12 +35,14 @@ class FrameBuffer
 
     void resize(unsigned int width, unsigned int height);
 
-    unsigned int getColorAttachmentRendererId() const { return m_textureColorBufferId; }
+    unsigned int getColorAttachmentId() const;
 
   private:
     unsigned int m_frameBufferId{0};
-    unsigned int m_textureColorBufferId{0};
-    unsigned int m_renderBufferId{0};
+
+    unsigned int m_colorTextureBufferId{0};
+    unsigned int m_depthTextureBufferId{0};
+    unsigned int m_depthRenderBufferId{0};
 
     FrameBufferSpecification m_specification;
 };
