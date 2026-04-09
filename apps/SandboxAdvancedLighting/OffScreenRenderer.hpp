@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Quad.hpp"
+
 #include <renderer/Buffers.hpp>
 #include <renderer/FrameBuffer.hpp>
 #include <renderer/Shader.hpp>
@@ -23,8 +25,7 @@ class OffScreenRenderer
     void draw();
 
   private:
-    renderer::VertexBuffer m_quadVBO{6 * 2 * 2 * sizeof(float)}; // 6 vertices with 2 pos and 2 tex coords
-    renderer::VertexArray m_quadVAO;
+    Quad m_quad{};
 
     renderer::Shader m_screenShader;
     renderer::FrameBuffer m_frameBuffer;

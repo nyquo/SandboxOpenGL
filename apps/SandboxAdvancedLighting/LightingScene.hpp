@@ -17,6 +17,9 @@
 #include <renderer/Shader.hpp>
 #include <renderer/Texture.hpp>
 
+// TEMP
+#include "Quad.hpp"
+
 class LightingScene : public core::Viewport
 {
   public:
@@ -32,6 +35,8 @@ class LightingScene : public core::Viewport
     void drawScene();
     void updatePointLightBuffer();
     void randomizeModelsPositions();
+    void renderDepthMap();
+    void displayShadowFrameBuffer();
 
   private:
     std::shared_ptr<renderer::PerspectiveCamera> m_camera;
@@ -44,7 +49,15 @@ class LightingScene : public core::Viewport
     TrackballCameraMover m_cameraMover;
     bool m_blinnPhong{true};
     float m_gammaCorrection{2.2};
+
+    // Shadows
     renderer::FrameBuffer m_shadowsFB;
+    renderer::Shader m_depthShader;
+    bool m_displayShadowFB{false};
+    Quad m_quad{}; // Temp quad to see depth tex;
+    // Temp shader to see depth tex
+    renderer::Shader m_depthTexPreviewShader{std::string(RESSOURCES_FOLDER) + "/shaders/depthTexPreview.vert",
+                                             std::string(RESSOURCES_FOLDER) + "/shaders/depthTexPreview.frag"};
 
     // Lights
     renderer::DirectionalLight m_directionalLight{

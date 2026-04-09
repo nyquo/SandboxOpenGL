@@ -22,6 +22,7 @@ sogl_add_executable(SandboxAdvancedLighting
         LightingScene.hpp
         OffScreenRenderer.cpp
         OffScreenRenderer.hpp
+        Quad.hpp
         Sandbox.cpp
         Sandbox.hpp
         TrackballCameraMover.hpp
@@ -37,6 +38,8 @@ sogl_add_executable(SandboxAdvancedLighting
         imgui
         Utils
     RESSOURCES
+        shaders/depthTexPreview.frag
+        shaders/depthTexPreview.vert
         shaders/modelShader.frag
         shaders/modelShader.vert
         shaders/pointLightCube.frag
@@ -44,6 +47,8 @@ sogl_add_executable(SandboxAdvancedLighting
         shaders/pointLightCube.vert
         shaders/screen.frag
         shaders/screen.vert
+        shaders/simpleDepthShader.frag
+        shaders/simpleDepthShader.vert
         ${MODELS}
         ${TEXTURES}
     DEFINITIONS

@@ -154,4 +154,21 @@ unsigned int FrameBuffer::getColorAttachmentId() const
     return m_colorTextureBufferId;
 }
 
+unsigned int FrameBuffer::getDepthAttachmentId() const
+{
+    if(m_specification.depthAttachmentType == DepthAttachmentType::None)
+    {
+        core::Logger::logError("FrameBuffer has no depth attachment");
+        return 0;
+    }
+    else if(m_specification.depthAttachmentType == DepthAttachmentType::Texture)
+    {
+        return m_depthTextureBufferId;
+    }
+    else // RenderBuffer
+    {
+        return m_depthRenderBufferId;
+    }
+}
+
 }

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Camera.hpp"
-#include "core/CoreExport.hpp"
+#include "RendererExport.hpp"
 
 namespace renderer {
 
-class CORE_API PerspectiveCamera : public Camera
+class RENDERER_API PerspectiveCamera : public Camera
 {
   public:
     PerspectiveCamera(float viewportWidth = 0,

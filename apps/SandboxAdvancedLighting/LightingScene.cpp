@@ -22,6 +22,8 @@ LightingScene::LightingScene(float layerWidth, float layerHeight)
   , m_lightCubeShader(std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.vert",
                       std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.frag",
                       std::string(RESSOURCES_FOLDER) + "/shaders/pointLightCube.geom")
+  , m_depthShader(std::string(RESSOURCES_FOLDER) + "/shaders/simpleDepthShader.vert",
+                  std::string(RESSOURCES_FOLDER) + "/shaders/simpleDepthShader.frag")
   , m_cameraMover(m_camera)
   , m_offScreenRenderer(800, 600) // initial size, will be resized later
   , m_shadowsFB({1024, 1024, false, renderer::DepthAttachmentType::Texture})
@@ -50,6 +52,7 @@ void LightingScene::onImGuiRender()
 {
     ImGui::Begin("Lighting Scene Settings");
     ImGui::Checkbox("Blinn-Phong", &m_blinnPhong);
+    ImGui::Checkbox("Display shadow frame buffer", &m_displayShadowFB);
     if(ImGui::DragFloat("Gamma Correction", &m_gammaCorrection, 0.01f, 1.0f, 5.0f))
     {
         m_offScreenRenderer.setGammaCorrection(m_gammaCorrection);
@@ -119,16 +122,26 @@ void LightingScene::onUpdate()
     m_cameraMover.setIsMouseInViewport(isInViewport(mousePosition.x, mousePosition.y));
     m_cameraMover.update();
 
-    // draw to framebuffer
-    m_offScreenRenderer.resize(static_cast<unsigned int>(getWidth()), static_cast<unsigned int>(getHeight()));
-    m_offScreenRenderer.bindFrameBuffer();
-    drawScene();
-    m_offScreenRenderer.unbindFrameBuffer();
+    // render to depth map
+    renderDepthMap();
 
-    // draw framebuffer texture to screen
-    begin();
-    m_offScreenRenderer.draw();
-    end();
+    if(m_displayShadowFB)
+    {
+        displayShadowFrameBuffer();
+    }
+    else
+    {
+        // draw to framebuffer
+        m_offScreenRenderer.resize(static_cast<unsigned int>(getWidth()), static_cast<unsigned int>(getHeight()));
+        m_offScreenRenderer.bindFrameBuffer();
+        drawScene();
+        m_offScreenRenderer.unbindFrameBuffer();
+
+        // draw framebuffer texture to screen
+        begin();
+        m_offScreenRenderer.draw();
+        end();
+    }
 }
 
 void LightingScene::drawScene()
@@ -215,4 +228,45 @@ void LightingScene::randomizeModelsPositions()
 
         m_modelMatrices.push_back(modelMatrix);
     }
+}
+
+void LightingScene::renderDepthMap()
+{
+    // For now only handle directional light
+    float near{1.0f};
+    float far{10.0f};
+    glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
+    glm::vec3 directionalLightEstimatedPosition = -m_directionalLight.m_direction * 5.0f;
+    glm::mat4 lightView = glm::lookAt(directionalLightEstimatedPosition, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+
+    m_depthShader.bind();
+    m_depthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    glViewport(0, 0, m_shadowsFB.getSpecification().width, m_shadowsFB.getSpecification().height);
+    m_shadowsFB.bind();
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+    m_depthShader.setMat4("model", glm::mat4(1.0f));
+    m_floorMesh->draw(m_depthShader);
+    for(const auto& modelMatrix : m_modelMatrices)
+    {
+        m_depthShader.setMat4("model", modelMatrix);
+        m_model->draw(m_depthShader);
+    }
+
+    m_shadowsFB.unbind();
+}
+
+void LightingScene::displayShadowFrameBuffer()
+{
+    begin();
+    m_depthTexPreviewShader.bind();
+    m_quad.bind();
+    glDisable(GL_DEPTH_TEST);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_shadowsFB.getDepthAttachmentId());
+    m_depthTexPreviewShader.setInt("depthMap", 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    end();
 }

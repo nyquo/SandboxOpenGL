@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RendererExport.hpp"
+
 #include <core/gl.h>
 #include <vector>
 
@@ -21,7 +23,7 @@ struct BufferElement
     size_t m_offset;
 };
 
-class BufferLayout
+class RENDERER_API BufferLayout
 {
   public:
     BufferLayout() = default;
@@ -35,7 +37,7 @@ class BufferLayout
     size_t m_stride{0};
 };
 
-class VertexBuffer
+class RENDERER_API VertexBuffer
 {
   public:
     VertexBuffer(size_t size);
@@ -59,7 +61,7 @@ class VertexBuffer
     BufferLayout m_layout;
 };
 
-class IndexBuffer
+class RENDERER_API IndexBuffer
 {
   public:
     IndexBuffer(size_t count, unsigned int* indices);
@@ -79,7 +81,7 @@ class IndexBuffer
     size_t m_count;
 };
 
-class VertexArray
+class RENDERER_API VertexArray
 {
   public:
     VertexArray();

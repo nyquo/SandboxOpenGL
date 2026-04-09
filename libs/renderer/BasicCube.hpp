@@ -1,17 +1,17 @@
 #pragma once
 
 #include "Buffers.hpp"
+#include "RendererExport.hpp"
 
-#include <renderer/Shader.hpp>
+#include <array>
 #include <core/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include <array>
+#include <renderer/Shader.hpp>
 #include <vector>
 // TEMP TO DELETE
-class BasicCube
+class RENDERER_API BasicCube
 {
   public:
     BasicCube(glm::vec3 position = glm::vec3(0.0F))

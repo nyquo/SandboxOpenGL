@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Camera.hpp"
-#include "core/CoreExport.hpp"
+#include "RendererExport.hpp"
 #include "Scene.hpp"
 
 #include <memory>
 
 namespace renderer {
 
-class CORE_API Renderer
+class RENDERER_API Renderer
 {
   public:
     Renderer() = default;

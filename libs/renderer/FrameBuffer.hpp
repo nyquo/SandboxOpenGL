@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RendererExport.hpp"
+
 #include <core/gl.h>
 
 namespace renderer {
@@ -12,7 +14,7 @@ enum class DepthAttachmentType
 };
 
 // May be too simple, will see later
-struct FrameBufferSpecification
+struct RENDERER_API FrameBufferSpecification
 {
     unsigned int width{800};
     unsigned int height{600};
@@ -20,7 +22,7 @@ struct FrameBufferSpecification
     DepthAttachmentType depthAttachmentType{DepthAttachmentType::RenderBuffer};
 };
 
-class FrameBuffer
+class RENDERER_API FrameBuffer
 {
   public:
     FrameBuffer(const FrameBufferSpecification& frameBufferSpec);
@@ -34,8 +36,10 @@ class FrameBuffer
     void unbind() const;
 
     void resize(unsigned int width, unsigned int height);
+    FrameBufferSpecification getSpecification() const { return m_specification; }
 
     unsigned int getColorAttachmentId() const;
+    unsigned int getDepthAttachmentId() const;
 
   private:
     unsigned int m_frameBufferId{0};
